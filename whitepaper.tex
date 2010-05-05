@@ -30,34 +30,36 @@
 \cfoot{{\url{www.txcorp.com}}}
 \rfoot{{Fax: 303.448.7756}}
 
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+
 
 %Title
-\vspace{20pt}
-\begin{center}{\huge{GPU Acceleration of Needlet Based \\ \vspace{5pt}Inversion of Diffusion MRI Data}}\end{center}
+\vspace{5pt}
+\begin{center}{\huge{Needlet Based Inversion of\\ \vspace{10pt}Diffusion MRI Data on GPUs}}\end{center}
 
 
 \section*{Summary}
-Introduced in the mid 1980s, biomedical diffusion weighted MRI techniques provide a unique tool to image micorstructures in the brain. \emph{...a bit more background and then a lead in into signal processing...}
+Introduced in the mid 1980s, diffusion weighted MRI techniques provide a unique tool to image micorstructures in the brain. \emph{...a bit more background and then a lead in into signal processing...}
 
-Multiresolution or wavelet techniques are a natural mathematical tool for analysis of signals containing localized features. Wavelets have lead to numerous technological advances. Despite the success of wavelet techniques for Euclidean signals, only recently have multiresolution techniques been developed for signals on the sphere, signals, for example, arising from diffusion MRI. Unlike traditional spherical-harmonic based frameworks, these new so-called ``needlet'' frameworks provide computationally efficient means of representing localized signals on the sphere and are thus ideally suited for diffusion MRI problems. 
+Wavelet techniques are a natural mathematical tool for analysis of signals containing localized features. Despite the success of wavelets for Euclidean signals, only recently have wavelets been developed for signals on the sphere, signals, for example, arising from diffusion MRI. Unlike traditional spherical-harmonic based frameworks, these new so-called ``needlets'' provide computationally efficient means of representing localized signals on the sphere and are thus ideally suited for diffusion MRI problems. 
 
 The use of graphical processing units (GPUs) in scientific computing has increased tremendously. GPUs offer massively-parallel processing capabilities and it is not uncommon to achieve a factor of 50 in speed up over a CPU-based codes. Because of the independence of voxels and the amount of data in diffusion MRI, use of GPUs to process diffusion MRI data will offer significant performance improvements. 
 
 In summary, Tech-X, in collaboration with scientists at the Henry H. Wheeler Brain Imaging Center at UC Berkeley, plan to 
 \begin{itemize}
-  \item{Develop new algorithms for processing diffusion weighted MRI data based on mulitresolution techniques for the sphere, which will offer unprecedented angular resolution}
-  \item{Develop new software libraries implementing these algorithms which take advantage of massively parallel GPU architectures}
-  \item{Initially, develop a user base for the libraries. These libraries will then be developed into a commercial software package}
+  \item{Develop new algorithms for processing diffusion weighted MRI data based on wavelet techniques for the sphere, which will offer unprecedented angular resolution.}
+  \item{Develop new software libraries implementing these algorithms which take advantage of massively parallel GPU architectures.}
+  \item{Develop a user base for the libraries. These libraries will then be developed into a commercial software package.}
 \end{itemize}
 
 \section*{Proposed technical approach}
 \emph{Paragraph on diffusion MRI}
 
-Many of the algorithms for reconstruction of diffusion weighted MRI data can be cast as a deconvolution problem for the orientation distribution function (ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\omega\right)$, gives the volume fraction of fibers oriented along the direction $\omega$. Mathematically, the problem is to determine $f$ , for each voxel, from the equation
+Many of the algorithms for reconstruction of diffusion weighted MRI data can be cast as a deconvolution problem for the orientation distribution function (ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume fraction of fibers oriented along the direction $\bomega\in\mathbb{S}^2$, where $\mathbb{S}^2$ is the unit sphere. Mathematically, the problem is to determine $f$, for each voxel, from the equation
 \begin{equation*}
-  S\left(\omega\right) = \int R\left(\omega,\omega'\right) f\left(\omega'\right)d\omega',
+  S\left(\bomega\right) = \int_{\mathbb{S}^2} R\left(\bomega,\bomega'\right) f\left(\bomega'\right)d\bomega',
 \end{equation*}  
-where $S$ is the measured signal and $R$ represents the response from a single fiber. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using quadratures from \cite{AHR-BEY-2009} and optimized filters. The resulting numerical algorithm leads to systems of linear equations which can be efficiently solved on GPUs.  
+where $S$ is the measured signal and $R$ represents the response from a single fiber. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from \cite{AHR-BEY-2009} and optimized filters. The resulting numerical algorithm leads to systems of linear equations which can be efficiently solved on GPUs. The benifit of using a needlet representation over traditional spherical harmonics is that....
 
 \emph{Paragraph on gpu computing}
 
