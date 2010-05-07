@@ -59,7 +59,7 @@ Many of the algorithms for reconstruction of diffusion weighted MRI data can be 
 \begin{equation*}
   S\left(\bomega\right) = \int_{\mathbb{S}^2} R\left(\bomega,\bomega'\right) f\left(\bomega'\right)d\bomega',
 \end{equation*}  
-where $S$ is the measured signal and $R$ represents the response from a single fiber. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from \cite{AHR-BEY-2009} and optimized filters. The resulting numerical algorithm leads to systems of linear equations which can be efficiently solved on GPUs. The benifit of using a needlet representation over traditional spherical harmonics is that....
+where $S$ is the measured signal and $R$ is the kernel for the specific imaging method. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from \cite{AHR-BEY-2009} and optimized filters. The resulting numerical algorithm leads to systems of linear equations which can be efficiently solved on GPUs. The benifit of using a needlet representation over traditional spherical harmonics is that....
 
 \emph{Paragraph on gpu computing}
 
