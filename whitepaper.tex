@@ -39,38 +39,41 @@
 
 
 \section*{Summary}
-Introduced in the mid 1980s, diffusion weighted MRI techniques provide a unique tool to image micorstructures in the brain. \emph{...a bit more background and then a lead in into signal processing...}
+Introduced in the mid 1980s, diffusion weighted MRI techniques provide a unique tool to image micro-structures in the brain. \emph{...more dMRI background and then a lead into signal processing...Fernando and Matthew}
 
-Wavelet techniques are a natural mathematical tool for analysis of signals containing localized features. Despite the success of wavelets for Euclidean signals, only recently have wavelets been developed for signals on the sphere, signals, for example, arising from diffusion MRI. Unlike traditional spherical-harmonic based frameworks, these new so-called ``needlets'' provide computationally efficient means of representing localized signals on the sphere and are thus ideally suited for diffusion MRI problems. 
+Wavelet techniques are a natural mathematical tool for analysis of signals with localized features. Despite the success of wavelets for Euclidean signals, only recently have wavelets been developed for signals on the sphere, signals, for example, arising from diffusion MRI. Unlike traditional spherical-harmonic based frameworks, these new so-called ``needlets'' provide computationally efficient means of representing localized signals on the sphere and are thus ideally suited for diffusion MRI problems. 
 
-The use of graphical processing units (GPUs) in scientific computing has increased tremendously. GPUs offer massively-parallel processing capabilities and it is not uncommon to achieve a factor of 50 in speed up over a CPU-based codes. Because of the independence of voxels and the amount of data in diffusion MRI, use of GPUs to process diffusion MRI data will offer significant performance improvements. 
+The use of graphical processing units (GPUs) in scientific computing has increased tremendously. GPUs offer massively-parallel processing capabilities and it is not uncommon to achieve a factor of 50 in speed up over CPU-based codes. Because of the independence of voxels and the amount of data in diffusion MRI, use of GPUs to process diffusion MRI data will offer significant performance improvements. 
 
-In summary, Tech-X, in collaboration with scientists at the Henry H. Wheeler Brain Imaging Center at UC Berkeley, plan to 
+By combining the expertise in computational harmonic analysis and GPU computing at Tech-X corporation with the expertise in diffusion MRI methods and software engineering at the Henry H. Wheeler Brain Imaging Center at UC Berkeley, we propose to  
 \begin{itemize}
-  \item{Develop new algorithms for processing diffusion weighted MRI data based on wavelet techniques for the sphere, which will offer unprecedented angular resolution.}
+  \item{Develop new needlet based algorithms for processing diffusion weighted MRI data.}
   \item{Develop new software libraries implementing these algorithms which take advantage of massively parallel GPU architectures.}
-  \item{Develop a user base for the libraries. These libraries will then be developed into a commercial software package.}
+  \item{Develop a user base for the libraries, which will then be developed into a commercial software package.}
 \end{itemize}
+The result of this collaboration will be to provide the research and clinical medical communities with unique, state-of-the-art diffusion weighted MRI software.
 
 \section*{Proposed technical approach}
-\emph{Paragraph on diffusion MRI}
+\emph{Paragraph on basic diffusion MRI -- Fernando and Matthew}
 
-Many of the algorithms for reconstruction of diffusion weighted MRI data can be cast as a deconvolution problem for the orientation distribution function (ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume fraction of fibers oriented along the direction $\bomega\in\mathbb{S}^2$, where $\mathbb{S}^2$ is the unit sphere. Mathematically, the problem is to determine $f$, for each voxel, from the equation
+Many of the algorithms for reconstruction of diffusion weighted MRI data can be cast as a deconvolution problem for the orientation distribution function (ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume fraction of fibers oriented along the direction $\bomega\in\mathbb{S}^2$, where $\mathbb{S}^2$ is the unit sphere. Mathematically, the problem is to reconstruct $f$, for each voxel, from the equation
 \begin{equation*}
   S\left(\bomega\right) = \int_{\mathbb{S}^2} R\left(\bomega,\bomega'\right) f\left(\bomega'\right)d\bomega',
 \end{equation*}  
-where $S$ is the measured signal and $R$ is the kernel for the specific imaging method. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from \cite{AHR-BEY-2009} and optimized filters. The resulting numerical algorithm leads to systems of linear equations which can be efficiently solved on GPUs. The benifit of using a needlet representation over traditional spherical harmonics is that....
+where $S$ is the measured signal and $R$ is the kernel for the specific imaging method. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from \cite{AHR-BEY-2009} and optimized filters. In a needlet representation, the ODF will be sparse, that is, since there are only a few $(\lesssim 4)$ fibers per voxel, only a few needlet coefficients will be non-negligible. Thus, sparse signal recovery techniques will be used to estimate needlet coefficients. Because of the localized nature of the needlets and sparsity of the signal (in the needlet basis), this method will be more robust for determining fiber direction than those based on spherical harmonics.
 
-\emph{Paragraph on gpu computing}
+The numerical algorithms needed to solve the above equation using needlets lead to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear systems of equations (one system per voxel), which can be efficiently solved on GPUs.\emph{...more on gpu computing -- Paul}
 
 \section*{Commercialization}
 Tech-X was founded in Boulder, CO in 1994 by John R. Cary, CEO and Professor of Physics at the University of Colorado and Svetlana Shasharina, Ph.D., Vice-President of Distributed Technologies. With a staff of more than 60 people, of whom 60\% have Ph.D. degrees in physics, mathematics, engineering, and computer science, Tech-X has strong expertise in computational simulations, data analysis, and distributed computing applied to engineering and scientific applications.  The company has been successful throughout its history in developing high-performance software solutions for research in high-energy physics, fusion, particle accelerators, and similar technologies.
 
-\emph{specifics about this project}
+\emph{specifics about this project -- Cory and Paul}
 
 \section*{Key personnel}
 
 Dr. Fernando Perez bio
+
+Dr. Matthew Brett bio
 
 Dr. Paul Mullowney bio
 
