@@ -32,35 +32,99 @@
 
 \newcommand{\bomega}{{\boldsymbol{\omega}}}
 
-
 %Title
 \vspace{5pt}
-\begin{center}{\huge{Needlet Based Inversion of\\ \vspace{10pt}Diffusion MRI Data on GPUs}}\end{center}
-
+\begin{center} {\huge{
+      New algorithms for Diffusion MRI \\
+      \vspace{10pt}
+      with high-efficiency implementations
+} }
+\end{center}
 
 \section*{Summary}
-Introduced in the mid 1980s, diffusion weighted MRI techniques provide a unique tool to image micro-structures in the brain. \emph{...more dMRI background and then a lead into signal processing...Fernando and Matthew}
 
-Wavelet techniques are a natural mathematical tool for analysis of signals with localized features. Despite the success of wavelets for Euclidean signals, only recently have wavelets been developed for signals on the sphere, signals, for example, arising from diffusion MRI. Unlike traditional spherical-harmonic based frameworks, these new so-called ``needlets'' provide computationally efficient means of representing localized signals on the sphere and are thus ideally suited for diffusion MRI problems. 
+We propose to develop an open source library for the analysis, diagnosis and
+visualization of diffusion imaging datasets that includes novel algorithmic
+approaches to the representation of the underlying data as well as optimized
+components based on the use of specialized fast hardware available today.  This
+library, contributed to existing NIH-funded open source tools for neuroimaging,
+will form the basis for the development of a commercially supported package,
+FDA-approved, for clinical analysis of diffusion imaging data.
 
-The use of graphical processing units (GPUs) in scientific computing has increased tremendously. GPUs offer massively-parallel processing capabilities and it is not uncommon to achieve a factor of 50 in speed up over CPU-based codes. Because of the independence of voxels and the amount of data in diffusion MRI, use of GPUs to process diffusion MRI data will offer significant performance improvements. 
+Diffusion weighted MRI techniques hold the promise of in vivo imaging of fiber
+tracts in the brain; this is proving of enormous value in understanding the
+connection structure of the brain, an essential component for the description
+of both healthy and diseased brain function.  
 
-By combining the expertise in computational harmonic analysis and GPU computing at Tech-X corporation with the expertise in diffusion MRI methods and software engineering at the Henry H. Wheeler Brain Imaging Center at UC Berkeley, we propose to  
+The analysis of diffusion weighted images requires estimating the direction of
+motion of water molecules at each location in the brain (voxel), providing an
+Orientation Distribution Function (ODF).  Standard analytic approaches to this
+problem represent the ODF using expansions in Spherical Harmonics, a set of
+functions that constitute the spherical analog of sines and cosines in
+classical Fourier analysis.  Spherical Harmonics share some key limitations of
+sines and cosines, namely their inability to efficiently and accurately
+represent localized features in signals.  For the study of diffusion data, this
+is of particular concern, as many of the key features of the data arise
+precisely from complex local patterns of anatomy such as crossing neural
+fibers.
+
+Wavelet techniques are a natural mathematical tool for the analysis of signals
+with localized features, and they have been successfully used in many fields
+where the signals can be defined on domains whose structure is that of a line,
+plane or cube.  However, there are fundamental mathematical difficulties in
+constructing the analog of wavelets for a spherical domain, and only very
+recently have these been successfully tackled, with the introduction of
+``needlets'', a wavelet-like construction that respects the specific
+topological constraints of working on the surface of a sphere.
+
+The use of graphical processing units (GPUs) in scientific computing has
+increased tremendously. GPUs offer massively-parallel processing capabilities
+and it is not uncommon to achieve a factor of 50 in speed up over CPU-based
+codes. Because of the independence of voxels and the amount of data in
+diffusion MRI, use of GPUs to process diffusion MRI data will offer significant
+performance improvements.
+
+By combining the expertise in computational harmonic analysis and GPU computing
+at Tech-X corporation with the expertise in brain imaging methods and open
+source software development at the Henry H. Wheeler Brain Imaging Center at UC
+Berkeley, we propose to
+
 \begin{itemize}
-  \item{Develop new needlet based algorithms for processing diffusion weighted MRI data.}
-  \item{Develop new software libraries implementing these algorithms which take advantage of massively parallel GPU architectures.}
-  \item{Develop a user base for the libraries, which will then be developed into a commercial software package.}
+\item{Develop new needlet based algorithms for processing diffusion weighted
+    MRI data.}
+\item{Develop new software libraries implementing these algorithms which take
+    advantage of massively parallel GPU architectures.}
+\item{Develop a user base for the libraries, which will then be developed into
+    a commercial software package.}
 \end{itemize}
-The result of this collaboration will be to provide the research and clinical medical communities with unique, state-of-the-art diffusion weighted MRI software.
+
+The result of this collaboration will be to provide the research and clinical
+medical communities with unique, state-of-the-art diffusion weighted MRI
+software.
 
 \section*{Proposed technical approach}
 \emph{Paragraph on basic diffusion MRI -- Fernando and Matthew}
 
-Many of the algorithms for reconstruction of diffusion weighted MRI data can be cast as a deconvolution problem for the orientation distribution function (ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume fraction of fibers oriented along the direction $\bomega\in\mathbb{S}^2$, where $\mathbb{S}^2$ is the unit sphere. Mathematically, the problem is to reconstruct $f$, for each voxel, from the equation
+Many of the algorithms for reconstruction of diffusion weighted MRI data can be
+cast as a deconvolution problem for the orientation distribution function
+(ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume
+fraction of fibers oriented along the direction $\bomega\in\mathbb{S}^2$, where
+$\mathbb{S}^2$ is the unit sphere. Mathematically, the problem is to
+reconstruct $f$, for each voxel, from the equation
 \begin{equation*}
-  S\left(\bomega\right) = \int_{\mathbb{S}^2} R\left(\bomega,\bomega'\right) f\left(\bomega'\right)d\bomega',
+  S\left(\bomega\right) = \int_{\mathbb{S}^2} R\left(\bomega,\bomega'\right)
+  f\left(\bomega'\right)d\bomega', 
 \end{equation*}  
-where $S$ is the measured signal and $R$ is the kernel for the specific imaging method. We propose to invert this equation using ideas from \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from \cite{AHR-BEY-2009} and optimized filters. In a needlet representation, the ODF will be sparse, that is, since there are only a few $(\lesssim 4)$ fibers per voxel, only a few needlet coefficients will be non-negligible. Thus, sparse signal recovery techniques will be used to estimate needlet coefficients. Because of the localized nature of the needlets and sparsity of the signal (in the needlet basis), this method will be more robust for determining fiber direction than those based on spherical harmonics.
+where $S$ is the measured signal and $R$ is the kernel for the specific imaging
+method. We propose to invert this equation using ideas from
+\cite{KE-NG-PI-2009} with needlets constructed using new quadratures from
+\cite{AHR-BEY-2009} and optimized filters. In a needlet representation, the ODF
+will be sparse, that is, since there are only a few $(\lesssim 4)$ fibers per
+voxel, only a few needlet coefficients will be non-negligible. Thus, sparse
+signal recovery techniques will be used to estimate needlet
+coefficients. Because of the localized nature of the needlets and sparsity of
+the signal (in the needlet basis), this method will be more robust for
+determining fiber direction than those based on spherical harmonics.
 
 The numerical algorithms needed to solve the above equation using needlets lead to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear systems of equations (one system per voxel), which can be efficiently solved on GPUs.\emph{...more on gpu computing -- Paul}
 
