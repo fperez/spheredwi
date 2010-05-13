@@ -45,18 +45,18 @@ We propose to develop an open source library for the analysis, diagnosis and
 visualization of diffusion imaging datasets that includes novel algorithmic
 approaches to the representation of the underlying data as well as optimized
 components based on the use of specialized fast hardware available today.  This
-library, contributed to existing NIH-funded open source tools for neuroimaging,
+library will be contributed to existing NIH-funded open source tools for neuroimaging and 
 will form the basis for the development of an FDA-approved, commercially supported 
 package for clinical analysis of diffusion imaging data.
 
 Diffusion weighted MRI techniques hold the promise of \emph{in vivo} imaging of fiber
-tracts in the brain; this is proving to be of enormous value in understanding the
-connection structure of the brain, an essential component for the description
+tracts in the brain.This type of imaging is proving to be of enormous value in understanding
+the connection structure of the brain, an essential component for the description
 of both healthy and diseased brain function.  
 
 The analysis of diffusion weighted images requires estimating the direction of
 motion of water molecules at each location (voxel) in the brain, providing an
-Orientation Distribution Function (ODF). Standard analytic approaches to this
+Orientation Distribution Function (ODF). Standard approaches to this
 problem represent the ODF using expansions in Spherical Harmonics, a set of
 functions that constitute the spherical analog of sines and cosines in
 classical Fourier analysis.  Spherical Harmonics share some key limitations of
@@ -66,14 +66,13 @@ is of particular concern, as many of the key features of the data arise
 precisely from complex local patterns of anatomy such as crossing neural
 fibers.
 
-Wavelet techniques are a natural mathematical tool for the analysis of signals
+Wavelet techniques are a natural mathematical tool for analysis of signals
 with localized features, and they have been successfully used in many fields
 where the signals can be defined on domains whose structure is that of a line,
 plane or cube.  However, there are fundamental mathematical difficulties in
 constructing the analog of wavelets for a spherical domain, and only recently have
 these been successfully tackled, with the introduction of
-``needlets'', a wavelet-like construction that respects the specific
-topological constraints of working on the surface of a sphere.
+``needlets'', a wavelet-like construction that respects the topology of the sphere.
 
 The use of graphical processing units (GPUs) in scientific computing has
 increased tremendously. GPUs offer massively-parallel processing capabilities
@@ -115,18 +114,18 @@ method. We propose to invert this equation using ideas from
 \cite{KE-NG-PI-2009} with needlets constructed using new quadratures from
 \cite{AHR-BEY-2009} and optimized filters. In a needlet representation, the ODF
 will be sparse, that is, since there are only a few $(\lesssim 4)$ fibers per
-voxel, only a few needlet coefficients will be non-negligible. Thus, sparse
+voxel, relatively few needlet coefficients will be non-negligible. Thus, sparse
 signal recovery techniques will be used to estimate needlet
 coefficients. Because of the localized nature of the needlets and sparsity of
 the signal (in the needlet basis), this method will be more robust for
 determining fiber direction than those based on spherical harmonics.
 
-The numerical algorithms used to solve the above equation with needlets leads to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear systems of equations (one system per voxel), which can be efficiently solved on GPUs.\emph{...more on gpu computing -- Paul}
+The numerical algorithms used to solve the above equation with needlets lead to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear systems of equations (one system per voxel), which can be efficiently solved on GPUs. These linear systems are solved using minimization techniques, for example, bi-conjugate gradients...something about GPUs and BiCG
 
 \section*{Commercialization}
-Tech-X was founded in Boulder, CO in 1994 by John R. Cary, CEO and Professor of Physics at the University of Colorado and Svetlana Shasharina, Ph.D., Vice-President of Distributed Technologies. With a staff of more than 60 people, of whom 60\% have Ph.D. degrees in physics, mathematics, engineering, and computer science, Tech-X has strong expertise in computational simulations, data analysis, and distributed computing applied to engineering and scientific applications.  The company has been successful throughout its history in developing high-performance software solutions for research in high-energy physics, fusion, particle accelerators, and similar technologies.
+Tech-X was founded in Boulder, CO in 1994. With a staff of more than 60 people, of whom 60\% have Ph.D. degrees in physics, mathematics, engineering, and computer science, Tech-X has strong expertise in computational simulations, GPU software development, data analysis, and distributed computing applied to engineering and scientific applications. 
 
-\emph{specifics about this project -- Cory and Paul}
+The initial phase of this project will be to develop an open source library that will be incorporated into Python package NIPY. By developing open source software, the broader scientific community will ... Once the softwar has ..., Tech-X will develop an FDA approved, commerical software package for clinical use. Currently, there are XXX commerical diffusion imaging software packages. 
 
 \section*{Key personnel}
 
