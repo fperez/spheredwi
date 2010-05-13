@@ -35,10 +35,8 @@
 %Title
 \vspace{5pt}
 \begin{center} {\huge{
-      New algorithms for Diffusion MRI \\
-      \vspace{10pt}
-      with high-efficiency implementations
-} }
+      New computationally efficient  \\
+      \vspace{10pt} algorithms for Diffusion MRI} }
 \end{center}
 
 \section*{Summary}
@@ -48,17 +46,17 @@ visualization of diffusion imaging datasets that includes novel algorithmic
 approaches to the representation of the underlying data as well as optimized
 components based on the use of specialized fast hardware available today.  This
 library, contributed to existing NIH-funded open source tools for neuroimaging,
-will form the basis for the development of a commercially supported package,
-FDA-approved, for clinical analysis of diffusion imaging data.
+will form the basis for the development of an FDA-approved, commercially supported 
+package for clinical analysis of diffusion imaging data.
 
-Diffusion weighted MRI techniques hold the promise of in vivo imaging of fiber
-tracts in the brain; this is proving of enormous value in understanding the
+Diffusion weighted MRI techniques hold the promise of \emph{in vivo} imaging of fiber
+tracts in the brain; this is proving to be of enormous value in understanding the
 connection structure of the brain, an essential component for the description
 of both healthy and diseased brain function.  
 
 The analysis of diffusion weighted images requires estimating the direction of
-motion of water molecules at each location in the brain (voxel), providing an
-Orientation Distribution Function (ODF).  Standard analytic approaches to this
+motion of water molecules at each location (voxel) in the brain, providing an
+Orientation Distribution Function (ODF). Standard analytic approaches to this
 problem represent the ODF using expansions in Spherical Harmonics, a set of
 functions that constitute the spherical analog of sines and cosines in
 classical Fourier analysis.  Spherical Harmonics share some key limitations of
@@ -72,8 +70,8 @@ Wavelet techniques are a natural mathematical tool for the analysis of signals
 with localized features, and they have been successfully used in many fields
 where the signals can be defined on domains whose structure is that of a line,
 plane or cube.  However, there are fundamental mathematical difficulties in
-constructing the analog of wavelets for a spherical domain, and only very
-recently have these been successfully tackled, with the introduction of
+constructing the analog of wavelets for a spherical domain, and only recently have
+these been successfully tackled, with the introduction of
 ``needlets'', a wavelet-like construction that respects the specific
 topological constraints of working on the surface of a sphere.
 
@@ -103,11 +101,8 @@ medical communities with unique, state-of-the-art diffusion weighted MRI
 software.
 
 \section*{Proposed technical approach}
-\emph{Paragraph on basic diffusion MRI -- Fernando and Matthew}
-
 Many of the algorithms for reconstruction of diffusion weighted MRI data can be
-cast as a deconvolution problem for the orientation distribution function
-(ODF)\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume
+cast as a deconvolution problem for ODF\cite{JIA-VEM-2007}. The ODF, $f\left(\bomega\right)$, gives the volume
 fraction of fibers oriented along the direction $\bomega\in\mathbb{S}^2$, where
 $\mathbb{S}^2$ is the unit sphere. Mathematically, the problem is to
 reconstruct $f$, for each voxel, from the equation
@@ -126,7 +121,7 @@ coefficients. Because of the localized nature of the needlets and sparsity of
 the signal (in the needlet basis), this method will be more robust for
 determining fiber direction than those based on spherical harmonics.
 
-The numerical algorithms needed to solve the above equation using needlets lead to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear systems of equations (one system per voxel), which can be efficiently solved on GPUs.\emph{...more on gpu computing -- Paul}
+The numerical algorithms used to solve the above equation with needlets leads to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear systems of equations (one system per voxel), which can be efficiently solved on GPUs.\emph{...more on gpu computing -- Paul}
 
 \section*{Commercialization}
 Tech-X was founded in Boulder, CO in 1994 by John R. Cary, CEO and Professor of Physics at the University of Colorado and Svetlana Shasharina, Ph.D., Vice-President of Distributed Technologies. With a staff of more than 60 people, of whom 60\% have Ph.D. degrees in physics, mathematics, engineering, and computer science, Tech-X has strong expertise in computational simulations, data analysis, and distributed computing applied to engineering and scientific applications.  The company has been successful throughout its history in developing high-performance software solutions for research in high-energy physics, fusion, particle accelerators, and similar technologies.
@@ -141,7 +136,7 @@ Dr. Matthew Brett bio
 
 Dr. Paul Mullowney bio
 
-Dr. Cory Ahrens received his BS and MS degrees in nuclear engineering from Kansas State University and the University of Michigan in 1999 and 2001, respectively. In 2006, Dr. Ahrens completed a Ph.D. in Applied Mathematics at the University of Colorado, Boulder, modeling nonlinear laser pulse interactions. Dr. Ahrens continued at UC-Boulder as a research associate, working with Prof. Gregory Beylkin. He and professor Beylkin developed new quadratures for the sphere which will play a key role in developing new algorithms for processing data collected on a sphere. Dr. Ahrens research interests include inverse problems, nonlinear wave propagation and radiation transport. He joined Tech-X Corp. in January 2010.
+Dr. Cory Ahrens received his BS and MS degrees in nuclear engineering from Kansas State University and the University of Michigan in 1999 and 2001, respectively. In 2006, Dr. Ahrens completed a Ph.D. in Applied Mathematics at the University of Colorado, Boulder.
 
 
 \bibliographystyle{plain}
