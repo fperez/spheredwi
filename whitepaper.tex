@@ -57,7 +57,7 @@ The analysis of dMRI data requires estimating the direction of
 motion of water molecules at each location (voxel) in the brain, providing an
 Orientation Distribution Function (ODF). Standard approaches represent
 the ODF using expansions in spherical harmonics, the spherical analog of
-sines and cosines in classical Fourier analysis. Like sines and cosines, spherical harmoncis
+sines and cosines in classical Fourier analysis. Like sines and cosines, spherical harmonics
 are unable to efficiently and accurately represent localized features. For dMRI datasets, this is
 of particular concern, since many key features of the data arise precisely from complex local patterns of anatomy
 such as crossing neural fibers.
@@ -85,7 +85,7 @@ development at the Henry H. Wheeler Brain Imaging Center at UC Berkeley, we prop
 \item{Address the computational burden of processing dMRI data by developing software
      libraries implementing needlet algorithms which take advantage of massively parallel GPU architectures.}
 \item{Address developing a commercial software package by first releasing open-source software that is open to scrutiny
-      of the scientific community and then build commerical packages from open-source code.}
+      of the scientific community and then build commercial packages from open-source code.}
 \end{itemize*}
 The result of this collaboration will be to provide the research and clinical
 medical communities with unique, state-of-the-art dMRI software.
@@ -107,7 +107,7 @@ faithfully represent localized features will provide more stable
 tractography analysis, as the artifacts inherent in global bases
 (e.g. spherical harmonics) can lead to spurious fiber identifications and other
 problems.  In order to accurately estimate higher order coefficients of the
-needlet expansion, the ODF reconstruction wiil be cast as a sparse reconstruction
+needlet expansion, the ODF reconstruction will be cast as a sparse reconstruction
 problem, leading to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear
 systems of equations (one per voxel) which can be efficiently solved on GPUs. Tech-X currently
 has libraries of GPU-accelerated numerical solvers for tackling these problems.
@@ -130,7 +130,7 @@ open source software, the broader scientific community will be to analyze and te
 our new methodologies. This will allow for continuous community critique and 
 development, which ultimately will define the utility of this approach. Once the
 methodologies gain traction in the neuroimaging community, Tech-X will then develop
-an FDA approved, commerical software package for clinical use. During phase I, we will
+an FDA approved, commercial software package for clinical use. During phase I, we will
 explore the current market conditions for this technology and develop a commercialization
 plan based on those results.
 
