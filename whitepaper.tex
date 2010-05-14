@@ -107,24 +107,23 @@ voxel, from the equation
 e^{-2\pi i {\mathbf q}\cdot {\mathbf R}} d{\mathbf R}
 \end{equation*}
 where $S$ is the signal attenuation measured when a field gradient along
-direction ${\mathbf q}$ acts over a time interval $\tau$.  The full probability
-$p$ can be approximated by sampling with field gradients over the surface of a
-sphere at fixed gradient strength, which provides the Orientation Distribution
-Function (ODF). We propose to estimate the ODF this equation using ideas from
-\cite{KE-NG-PI-2009} with needlets constructed using new quadratures from
-\cite{AHR-BEY-2009} and optimized filters.  The ability of needlets to
-faithfully represent localized features will provide for more stable
-tractography analysis, as the artifacts inherent in global bases
-(e.g. spherical harmonics) can lead to spurious fiber identifications and other
-problems.  In order to accurately estimate higher order coefficients of the
-needlet expansion, the ODF reconstruction is cast as a sparse reconstruction
-problem, for which the numerical algorithms used lead to many $(\sim 10^6)$
-small $(\lesssim 256\times256)$ independent linear systems of equations (one
-system per voxel), which can be efficiently solved on GPUs. These linear systems are
-solved using minimization techniques, for example, bi-conjugate gradients. Tech-X currently
-has libraries of GPU-accelerated numerical solvers for tackling these problems
-Generalizing these codes to handle a wide range of problems will be an important
-component of this project.
+direction ${\mathbf q}$ acts over a time interval $\tau$.  We propose to
+estimate the ODF from this equation using ideas from \cite{KE-NG-PI-2009}
+with needlets constructed using new quadratures from \cite{AHR-BEY-2009}
+and optimized filters.  The ability of needlets to faithfully represent
+localized features will provide for more stable tractography analysis,
+as the artifacts inherent in global bases (e.g. spherical harmonics) can
+lead to spurious fiber identifications and other problems.  In order to
+accurately estimate higher order coefficients of the needlet expansion,
+the ODF reconstruction is cast as a sparse reconstruction problem, for
+which the numerical algorithms used lead to many $(\sim 10^6)$ small
+$(\lesssim 256\times256)$ independent linear systems of equations (one
+system per voxel), which can be efficiently solved on GPUs. These linear
+systems are solved using minimization techniques, for example,
+bi-conjugate gradients. Tech-X currently has libraries of
+GPU-accelerated numerical solvers for tackling these problems
+Generalizing these codes to handle a wide range of problems will be an
+important component of this project.
 
 \section*{Commercialization}
 Tech-X was founded in Boulder, CO in 1994. With a staff of more than 60 people,
@@ -133,18 +132,21 @@ computer science, Tech-X has strong expertise in computational simulations, GPU
 software development, data analysis, and distributed computing applied to
 engineering and scientific applications.
 
-In the initial phase of this project, we will develop an open source library
-that will be incorporated into the Nipy project (http://nipy.sourceforge.net),
-an NIH-funded collection of open source tools for multiple tasks in the
-analysis of neuroimaging data.  All software at this stage will be contributed
-to Nipy under the terms of the BSD Software License, which allows for further
-commercial development. By developing open source software, the broader scientific
-community will be to analyze and test our new methodologies. This will allow for
-continuous community critique and development, which ultimately will define the
-utility of this approach. Once the methodologies gain traction in the neuroimaging
-community, Tech-X will then develop an FDA approved, commerical software package
-for clinical use. During phase I, we will explore the current market conditions
-for this technology and develop a commercialization plan based on those results.
+In the initial phase of this project, we will develop an open source
+library that will be incorporated into the Nipy project
+(http://nipy.sourceforge.net), an NIH-funded collection of open source
+tools for multiple tasks in the analysis of neuroimaging data.  All
+software at this stage will be contributed to Nipy under the terms of
+the BSD Software License, which allows for further commercial
+development. By developing open source software, the broader scientific
+community will be to analyze and test our new methodologies. This will
+allow for continuous community critique and development, which
+ultimately will define the utility of this approach. Once the
+methodologies gain traction in the neuroimaging community, Tech-X will
+then develop an FDA approved, commerical software package for clinical
+use. During phase I, we will explore the current market conditions for
+this technology and develop a commercialization plan based on those
+results.
 
 \section*{Key personnel}
 This project brings together of number of individuals with varying expertise to make this project successful. These individuals are:
@@ -157,7 +159,15 @@ He has made extensive contributions to the development of modern open source
 tools for scientific computing in Python. He is an Associate Researcher at the
 Brain Imaging Center of the University of California, Berkeley.}
 
-  \item{Dr. Matthew Brett bio}
+  \item{Dr. Matthew Brett trained as a neurologist before transferring
+    to full-time research in 1996.  Since then he has worked on imaging
+    methodology in positron emission and functional MRI.  He has been
+    writing and supporting imaging software for many years, including
+    the widely used MarsBaR project (http://marsbar.sourceforge.net). He
+    currently works in the Brain Imaging Center in Berkeley, where he
+    maintains and develops NIPY as well as contributing to DIPY, the
+    diffusion imaging project under the NIPY umbrella
+    (http://nipy.sourceforge.net/dipy)}
   
   \item{Dr. Paul Mullowney received his PhD in Applied Mathematics at the University of Colorado at Boulder. He will contribute his expertise in high-performance computating (GPUs) to this project in order to provide efficient computational solutions for the developed algorithms.}
 
