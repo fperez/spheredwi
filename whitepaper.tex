@@ -1,10 +1,10 @@
 \documentclass[10pt]{article}
 \usepackage{fancyhdr,amssymb,amsmath,graphicx}
-\usepackage{hyperref,fullpage}
+\usepackage{hyperref,fullpage,mdwlist}
 \setlength{\topmargin}{-36pt}
 \setlength{\headheight}{42pt}
-\setlength{\headsep}{10pt}
-\setlength{\footskip}{0pt}
+\setlength{\headsep}{5pt}
+\setlength{\footskip}{20pt}
 \renewcommand{\labelitemi}{{\Large\textperiodcentered}}
 \pagenumbering{empty}
 \pagestyle{fancy}
@@ -30,151 +30,124 @@
 \cfoot{{\url{www.txcorp.com}}}
 \rfoot{{Fax: 303.448.7756}}
 
-\newcommand{\bomega}{{\boldsymbol{\omega}}}
-
 %Title
-\vspace{5pt}
+\vspace{-2pt}
 \begin{center} {\huge{
-      New computationally efficient  \\
-      \vspace{10pt} algorithms for Diffusion MRI} }
+      New Computationally Efficient  \\
+      \vspace{3pt} Algorithms for Diffusion MRI} }
 \end{center}
 
+\vspace{-5pt}
 \section*{Summary}
-
-We propose to develop an open source library for the analysis, diagnosis and
-visualization of diffusion imaging datasets that includes novel algorithmic
-approaches to the representation of the underlying data as well as optimized
-components based on the use of specialized fast hardware available today.  This
-library will be contributed to existing NIH-funded open source tools for
-neuroimaging and will form the basis for the development of an FDA-approved,
-commercially supported package for clinical analysis of diffusion imaging data.
-
-Diffusion weighted MRI techniques hold the promise of \emph{in vivo} imaging of
+\vspace{-5pt}
+Diffusion weighted MRI (dMRI) techniques hold the promise of \emph{in vivo} imaging of
 fiber tracts in the brain. This type of imaging is proving to be of enormous
 value in understanding the connection structure of the brain, an essential
 component for description of both healthy and diseased brain function.
 
-The analysis of diffusion weighted images requires estimating the direction of
+We propose to develop an open source library for analysis, diagnosis and
+visualization of dMRI datasets that includes novel algorithmic
+approaches to representing the underlying data and optimized
+components based on use of specialized fast hardware available today.  This
+library will be contributed to existing NIH-funded open source tools for
+neuroimaging and will form the basis for developing an FDA-approved,
+commercially supported package for clinical analysis of dMRI data.
+
+The analysis of dMRI data requires estimating the direction of
 motion of water molecules at each location (voxel) in the brain, providing an
 Orientation Distribution Function (ODF). Standard approaches represent
-the ODF using expansions in spherical harmonics, a set of
-functions that constitute the spherical analog of sines and cosines in
-classical Fourier analysis.  Spherical harmonics share some key limitations of
-sines and cosines, namely their inability to efficiently and accurately
-represent localized features in signals. For the study of diffusion data, this
-is of particular concern, as many of the key features of the data arise
-precisely from complex local patterns of anatomy such as crossing neural
-fibers.
+the ODF using expansions in spherical harmonics, the spherical analog of
+sines and cosines in classical Fourier analysis. Like sines and cosines, spherical harmoncis
+are unable to efficiently and accurately represent localized features. For dMRI datasets, this is
+of particular concern, since many key features of the data arise precisely from complex local patterns of anatomy
+such as crossing neural fibers.
 
 Wavelet techniques are a natural mathematical tool for analysis of signals with
-localized features, and they have been successfully used in many fields where
-the signals can be defined on domains such as a line, plane or cube. However, there
-are fundamental difficulties in constructing the analog of wavelets for a spherical
-domain, and only recently have these been successfully tackled, with the
+localized features and they have been successfully used in many fields. However, there
+are fundamental mathematical difficulties in constructing wavelets for spherical
+domains, and only recently have these been successfully tackled, with the
 introduction of ``needlets'', a wavelet-like construction that respects the
-topology of the sphere.
+topology of the sphere. When using either needlets or spherical harmonics, however, the 
+processing of dMRI data is computationally intensive and time consuming.
 
 Use of graphical processing units (GPUs) in scientific computing has
 increased tremendously. GPUs offer massively-parallel processing capabilities
 and it is not uncommon to achieve a factor of 50 in speed up over CPU-based
 codes. Because of the independence of voxels and the amount of data in
-diffusion MRI, use of GPUs to process diffusion MRI data will offer significant
-performance improvements.
+dMRI, use of GPUs will provide significant performance improvements.
 
 By combining the expertise in computational harmonic analysis and GPU computing
-at Tech-X corporation with the expertise in brain imaging methods and open
-source software development at the Henry H. Wheeler Brain Imaging Center at UC
-Berkeley, we propose to
-\begin{itemize}
-\item{Develop new needlet based algorithms for processing diffusion weighted
-    MRI data.}
-\item{Develop new software libraries implementing these algorithms which take
-    advantage of massively parallel GPU architectures.}
-\item{Develop a user base for the libraries, which will then be developed into
-    a commercial software package.}
-\end{itemize}
+at Tech-X corporation with the expertise in brain imaging and open source software
+development at the Henry H. Wheeler Brain Imaging Center at UC Berkeley, we propose to
+\begin{itemize*}
+\item{Address the problem of robustly finding localized features in dMRI data by developing new
+      needlet based algorithms.}
+\item{Address the computational burden of processing dMRI data by developing software
+     libraries implementing needlet algorithms which take advantage of massively parallel GPU architectures.}
+\item{Address developing a commercial software package by first releasing open-source software that is open to scrutiny
+      of the scientific community and then build commerical packages from open-source code.}
+\end{itemize*}
 The result of this collaboration will be to provide the research and clinical
-medical communities with unique, state-of-the-art diffusion weighted MRI
-software.
+medical communities with unique, state-of-the-art dMRI software.
 
+\vspace{-8pt}
 \section*{Proposed technical approach}
-The reconstruction of diffusion weighted MRI data can be cast as a
-deconvolution [\cite{Lenglet2008, JIA-VEM-2007}]; mathematically, the problem is
-to reconstruct the probability of diffusion $p({\mathbf R}|\tau)$, for each
-voxel, from the equation
-\begin{equation*}
-  S\left({\mathbf q},\tau\right) = \int_{\mathbb{R}^3} p({\mathbf R}|\tau)
-e^{-2\pi i {\mathbf q}\cdot {\mathbf R}} d{\mathbf R}
-\end{equation*}
-where $S$ is the signal attenuation measured when a field gradient along
-direction ${\mathbf q}$ acts over a time interval $\tau$.  We propose to
-estimate the ODF from this equation using ideas from \cite{KE-NG-PI-2009}
-with needlets constructed using new quadratures from \cite{AHR-BEY-2009}
-and optimized filters.  The ability of needlets to faithfully represent
-localized features will provide for more stable tractography analysis,
-as the artifacts inherent in global bases (e.g. spherical harmonics) can
-lead to spurious fiber identifications and other problems.  In order to
-accurately estimate higher order coefficients of the needlet expansion,
-the ODF reconstruction is cast as a sparse reconstruction problem, for
-which the numerical algorithms used lead to many $(\sim 10^6)$ small
-$(\lesssim 256\times256)$ independent linear systems of equations (one
-system per voxel), which can be efficiently solved on GPUs. These linear
-systems are solved using minimization techniques, for example,
-bi-conjugate gradients. Tech-X currently has libraries of
-GPU-accelerated numerical solvers for tackling these problems
-Generalizing these codes to handle a wide range of problems will be an
-important component of this project.
+\vspace{-5pt}
+The reconstruction of dMRI data can be cast as a
+deconvolution \cite{Lenglet2008}. The problem is
+to reconstruct the probability of diffusion $p({\mathbf r},\tau)$, for each
+voxel, from the equation $S\left({\mathbf q},\tau\right) = \mathcal{F}_{\mathbf r}\left[p({\mathbf r},\tau)\right]$ where $S$ is the signal attenuation measured when a field gradient in
+direction ${\mathbf q}$ acts over a time interval $\tau$ and $\mathcal{F}_{\mathbf r}\left[\cdot\right]$ is
+the 3D Fourier transform.  The full probability $p$ can be approximated by sampling
+with field gradients over the surface of a sphere at fixed gradient strength, which provides the 
+ODF. We propose to estimate the ODF using ideas from
+\cite{KE-NG-PI-2009} with needlets constructed using new quadratures from
+\cite{AHR-BEY-2009} and optimized filters.  The ability of needlets to
+faithfully represent localized features will provide more stable
+tractography analysis, as the artifacts inherent in global bases
+(e.g. spherical harmonics) can lead to spurious fiber identifications and other
+problems.  In order to accurately estimate higher order coefficients of the
+needlet expansion, the ODF reconstruction wiil be cast as a sparse reconstruction
+problem, leading to many $(\sim 10^6)$ small $(\lesssim 256\times256)$ independent linear
+systems of equations (one per voxel) which can be efficiently solved on GPUs. Tech-X currently
+has libraries of GPU-accelerated numerical solvers for tackling these problems.
 
+\vspace{-8pt}
 \section*{Commercialization}
+\vspace{-5pt}
 Tech-X was founded in Boulder, CO in 1994. With a staff of more than 60 people,
 of whom 60\% have Ph.D. degrees in physics, mathematics, engineering, and
 computer science, Tech-X has strong expertise in computational simulations, GPU
 software development, data analysis, and distributed computing applied to
 engineering and scientific applications.
 
-In the initial phase of this project, we will develop an open source
-library that will be incorporated into the Nipy project
-(http://nipy.sourceforge.net), an NIH-funded collection of open source
-tools for multiple tasks in the analysis of neuroimaging data.  All
-software at this stage will be contributed to Nipy under the terms of
-the BSD Software License, which allows for further commercial
-development. By developing open source software, the broader scientific
-community will be to analyze and test our new methodologies. This will
-allow for continuous community critique and development, which
-ultimately will define the utility of this approach. Once the
-methodologies gain traction in the neuroimaging community, Tech-X will
-then develop an FDA approved, commerical software package for clinical
-use. During phase I, we will explore the current market conditions for
-this technology and develop a commercialization plan based on those
-results.
+In the initial phase of this project, we will develop an open source library
+that will be incorporated into the Nipy project (http://nipy.sourceforge.net),
+an NIH-funded collection of open source tools for analysis of neuroimaging data.
+All software at this stage will be contributed to Nipy under the terms of the
+BSD Software License, which allows for further commercial development. By developing
+open source software, the broader scientific community will be to analyze and test
+our new methodologies. This will allow for continuous community critique and 
+development, which ultimately will define the utility of this approach. Once the
+methodologies gain traction in the neuroimaging community, Tech-X will then develop
+an FDA approved, commerical software package for clinical use. During phase I, we will
+explore the current market conditions for this technology and develop a commercialization
+plan based on those results.
 
+\vspace{-8pt}
 \section*{Key personnel}
+\vspace{-5pt}
 This project brings together of number of individuals with varying expertise to make this project successful. These individuals are:
-\begin{itemize}
-  \item{Dr. Fernando Perez received his PhD in Theoretical Physics from the University
-of Colorado in 2002, where he then worked as a postdoctoral researcher in
-Applied Mathematics with professor Gregory Beylkin, on the development of fast
-multiresolution algorithms for the solution of partial differential equations.
-He has made extensive contributions to the development of modern open source
-tools for scientific computing in Python. He is an Associate Researcher at the
-Brain Imaging Center of the University of California, Berkeley.}
+\begin{itemize*}
+  \item{Dr. Fernando Perez received his PhD in Theoretical Physics from the University of Colorado at Boulder in 2002. His area of expertise is in development of modern open source tools for scientific computing in Python and is an Associate Researcher at the Brain Imaging Center of the UC, Berkeley.}
 
-  \item{Dr. Matthew Brett trained as a neurologist before transferring
-    to full-time research in 1996.  Since then he has worked on imaging
-    methodology in positron emission and functional MRI.  He has been
-    writing and supporting imaging software for many years, including
-    the widely used MarsBaR project (http://marsbar.sourceforge.net). He
-    currently works in the Brain Imaging Center in Berkeley, where he
-    maintains and develops NIPY as well as contributing to DIPY, the
-    diffusion imaging project under the NIPY umbrella
-    (http://nipy.sourceforge.net/dipy)}
+  \item{Dr. Matthew Brett trained as a neurologist before transferring to full-time research in 1996. His area of expertise is in imaging methodologies in positron emission and functional and diffusion MRI.}
   
-  \item{Dr. Paul Mullowney received his PhD in Applied Mathematics at the University of Colorado at Boulder. He will contribute his expertise in high-performance computating (GPUs) to this project in order to provide efficient computational solutions for the developed algorithms.}
+  \item{Dr. Paul Mullowney received his PhD in Applied Mathematics at the University of Colorado at Boulder. His area of expertise is in high-performance computing, specifically with GPUs, and is a research mathematician at Tech-X Corp.}
 
-  \item{Dr. Cory Ahrens received Ph.D. in Applied Mathematics at the University of Colorado at Boulder in 2006. Dr. Ahrens will contribute his expertise in developing wavelet based algorithms for the sphere.}
+  \item{Dr. Cory Ahrens received Ph.D. in Applied Mathematics at the University of Colorado at Boulder in 2006. His area of expertise is in developing wavelet based algorithms for the sphere, and is an associate research mathematician at Tech-X Corp.}
   
-\end{itemize}
-
+\end{itemize*}
 
 \bibliographystyle{plain}
 \bibliography{biblio,diffusion_needlets}
