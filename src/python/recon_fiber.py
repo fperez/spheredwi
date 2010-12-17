@@ -10,10 +10,15 @@ from __future__ import print_function
 # Third-party
 import numpy as np
 import matplotlib.pyplot as plt
+import cvxmod as cvx
 
 # Local imports
-import sphquad as sph
+from sphdif import sphquad as sph
 reload(sph)  # For interactive development
+
+# Make global some frequently used functions
+from numpy import dot
+from numpy.linalg import norm
 
 #-----------------------------------------------------------------------------
 # Main script
@@ -26,7 +31,7 @@ N = 18        # maximum degree of subspace
 n_qpnts = 492  # number of points in quadrature
 
 # Sample signal on lower degree quadrature
-qsph1-16-132DP = np.loadtxt('qsph1-16-132DP.dat')
+qsph1_16_132DP = np.loadtxt('qsph1-16-132DP.dat')
 sample_pnts  = qsph1_16_132DP[:, :3]
 n_sample_pnts = 132
 
@@ -40,57 +45,75 @@ b       = 3000                   # s/mm^2
 r_angle = -np.pi/2
 signal = np.zeros(n_sample_pnts)
 for i in range(n_sample_pnts):
-  signal[i] = rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)
+    signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)
 
+SNR = []
 
 nRealizations = 1
-for kk=1:nRealizations
-
+for kk in range(nRealizations):
     # Make Rician noise
     sigma  = 0.0                          # standard deviation
-    noiseR = sigma * randn(size(signal))
-    noiseI = sigma * randn(size(signal))
-    noise  = noiseR + i*noiseI
+    noiseR = sigma * np.random.randn(*signal.shape)
+    noiseI = sigma * np.random.randn(*signal.shape)
+    noise  = noiseR + 1j*noiseI
 
-    SNR(kk) = 10 * log10(norm(signal,2)/norm(noise,2))
-    sprintf('Signal to noise ratio: %0.5g',SNR(kk))
+    SNR.append(10 * np.log10(norm(signal,2)/norm(noise,2)))
+    print('Signal to noise ratio: %0.5g', SNR[kk])
 
     # Add noise to signal
     rSig = signal + noise
     rSig = abs(rSig)      # only real part is used in MRI
 
     # Choose regularization parameter
-    lambda_max = 2*norm(transpose(nA)*rSig.T,inf) # lambda > lambda_max -> zero solution
-    lambda = 0.1275*lambda_max
+    # lambda > lambda_max -> zero solution
+    lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf) 
+    lamb = 0.1275*lambda_max
 
-    print('Solving L1 penalized system...')
-    # Solve L_1 minimization problem with CVX
-    cvx_begin
-      variable ndCoefsl1(nQpnts)
-      cvx_precision('low')
-      minimize( norm( nA * ndCoefsl1 - rSig.T,2) + lambda*norm(ndCoefsl1,1) )
-      subject to
-        0.0 <= ndCoefsl1
-    cvx_end
+    print('Solving L1 penalized system with cvxmod...')
+    # For reference, original specification of the convex optimization problem
+    # using the matlab cvxopt syntax.
+    """
+    variable ndCoefsl1(nQpnts)
+    cvx_precision('low')
+    minimize( norm( nA * ndCoefsl1 - rSig.T,2) + lamb*norm(ndCoefsl1,1) )
+    subject to
+      0.0 <= ndCoefsl1
+      """
+    ndCoefsl1 = cvx.optvar('ndCoefsl1', n_qpnts)
+    nAp = cvx.param('nA', value=cvx.matrix(nA))
+    rSigp = cvx.param('rSig', value=cvx.matrix(rSig))
+    objective = cvx.minimize(cvx.norm2( nAp * ndCoefsl1 - rSigp) +
+                             lamb*cvx.norm1(ndCoefsl1) )
+    constraints = [0.0 <= ndCoefsl1]
+    prob = cvx.problem(objective, constraints)
+
+    # Call the solver
+    prob.solve()
+
+    # Convert the cvxmod objects to plain numpy arrays for further processing
+    nd_coefs_l1 = array(ndCoefsl1.value).squeeze()
 
     # Cutoff those coefficients that are less than cutoff
-    cutoff = mean(ndCoefsl1) + 2.5*std(ndCoefsl1)
-    mask = ndCoefsl1 > cutoff
-    ndCoefsl1_trim = ndCoefsl1 .* mask
+    cutoff = nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std()
+    nd_coefs_l1_trim = np.where(nd_coefs_l1 > cutoff, nd_coefs_l1, 0)
 
-    # Sort coefficients and keep track of indices
-    [sortedCoefs, sortedIndex] = sort(ndCoefsl1_trim,'descend')
-    nSig = sum(ndCoefsl1_trim > 0)              # number of significant coefficients
-    print('Compression: %0.5g',nSig/nQpnts)
+    # Get indices needed for sorting coefs, in reverse order.
+    sortedIndex = nd_coefs_l1_trim.argsort()[::-1]
+    # number of significant coefficients
+    nSig = (nd_coefs_l1_trim > 0).sum()
+    print('Compression: %0.5g',nSig/n_qpnts)
 
     # Used for taking only some of the points---now using the whole sphere
     # Let -1.5 -> 0 and get only the hemisphere with x>0
-    indexPos = sortedIndex(find(quadPnts(sortedIndex(1:nSig),1) >= -1.5))
-    points   = quadPnts(indexPos,1:3)
+    cond  = where(quad_pnts[sortedIndex[:nSig], 0] >= -1.5)
+    indexPos = sortedIndex[cond]
+    points   = quad_pnts[indexPos, :3]
 
     # Sort by x-coordinate in descending order
     points = sortrows(points,[-1])
 
+    # Unported matlab sources
+    """
     # Start clustering algorithm using cosine distance
     nClusters = 4
     ZZ = linkage(points,'single','cosine')
@@ -160,3 +183,4 @@ angle1  = mean(a1); std1     = sqrt(var(a1))
 angle2  = mean(a2); std2     = sqrt(var(a2))
 anglebw = mean(ab); stdbw    = sqrt(var(ab))
 ratio   = mean(r);  stdratio = sqrt(var(r))
+    """

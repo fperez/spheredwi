@@ -24,15 +24,16 @@ def interp_matrix(qpnts, spnts, npgrid, nsamp, deg_max):
     deg_max = maximum degree of spherical harmonic subspace
     """
     # Initialize
-    A = zeros(nsamp,npgrid)
+    A = np.zeros((nsamp,npgrid))
 
     # Create matrix
-    for i in range(nsamp):
-        for j in range(npgrid):
+    for i in xrange(nsamp):
+        for j in xrange(npgrid):
             cosTheta = np.dot(spnts[i], qpnts[j])
             if(abs(cosTheta)>1):
                 cosTheta = np.sign(cosTheta)
             A[i,j] = inv_funk_radon_kernel(cosTheta, deg_max)
+    return A
 
 
 def rand_sig(u, b, n, theta):
@@ -66,8 +67,8 @@ def rand_sig(u, b, n, theta):
     D3 = D1
 
     # orthonormal e-vectors of diffusion tensor
-    V1 = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=float)
-    V2 = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=float)
+    V1 = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=float).reshape(3, 3)
+    V2 = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=float).reshape(3, 3)
     V3 = V1
 
     V2 = dot(rotationMatrix, V2)
@@ -110,9 +111,9 @@ def inv_funk_radon_kernel(mu, N):
     # Need Legendre polynomials
     legPolys = legp(mu, N)
     p_at_zero = legp(0, N)
-    coefs = 2*np.arange(0, N, 2) + 1
+    coefs = 2*np.arange(0, N+1, 2) + 1
     ker = coefs*legPolys[::2]/p_at_zero[::2]
-    value = ker.sum() / (8*np.pi)
+    return ker.sum() / (8*np.pi)
 
 
 def legp(x, n):
@@ -147,3 +148,14 @@ def legp(x, n):
     for i in range(1, n):
         p[i+1] = ((2*i + 1)*x*p[i] - i*p[i-1] ) / (i+1)
     return p
+
+
+def rotation3Dz(theta):
+    """Create a 3D  rotation matrix for rotation about z-axis.
+    """
+    rmat = np.zeros((3,3))
+    rmat[0,0] = rmat[1,1] = np.cos(theta)
+    rmat[0,1] = np.sin(theta)
+    rmat[1,0] = -rmat[0,1]
+    rmat[2,2] = 1
+    return rmat
