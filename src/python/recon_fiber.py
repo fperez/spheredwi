@@ -94,7 +94,7 @@ for kk in range(nRealizations):
     nd_coefs_l1 = np.array(ndCoefsl1.value).squeeze()
 
     # Cutoff those coefficients that are less than cutoff
-    cutoff = nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std()
+    cutoff = nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std(ddof=1)
     nd_coefs_l1_trim = np.where(nd_coefs_l1 > cutoff, nd_coefs_l1, 0)
 
     # Get indices needed for sorting coefs, in reverse order.
