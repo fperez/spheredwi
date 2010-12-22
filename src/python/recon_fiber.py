@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 # Imports
 #-----------------------------------------------------------------------------
-from __future__ import print_function
+from __future__ import print_function, division
 
 # Third-party
 import numpy as np
@@ -58,7 +58,7 @@ for kk in range(nRealizations):
     noise  = noiseR + 1j*noiseI
 
     SNR.append(10 * np.log10(norm(signal,2)/norm(noise,2)))
-    print('Signal to noise ratio: %0.5g', SNR[kk])
+    print('Signal to noise ratio: %0.5g' % SNR[kk])
 
     # Add noise to signal
     rSig = signal + noise
@@ -91,7 +91,7 @@ for kk in range(nRealizations):
     prob.solve()
 
     # Convert the cvxmod objects to plain numpy arrays for further processing
-    nd_coefs_l1 = array(ndCoefsl1.value).squeeze()
+    nd_coefs_l1 = np.array(ndCoefsl1.value).squeeze()
 
     # Cutoff those coefficients that are less than cutoff
     cutoff = nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std()
@@ -101,16 +101,16 @@ for kk in range(nRealizations):
     sortedIndex = nd_coefs_l1_trim.argsort()[::-1]
     # number of significant coefficients
     nSig = (nd_coefs_l1_trim > 0).sum()
-    print('Compression: %0.5g',nSig/n_qpnts)
+    print('Compression: %0.5g' % (nSig/n_qpnts))
 
     # Used for taking only some of the points---now using the whole sphere
     # Let -1.5 -> 0 and get only the hemisphere with x>0
-    cond  = where(quad_pnts[sortedIndex[:nSig], 0] >= -1.5)
+    cond  = np.where(quad_pnts[sortedIndex[:nSig], 0] >= -1.5)
     indexPos = sortedIndex[cond]
     points   = quad_pnts[indexPos, :3]
 
     # Sort by x-coordinate in descending order
-    points = sortrows(points,[-1])
+    #points = sortrows(points,[-1])
 
     # Unported matlab sources
     """
