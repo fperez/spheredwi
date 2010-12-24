@@ -30,6 +30,13 @@ quad_pnts = qsph1_37_492DP[:, :3]
 N = 18        # maximum degree of subspace
 n_qpnts = 492  # number of points in quadrature
 
+## # Alternative quadrature points
+## from dipy.data import get_sphere
+## data_file = get_sphere('symmetric362') # 'symmetric642'
+## quad_pnts = np.load(data_file)['vertices']
+## N = 18
+## n_qpnts = len(quad_pnts)
+
 # Sample signal on lower degree quadrature
 qsph1_16_132DP = np.loadtxt('qsph1-16-132DP.dat')
 sample_pnts  = qsph1_16_132DP[:, :3]
