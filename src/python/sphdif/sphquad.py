@@ -163,10 +163,14 @@ def rotation3Dz(theta):
     return rmat
 
 
-def angle(x, y):
+def angle(x, y, deg=False):
     """Return angle between two vectors in R^3, in radians
     """
-    return np.arrcos(np.dot(x, y)/ (norm(x)*norm(y)))
+    rad_angle = np.arccos(np.dot(x, y)/ (norm(x)*norm(y)))
+    if deg:
+        return rad_angle*(180.0/np.pi)
+    else:
+        return rad_angle
 
 
 def spherical_distances(x, y):

@@ -49,7 +49,7 @@ nA = sph.interp_matrix(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
 print('Creating signal...')
 n_fibers = 2                      # number of Gaussian components (max n=3)
 b       = 3000                   # s/mm^2
-r_angle = -np.pi/2
+r_angle = -np.pi/4
 signal = np.zeros(n_sample_pnts)
 for i in range(n_sample_pnts):
     signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)
