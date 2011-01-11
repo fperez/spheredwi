@@ -107,8 +107,7 @@ def inv_funk_radon_kernel(mu, N):
     """
 
     # Check that -1 <= mu <= 1
-    if abs(mu)>1.0:
-        mu = np.sign(mu)
+    mu = np.clip(mu, -1, 1)
 
     # Need Legendre polynomials
     legPolys = legp(mu, N)
