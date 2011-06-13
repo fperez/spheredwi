@@ -1,0 +1,434 @@
+%\documentclass[landscape,a0b,final,a4resizeable]{a0poster}
+\documentclass[landscape,a0b,final]{a0poster}
+%\documentclass[portrait,a0b,final,a4resizeable]{a0poster}
+%\documentclass[portrait,a0b,final]{a0poster}
+%%% Option "a4resizeable" makes it possible ot resize the
+%   poster by the command: psresize -pa4 poster.ps poster-a4.ps
+%   For final printing, please remove option "a4resizeable" !!
+
+
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{multicol}
+\usepackage{pstricks,pst-grad}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition of some variables and colors
+%\renewcommand{\rho}{\varrho}
+%\renewcommand{\phi}{\varphi}
+\setlength{\columnsep}{3cm}
+\setlength{\columnseprule}{2mm}
+\setlength{\parindent}{0.0cm}
+
+\newtheorem{thm}{Theorem}
+
+\newcommand{\Har}{{\mathcal H}}
+
+\newcommand{\HH}{{\mathcal P}}
+
+\newcommand{\Qu}{{\mathbb H}}
+
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+
+\newcommand{\odotop}{{\boldsymbol{\omega}\cdot\boldsymbol{\omega}'}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%               Background                     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\background}[3]{
+  \newrgbcolor{cgradbegin}{#1}
+  \newrgbcolor{cgradend}{#2}
+  \psframe[fillstyle=gradient,gradend=cgradend,
+  gradbegin=cgradbegin,gradmidpoint=#3](0.,0.)(1.\textwidth,-1.\textheight)
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                Poster                        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{poster}{
+  \begin{center}
+  \begin{minipage}[c]{0.98\textwidth}
+}{
+  \end{minipage} 
+  \end{center}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                pcolumn                       %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{pcolumn}[1]{
+  \begin{minipage}{#1\textwidth}
+  \begin{center}
+}{
+  \end{center}
+  \end{minipage}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                pbox                          %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newrgbcolor{lcolor}{0. 0. 0.80}
+\newrgbcolor{gcolor1}{1. 1. 1.}
+\newrgbcolor{gcolor2}{.80 .80 1.}
+
+\newcommand{\pbox}[4]{
+\psshadowbox[#3]{
+\begin{minipage}[t][#2][t]{#1}
+#4
+\end{minipage}
+}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                myfig                         %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \myfig - replacement for \figure
+% necessary, since in multicol-environment 
+% \figure won't work
+
+\newcommand{\myfig}[3][0]{
+\begin{center}
+  \vspace{1.25cm}
+  \includegraphics[width=#3\hsize,angle=#1]{#2}
+  \nobreak\medskip
+\end{center}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                mycaption                     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \mycaption - replacement for \caption
+% necessary, since in multicol-environment \figure and
+% therefore \caption won't work
+
+%\newcounter{figure}
+\setcounter{figure}{1}
+\newcommand{\mycaption}[1]{
+  \vspace{0.25cm}
+  \begin{quote}
+    {{\sc Figure} \arabic{figure}: #1}
+  \end{quote}
+  \vspace{0.25cm}
+  \stepcounter{figure}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Begin of Document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\background{1. 1. 1.}{1. 1. 1.}{0.5}
+
+\vspace*{2cm}
+
+
+\newrgbcolor{lightblue}{0. 0. 0.80}
+\newrgbcolor{white}{1. 1. 1.}
+\newrgbcolor{whiteblue}{.80 .80 1.}
+
+
+\begin{poster}
+
+%%%%%%%%%%%%%%%%%%%%%
+%%% Header
+%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+\begin{pcolumn}{0.98}
+
+\pbox{0.95\textwidth}{}{linewidth=2mm,framearc=0.3,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{
+
+%%% Pic1
+\begin{minipage}[c][9cm][c]{0.1\textwidth}
+  \begin{flushleft}
+    \myfig[0]{UCBerkeleyLogo.eps}{0.9}
+  \end{flushleft}
+\end{minipage}
+%%% Title
+\begin{minipage}[c][9cm][c]{0.78\textwidth}
+  \begin{center}
+    {\sc \Huge Alternate grids for diffusion weighted imaging \\ [7mm] and associated
+reconstruction algorithms}\\ [5mm]
+    {\Large Fernando Perez and St\'{e}fan van der Walt\\
+    University of California Berkeley, Berkeley CA \\[5mm]
+    Cory Ahrens\\
+    Colorado School of Mines, Golden CO}
+  \end{center}
+\end{minipage}
+%%% Pic2
+\begin{minipage}[c][9cm][c]{0.1\textwidth}
+  \begin{flushleft}
+    \myfig[0]{CSM_Logo.eps}{0.9}
+  \end{flushleft}
+\end{minipage}
+
+}
+\end{pcolumn}
+\end{center}
+
+
+\vspace*{1cm}
+
+
+%%% Begin of Multicols-Enviroment
+\begin{multicols}{3}
+
+
+%%% Introduction
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Introduction\end{center}}\end{center}
+\vspace{0.25cm}
+Many problems in physics, mathematics and engineering involve integration
+and interpolation on the sphere in $\mathbb{R}^{3}$. Of particular
+importance are discretizations of rotationally invariant subspaces
+of $L^{2}\left(\mathbb{S}^{2}\right)$ that integrate all spherical
+harmonics up to a fixed order and degree. Typically, the sphere is discretized using
+equally spaced nodes in azimuthal angle and Gauss-Legendre nodes in polar angle,
+leading to an unreasonably dense concentration of nodes near the poles. In a variety
+of applications such concentration of nodes may lead to problems when using
+these grids. Alternatively, Sobolev \cite{SOBOLEV-1962} suggested the use of
+grids that are invariant under finite rotation groups. In such constructions
+there is no clustering of nodes and, moreover, the number of nodes necessary to
+integrate a particular subspace is close to optimal. 
+
+We develop a systematic numerical approach for constructing
+nearly optimal quadratures invariant under the icosahedral group to
+integrate rotationally invariant subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$
+up to a fixed order and degree. Using these grids and a reproducing
+kernel, we show how to replace the standard basis of spherical harmonics
+by a representation formed using a single function centered at the
+quadrature nodes. The reproducing kernel is mostly concentrated near 
+the corresponding grid point. In this representation, the 
+coefficients, up to a factor, are the values on the grid of the function 
+being represented. We may interpret this construction as an analogue of 
+Lagrange interpolation on the sphere. 
+
+We view our approach as the first step in constructing a local and
+multiresolution representation of functions on the sphere that respects
+rotationally invariant subspaces.  
+
+
+%%% Preliminaries
+\vspace{0.25cm}
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Preliminaries\end{center}}\end{center}
+\vspace{0.25cm}
+
+Here we establish notation and state some well known results about
+spherical harmonics, reproducing kernels and state two theorems by Sobolev.
+
+We denote the unit sphere in $\mathbb{R}^{3}$ as $\mathbb{S}^{2}$. An orthonormal basis for $L^{2}\left(\mathbb{S}^{2}\right)$ is given by the spherical harmonics, 
+\begin{equation}
+Y_{n}^{m}\left(\theta,\phi\right)=\frac{1}{\sqrt{2\pi}}\overline{P}_{n}^{m}\left(\cos\theta\right)e^{im\phi},\;0\le|m|\le n,\quad n=0,1,\dots,\label{eq:ylm}
+\end{equation}
+where the polar angle $\theta\in[0,\pi]$, the azimuthal angle $\phi\in[0,2\pi)$
+and $\overline{P}_{n}^{m}$ are the normalized associated Legendre
+functions. We define a subspace of spherical harmonics with fixed degree $n$ as
+\begin{equation}
+\Har_{n}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\,\:|m|\le n\right\} .\label{eq:space-sp-h-fixed-degree}
+\end{equation}
+The dimension of $\Har_{n}$ is $2n+1$. The subspace of maximum
+degree $N$ is then the direct sum
+\begin{equation}
+\HH_{N}=\bigoplus_{n=0}^{N}\Har_{n}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\:|m|\le n,\:0\le n\le N\right\} \label{eq:fsubsp}
+\end{equation}
+and has dimension $\left(N+1\right)^{2}$. The reproducing kernel for $\HH_{N}$, 
+\begin{equation}
+K\left(\bomega\cdot\bomega'\right) = \sum_{n=0}^{N}\frac{2n+1}{4\pi}P_{n}\left(\odotop\right),\label{eq:kernel}
+\end{equation}
+satisfies 
+\begin{equation}
+f\left(\bomega\right)=\int_{\mathbb{S}^{2}}K\left(\odotop\right)f\left(\bomega'\right)d\Omega',\,\,\,\, f\in\HH_{N}.\label{eq:rep}
+\end{equation}
+The identity in (\ref{eq:rep}) may be verified by using the addition theorem for spherical harmonics.
+We rely on (\ref{eq:rep}) to develop a representation of functions
+in $\HH_{N}$ which is an analogue of Lagrange interpolation on the sphere, known as hyper-interpolation.
+
+Sobolev's paper \cite{SOBOLEV-1962} contains two key results that
+we now summarize, specialized to the icosahedral rotation group:
+\begin{thm}
+\label{thm:invQ}Let Q be a quadrature rule invariant under the group
+G. Then Q is exact for all functions $f\in\HH_{N}$ if and only if
+Q is exact for functions $f$ invariant under G. 
+\end{thm}
+This theorem reduces the size of the system of nonlinear
+equations which must be solved to determine a quadrature invariant
+under the group $G$. The next result gives a formula to calculate
+the number of invariant functions under the group $G$ in a subspace
+of spherical harmonics $\Har_{n}$ of a given degree $n$. Let $q_{1}=5$
+be the number of edges meeting at a vertex of an icosahedron, $q_{2}=3$
+be the number of sides of its (triangular) face and $q_{3}=2$ denote
+the order of rotation about mid-points of opposing edges. 
+\begin{thm}
+\label{thm:Snumbers}For a given degree $n$, the number of functions
+invariant under the icosahedral rotation group in a subspace of spherical
+harmonics $\Har_{n}$ is given by
+\[
+S(n)=\left\lfloor \frac{n}{q_{1}}\right\rfloor +\left\lfloor \frac{n}{q_{2}}\right\rfloor +\left\lfloor \frac{n}{q_{3}}\right\rfloor -n+1,
+\]
+where $\left\lfloor \,\right\rfloor$ denotes the integer part.
+\end{thm}
+
+%%% Quadratures
+\vspace{0.25cm}
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Quadratures for the sphere\end{center}}\end{center}
+\vspace{0.25cm}
+
+The main difficulty in constructing quadratures comes from the need
+to solve a large system of nonlinear equations. Without using special
+structure of these equations, general root finding or optimization
+methods typically fail. The essence of our approach is to develop
+and use such structure within a root finding method.
+
+To start, there are four different types of orbits of the icosahedral
+rotation group. In general, a point on the sphere under the action
+of the group generates a total of $60$ points. However, if a point
+is a vertex of the icosahedron, then it generates a total of only
+$12$ distinct points. Also, if a point is the projection of the center
+of an icosahedron face onto the sphere, it generates $20$ distinct
+points in total. Finally, if a point is the projection onto the sphere
+of the mid-point of an edge, it generates a total of $30$ distinct
+points. When describing these different types of orbits it is sufficient
+to consider a single point, a generator of its orbit. The orbit of
+a point with spherical coordinates $\left(\theta,\phi\right)$ is
+the set $\left\{ \left(g_{i}^{-1}\theta,g_{i}^{-1}\phi\right)\:|\: g_{i}\in G\right\} $
+and, depending on the type of orbit, has cardinality $12$, $20$,
+$30$ or $60$.
+
+With these types of orbits in mind, we consider four types of quadratures.
+The first type assumes that all generators, except for a vertex of
+the icosahedron, give rise to orbits of size $60$, i.e., \begin{equation}
+Q_{v}\left(f\right)=w_{v}\sum_{i=1}^{12}f\left(\theta_{i}^{v},\phi_{i}^{v}\right)+\sum_{j=1}^{N_{g}}w_{j}\sum_{i=1}^{60}f\left(\theta_{i}^{\left(j\right)},\phi_{i}^{\left(j\right)}\right),\label{eq:Q-v}\end{equation}
+where $\left\{ \theta_{i}^{v},\phi_{i}^{v}\right\} _{i=1}^{12}$ are
+coordinates of the vertices of an icosahedron inscribed in the unit
+sphere, $w_{v}$ their associated weight, $N_{g}$ is the number of
+generators with coordinates $\left\{ \theta^{\left(j\right)},\phi^{\left(j\right)}\right\} _{j=1}^{N_{g}}$
+and weights $\left\{ w_{j}\right\} _{j=1}^{N_{g}}$. For each $g_{i}\in G$,
+we denote $\left(\theta_{i}^{\left(j\right)},\phi_{i}^{\left(j\right)}\right)=\left(g_{i}^{-1}\theta^{\left(j\right)},g_{i}^{-1}\phi^{\left(j\right)}\right)$.
+
+The second type of quadrature has the form
+\begin{equation}
+Q_{vf}\left(f\right)=w_{v}\sum_{i=1}^{12}f\left(\theta_{i}^{v},\phi_{i}^{v}\right)+w_{f}\sum_{i=1}^{20}f\left(\theta_{i}^{f},\phi_{i}^{f}\right)+\sum_{j=1}^{N_{g}}w_{j}\sum_{i=1}^{60}f\left(\theta_{i}^{\left(j\right)},\phi_{i}^{\left(j\right)}\right),\label{eq:Q-vf}
+\end{equation}
+where $\left\{ \theta_{i}^{f},\phi_{i}^{f}\right\} _{i=1}^{20}$ are
+coordinates of the face centers of the icosahedron projected onto
+the sphere and $w_{f}$ is the associated weight.
+
+The other quadratures are constructed in a similar manner. Using Theorem~\ref{thm:Snumbers}, we determine the number of invariant functions in the subspace $\Har_{n}$.Theorem~\ref{thm:invQ} allows us to limit the number of equations to not exceed the number of invariant functions. We solve the resulting system of equations using Newtons's method.
+
+Figure 1 shows a type 1 quadrature for $\HH_{145}$ with 7121 nodes.
+%\begin{center}
+  % first argument: eps-file
+  % second argument: stretching-factor relative to Column-width (<1)
+  % optional argument: rotation angle (0-360), default=0
+%  \myfig[0]{N145.eps}{0.25}
+%  \mycaption{Type 1 quadrature for degree $N=145$.}
+%\end{center}
+%
+%\begin{center}
+%  \includegraphics[scale=0.45]{N145.eps}
+%  %\vspace{0.25cm}
+%  \begin{quote}{Figure 1: Type 1 quadrature for degree $N=145$.}\end{quote}
+%\end{center}
+
+%\vspace{3cm}
+
+
+
+%
+A useful way of measuring the efficiency of a quadrature is the ratio of the dimension of the subspace
+to be integrated to the (maximum) number of degrees of freedom in
+the quadrature rule (two coordinates and a weight for each node):
+%
+\begin{equation}
+\eta=\frac{\left(N+1\right)^{2}}{3M},\label{eq:efficiency}
+\end{equation}
+%
+where $M$ is the number of nodes. If $\eta=1$, we call the quadrature optimal.
+%
+%\begin{center}
+%  \includegraphics[scale=1.5]{Eff_new.eps}
+%  \vspace{0.25cm}
+%  \begin{quote}{Figure 2: Potential efficiency (\ref{eq:efficiency})
+%of quadrature (\ref{eq:Q-v}) as a function of degree $N$ of subspace
+%$\HH_{N}$ computed using Theorem~\ref{thm:Snumbers}. Also shown is the efficiency of the standard 
+%quadrature $\eta=2/3$.}\end{quote}
+%\end{center}
+%
+In Figure~2 we display the
+potential efficiency of quadrature $Q_{v}$ as a function of the degree
+$N$ of subspace $\HH_{N}$ using Theorem~\ref{thm:Snumbers} to count invariants and superimpose the
+actual efficiencies of computed quadratures. The behavior of efficiency
+of other quadratures is similar. For comparison, efficiency of the standard quadrature $\eta=2/3$
+is also shown. Solid dots indicate the efficiency of computed quadratures
+using our approach.
+
+
+
+%%%Local representations
+\vspace{0.25cm}
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Local representations\end{center}}\end{center}
+\vspace{0.25cm}
+
+Using the new quadratures, we construct an alternative representation for functions on invariant
+subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$ by discretizing Eq. (\ref{eq:rep})
+\begin{equation}
+f\left(\boldsymbol{\omega}\right)=\sum_{j=1}^{M}K\left(\bomega\cdot\bomega_{j}\right)w_{j}f\left(\bomega_{j}\right).\label{eq:f-semi-disc}
+\end{equation}
+If $f\in\HH_{N}$, then (\ref{eq:f-semi-disc}) provides
+an exact reconstruction of the function $f$ from its values $f\left(\bomega_{1}\right),f\left(\bomega_{2}\right),\dots,f\left(\bomega_{M}\right)$.
+The functions $\left\{ K\left(\bomega\cdot\bomega_{j}\right)w_{j}\right\} _{j=1}^{M}$
+play a role similar to that of Lagrange interpolating polynomials
+and, therefore, we may think of (\ref{eq:f-semi-disc}) as an analogue
+of Lagrange interpolation on the sphere.
+
+Further localization of $K$ may be achieved by optimization techniques.
+
+
+
+%%% This starts another column
+%%% Section
+\vspace{0.25cm}
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Conclusions\end{center}}\end{center}
+\vspace{0.25cm}
+
+We introduced a numerical method for constructing quadratures
+invariant under the icosahedral group which integrate rotationally
+invariant subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$. Using these quadratures,
+an exact representation of functions on rotationally invariant
+subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, similar to Lagrange
+interpolation, was developed. The results of this paper are the first step to develop practical computational methods for applications that deal with the sphere. See \cite{AHR-BEY-2009} for more details.
+
+\vspace{0.25cm}
+\emph{This research was partially supported by AFOSR grant FA9550-07-1-0135,
+NSF grant DMS-0612358, DOE/ORNL grants 4000038129 and DE-FG02-03ER25583.}
+
+
+%%% References
+\bibliographystyle{plain}
+\bibliography{poster}
+
+
+\end{multicols}
+
+\end{poster}
+
+\end{document}
+
