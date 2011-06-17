@@ -227,14 +227,7 @@ We denote the unit sphere in $\mathbb{R}^{3}$ as $\mathbb{S}^{2}$. An orthonorma
 \end{equation}
 %
 where the polar angle $\theta\in[0,\pi]$, the azimuthal angle $\phi\in[0,2\pi)$
-and $\overline{P}_{n}^{m}$ are the normalized associated Legendre functions. We define a subspace of spherical harmonics with fixed maximum degree $N$ as
-%
-\begin{equation}
-  \HH_{N}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\:|m|\le n,\:0\le n\le N\right\},
-  \label{eq:fsubsp}
-\end{equation}
-%
-which has dimension $\left(N+1\right)^{2}$. The reproducing kernel for $\HH_{N}$, 
+and $\overline{P}_{n}^{m}$ are the normalized associated Legendre functions. We define a subspace of spherical harmonics with fixed maximum degree $N$ as $\HH_{N}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\:|m|\le n,\:0\le n\le N\right\}$, which has dimension $\left(N+1\right)^{2}$. The reproducing kernel for $\HH_{N}$, 
 %
 \begin{equation}
   K\left(\bomega\cdot\bomega'\right) = \sum_{n=0}^{N}\frac{2n+1}{4\pi}P_{n}\left(\odotop\right),
@@ -259,32 +252,27 @@ The Funk-Radon transform is the spherical analog of the Radon transform and is d
   \label{eq:funk-radon}
 \end{equation}
 %
-where $\delta$ is the Dirac mass and effectively causes the integration to be taken over the equator defined by the intersection of $\mathbb{S}^2$ and the plane $\mathbf{u}\cdot\mathbf{v} = 0$. The last result we will need is the Funk-Hecke theorem, which states that for any continuous function $f\left(t\right)$ on $\left[-1,1\right]$ and any spherical harmonic $Y_n^m$
+where $\delta$ is the Dirac mass and effectively restricts the integration to be over the equator defined by the intersection of $\mathbb{S}^2$ and the plane $\mathbf{u}\cdot\mathbf{v} = 0$. The last result we will need is the Funk-Hecke theorem, which states that for any continuous function $f\left(t\right)$ on $\left[-1,1\right]$ and any spherical harmonic $Y_n^m$
 %
 \begin{equation}
   \int_{\mathbb{S}^{2}} f\left(\mathbf{u}\cdot\mathbf{v}\right)Y_n^m\left(\mathbf{v}\right)d\mathbf{v} = \lambda_n Y_n^m\left(\mathbf{u}\right),         
   \label{eq:funk-hecke}
 \end{equation}
 %
-where
-\begin{equation}
-  \lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt         
-  \label{eq:evalue}
-\end{equation}
-and $P_n$ is the $n^{\mathrm{th}}$ degree Legendre polynomial. We remark that this theorem can be extended to distributions as well. 
+where $\lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt$ and $P_n$ is the $n^{\mathrm{th}}$ degree Legendre polynomial. We remark that this theorem can be extended to distributions as well. 
 %
 %%% Quadratures -- new header/section
 \vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Quadratures for the sphere\end{center}}\end{center}
 \vspace{0.25cm}
 Quadratures are at the heart of many methods for discretely sampling functions. These methods typically result from 
-discretizing an integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
+discretizing some type of integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
 
-While one-dimensional quadratures are well understood, developing quadratures for the sphere is an active area of research. The difficulty in constructing quadratures for the sphere is related to its topology. A variety of quadratures for the sphere already exist, ranging from exact Cartesian product quadratures to approximate quadratures found by treating nodes as charged particles and minimizing their electrostatic potential energy. 
+While one-dimensional quadratures are well understood, developing quadratures for the sphere is an active area of research. The difficulty in constructing quadratures for the sphere is related to its topology. A variety of quadratures for the sphere already exist, ranging from exact Cartesian product quadratures to approximate quadratures found by treating nodes as charged particles and minimizing their electrostatic potential energy. From the point of view of efficient function representation, especially of localized functions, many existing quadratures have serious drawbacks, ranging from clustering of nodes to poor conditioning of resulting matrices.
 
-Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. 
+Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.~\cite{AHR-BEY-2009}. 
 
-To visualize how well a point set covers the sphere we assign at each point a Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength on the sphere and $\sigma^2=2/n\log\left(2\right)$ with $n$ the number of points. Figure~1 shows a coverage map of symmeterized version of a 64 point grid regularly used for diffusion tensor imaging at UC Berkeley. The displayed version has 128 points. Figure~2 shows a coverage map for a quadrature with 72 nodes taken from Ref.~\cite{AHR-BEY-2009}.
+To visualize how well a point set covers the sphere we assign to each point a Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength measured from the point and $\sigma^2=2/n\log\left(2\right)$ with $n$ the number of points. Figure~1 shows a coverage map of a symmeterized version of a 64 point grid regularly used for diffusion tensor imaging at UC Berkeley. The 64 points lie in the upper hemisphere. Another 64 points where added to the grid by reflecting the original 64 points through the origin. The displayed version thus has 128 points. Figure~2 shows a coverage map for a quadrature with 72 nodes (originally distributed over the whole sphere) taken from Ref.~\cite{AHR-BEY-2009}.
 \begin{center}
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
@@ -301,7 +289,7 @@ To visualize how well a point set covers the sphere we assign at each point a Ga
   \mycaption{Coverage map for quadrature with 72 nodes from Ref.~\cite{AHR-BEY-2009}.}
 \end{center}
 %
-The two figures clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley.
+Figures 1 and 2 clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley. Moreover, they are approximately half as many points for the quadrature, but the coverage is better. Thus, using the quadrature nodes as measurement directions for diffusion MRI may lead to reduced total measurement time while retaining the same or better resolution. This is currently under investigation.  
 
 The quadratures from Ref.~\cite{AHR-BEY-2009} will now be used to develop a localized representation of functions on the sphere, ideally suited for reconstruction of HARDI signals.
 
@@ -311,15 +299,15 @@ The quadratures from Ref.~\cite{AHR-BEY-2009} will now be used to develop a loca
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Local representations\end{center}}\end{center}
 \vspace{0.25cm}
 
-Using the new quadratures, we construct an alternative representation for functions on invariant
-subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$ by discretizing Eq. (\ref{eq:rep})
+Using the quadratures from Ref.~\cite{AHR-BEY-2009}, we construct an alternative representation for functions on invariant
+subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, namely $\HH_{N}$, by discretizing Eq. (\ref{eq:rep})
 %
 \begin{equation}
-  f\left(\boldsymbol{\omega}\right)=\sum_{j=1}^{M}K\left(\bomega\cdot\bomega_{j}\right)w_{j}f\left(\bomega_{j}\right).
+  f\left(\boldsymbol{\omega}\right)=\sum_{j=1}^{M}K\left(\bomega\cdot\bomega_{j}\right)w_{j}f\left(\bomega_{j}\right),
   \label{eq:f-semi-disc}
 \end{equation}
 %
-If $f\in\HH_{N}$, then (\ref{eq:f-semi-disc}) provides
+with $\bomega_{j}$ a quadrature point and $w_{j}$ the associated weight. If $f\in\HH_{N}$, then (\ref{eq:f-semi-disc}) provides
 an exact reconstruction of the function $f$ from its values $f\left(\bomega_{1}\right),f\left(\bomega_{2}\right),\dots,f\left(\bomega_{M}\right)$.
 The functions $\left\{ K\left(\bomega\cdot\bomega_{j}\right)w_{j}\right\} _{j=1}^{M}$
 play a role similar to that of Lagrange interpolating polynomials
@@ -348,31 +336,31 @@ The diffusion weighted MR signal has the form
 where $p\left(\mathbf{r}\right)$ is the ensemble averaged probability distribution function. To reconstruct directional information, the radial projection of $s\left(\mathbf{q}\right)$, the so-called orientation distribution function (ODF), can be used and is defined by
 %
 \begin{equation}
-  \psi\left(\mathbf{u}\right) = \int_0^{\infty} p\left(\mathbf{u}r\right) dr,\;\; \mathbf{u}\in\mathbb{S}^2
+  \psi\left(\mathbf{u}\right) = \int_0^{\infty} p\left(\mathbf{u}r\right) dr,\;\; \mathbf{u}\in\mathbb{S}^2.
 \end{equation}
-Tuch \cite{TUCH-2004} showed that 
+Because of the localized features found in $\psi\left(\mathbf{u}\right)$, the representation $\psi\left(\mathbf{u}\right) \approx \sum_{j=1}^M \psi_j K\left(\mathbf{u}\cdot\bomega_{j}\right)$ is attractive since the coefficients will be sparse, i.e., there will be only a few dominant coefficients corresponding to the peak directions of $\psi$. Tuch \cite{TUCH-2004} showed that the ODF can be approximated by the Funk-Radon transform of the diffusion signal $s$, i.e.,
 %
 \begin{equation}
   \psi\left(\mathbf{u}\right) \approx \mathcal{G}\left[s\right]\left(\mathbf{u}\right).
 \end{equation}
 %
-Similar to \cite{MICHA-2009}
+Thus, using ideas similar to those found in \cite{L-C-D-H-2009}, we propose reconstructing the ODF $\psi$ from measurements of the diffusion signal $s\left(\bomega_{j}\right)$, $j=1,2,...J$ by construction the system of $J$ equations
+%
+\begin{equation}
+  s\left(\bomega_{j}\right) \approx \sum_{i=1}^M \psi_i \mathcal{G}^{-1}\left[K\left(\cdot\bomega_{i}\right)\right]\left(\bomega_{j}\right), \;\;\;j=1,2,3,...J.
+\end{equation}
+%
+We solve the resulting under-determined system for the $\psi_i$ using an $l_1$ penalized least-squares minimization technique. Note that $\mathcal{G}^{-1}\left[K\left(\cdot\bomega_{i}\right)\right]\left(\bomega_{j}\right)$ can be calculated explicitly using the Funk-Hecke theorem. The coefficients $\psi_i$ can then be used to determine dominant fiber directions. Robust methods for accomplishing this are currently being developed.
 %%% Conclusions -- new header/section
 \vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Conclusions\end{center}}\end{center}
 \vspace{0.25cm}
 
-We introduced a numerical method for constructing quadratures
-invariant under the icosahedral group which integrate rotationally
-invariant subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$. Using these quadratures,
-an exact representation of functions on rotationally invariant
-subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, similar to Lagrange
-interpolation, was developed. The results of this paper are the first step to develop practical computational methods for applications that deal with the sphere. See \cite{AHR-BEY-2009} for more details.
+We introduced...
 
 \vspace{0.25cm}
 \emph{This research was partially supported by AFOSR grant FA9550-07-1-0135,
 NSF grant DMS-0612358, DOE/ORNL grants 4000038129 and DE-FG02-03ER25583.}
-
 
 %%% References
 \bibliographystyle{plain}

@@ -10,6 +10,24 @@
   year           = 2004
 }
 
+@Article{L-C-D-H-2009,
+  Author         = {Lenglet, C. and Campbell, J.S.W. and {et al.}},
+  Title          = {Mathematical methods for diffusion {MRI} processing},
+  Journal        = {Neuroimage},
+  Volume         = {45},
+  Number         = {1},
+  Pages          = {S111-S122},
+  year           = 2009
+}
+
+@Article{CANDE-2010,
+  Author         = {Candes, E.},
+  Title          = {Compressed sensing with coherent and redundant
+                   dictionaries},
+  Journal        = {arXiv:1005.2613v3},
+  year           = 2010
+}
+
 @Article{AHR-BEY-2009,
   Author         = {Ahrens, C. and Beylkin, G.},
   Title          = {Rotationally invariant quadratures for the sphere},
