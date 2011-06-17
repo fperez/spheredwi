@@ -4,36 +4,36 @@ The style file: plain.bst
 Database file #1: poster.bib
 You've used 3 entries,
             2118 wiz_defined-function locations,
-            519 strings with 4379 characters,
-and the built_in function-call counts, 935 in all, are:
-= -- 95
-> -- 27
+            519 strings with 4366 characters,
+and the built_in function-call counts, 1020 in all, are:
+= -- 102
+> -- 38
 < -- 0
-+ -- 11
-- -- 8
-* -- 66
-:= -- 162
++ -- 15
+- -- 12
+* -- 77
+:= -- 176
 add.period$ -- 9
 call.type$ -- 3
-change.case$ -- 13
+change.case$ -- 15
 chr.to.int$ -- 0
 cite$ -- 3
 duplicate$ -- 33
-empty$ -- 82
-format.name$ -- 8
-if$ -- 193
+empty$ -- 84
+format.name$ -- 12
+if$ -- 209
 int.to.chr$ -- 0
 int.to.str$ -- 3
 missing$ -- 3
 newline$ -- 18
 num.names$ -- 6
-pop$ -- 7
+pop$ -- 9
 preamble$ -- 1
-purify$ -- 10
+purify$ -- 12
 quote$ -- 0
 skip$ -- 22
 stack$ -- 0
-substring$ -- 88
+substring$ -- 94
 swap$ -- 3
 text.length$ -- 0
 text.prefix$ -- 0
