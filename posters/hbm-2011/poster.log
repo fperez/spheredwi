@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.6)  13 JUN 2011 12:02
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2011.4.6)  16 JUN 2011 22:33
 entering extended mode
  %&-line parsing enabled.
 **poster.tex
@@ -251,16 +251,23 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 File: CSM_Logo.eps Graphic file (type eps)
  <CSM_Logo.eps>
+File: coverage_64_full_range.eps Graphic file (type eps)
+
+<coverage_64_full_range.eps>
+File: coverage_72_full_range.eps Graphic file (type eps)
+ <coverage_72_full_range.eps>
+File: splot.eps Graphic file (type eps)
+ <splot.eps>
 (./poster.bbl) [1
 
 ] (./poster.aux) ) 
 Here is how much of TeX's memory you used:
- 2893 strings out of 495062
- 37176 string characters out of 1182645
- 171473 words of memory out of 3000000
- 6044 multiletter control sequences out of 15000+50000
+ 2897 strings out of 495062
+ 37264 string characters out of 1182645
+ 164633 words of memory out of 3000000
+ 6045 multiletter control sequences out of 15000+50000
  12592 words of font info for 46 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 32i,13n,52p,376b,678s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 32i,13n,52p,761b,678s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on poster.dvi (1 page, 22564 bytes).
+Output written on poster.dvi (1 page, 21000 bytes).
