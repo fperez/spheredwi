@@ -2,7 +2,7 @@
 \documentclass[landscape,a0b,final]{a0poster}
 %\documentclass[portrait,a0b,final,a4resizeable]{a0poster}
 %\documentclass[portrait,a0b,final]{a0poster}
-%%% Option "a4resizeable" makes it possible ot resize the
+%%% Option "a4resizeable" makes it possible to resize the
 %   poster by the command: psresize -pa4 poster.ps poster-a4.ps
 %   For final printing, please remove option "a4resizeable" !!
 
@@ -193,22 +193,9 @@ reconstruction algorithms}\\ [5mm]
 \begin{multicols}{3}
 
 
-%%% Introduction
+%%% Introduction --- new header/section
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Introduction\end{center}}\end{center}
 \vspace{0.25cm}
-Many problems in physics, mathematics and engineering involve integration
-and interpolation on the sphere in $\mathbb{R}^{3}$. Of particular
-importance are discretizations of rotationally invariant subspaces
-of $L^{2}\left(\mathbb{S}^{2}\right)$ that integrate all spherical
-harmonics up to a fixed order and degree. Typically, the sphere is discretized using
-equally spaced nodes in azimuthal angle and Gauss-Legendre nodes in polar angle,
-leading to an unreasonably dense concentration of nodes near the poles. In a variety
-of applications such concentration of nodes may lead to problems when using
-these grids. Alternatively, Sobolev \cite{SOBOLEV-1962} suggested the use of
-grids that are invariant under finite rotation groups. In such constructions
-there is no clustering of nodes and, moreover, the number of nodes necessary to
-integrate a particular subspace is close to optimal. 
-
 We develop a systematic numerical approach for constructing
 nearly optimal quadratures invariant under the icosahedral group to
 integrate rotationally invariant subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$
@@ -226,185 +213,151 @@ multiresolution representation of functions on the sphere that respects
 rotationally invariant subspaces.  
 
 
-%%% Preliminaries
+%%% Preliminaries  --- new header/section
 \vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Preliminaries\end{center}}\end{center}
 \vspace{0.25cm}
 
-Here we establish notation and state some well known results about
-spherical harmonics, reproducing kernels and state two theorems by Sobolev.
+Here we establish notation and state some results about spherical harmonics, reproducing kernels for subspaces of spherical harmonics, the Funk-Radon transform and the Funk-Hecke theorem.
 
 We denote the unit sphere in $\mathbb{R}^{3}$ as $\mathbb{S}^{2}$. An orthonormal basis for $L^{2}\left(\mathbb{S}^{2}\right)$ is given by the spherical harmonics, 
 \begin{equation}
-Y_{n}^{m}\left(\theta,\phi\right)=\frac{1}{\sqrt{2\pi}}\overline{P}_{n}^{m}\left(\cos\theta\right)e^{im\phi},\;0\le|m|\le n,\quad n=0,1,\dots,\label{eq:ylm}
+  Y_{n}^{m}\left(\theta,\phi\right)=\frac{1}{\sqrt{2\pi}}\overline{P}_{n}^{m}\left(\cos\theta\right)e^{im\phi},\;0\le|m|\le n,\quad n=0,1,\dots,
+  \label{eq:ylm}
 \end{equation}
+%
 where the polar angle $\theta\in[0,\pi]$, the azimuthal angle $\phi\in[0,2\pi)$
-and $\overline{P}_{n}^{m}$ are the normalized associated Legendre
-functions. We define a subspace of spherical harmonics with fixed degree $n$ as
+and $\overline{P}_{n}^{m}$ are the normalized associated Legendre functions. We define a subspace of spherical harmonics with fixed maximum degree $N$ as
+%
 \begin{equation}
-\Har_{n}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\,\:|m|\le n\right\} .\label{eq:space-sp-h-fixed-degree}
+  \HH_{N}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\:|m|\le n,\:0\le n\le N\right\},
+  \label{eq:fsubsp}
 \end{equation}
-The dimension of $\Har_{n}$ is $2n+1$. The subspace of maximum
-degree $N$ is then the direct sum
+%
+which has dimension $\left(N+1\right)^{2}$. The reproducing kernel for $\HH_{N}$, 
+%
 \begin{equation}
-\HH_{N}=\bigoplus_{n=0}^{N}\Har_{n}=\mathrm{span}\left\{ Y_{n}^{m}\left(\theta,\phi\right),\:|m|\le n,\:0\le n\le N\right\} \label{eq:fsubsp}
+  K\left(\bomega\cdot\bomega'\right) = \sum_{n=0}^{N}\frac{2n+1}{4\pi}P_{n}\left(\odotop\right),
+  \label{eq:kernel}
 \end{equation}
-and has dimension $\left(N+1\right)^{2}$. The reproducing kernel for $\HH_{N}$, 
-\begin{equation}
-K\left(\bomega\cdot\bomega'\right) = \sum_{n=0}^{N}\frac{2n+1}{4\pi}P_{n}\left(\odotop\right),\label{eq:kernel}
-\end{equation}
+%
 satisfies 
+%
 \begin{equation}
-f\left(\bomega\right)=\int_{\mathbb{S}^{2}}K\left(\odotop\right)f\left(\bomega'\right)d\Omega',\,\,\,\, f\in\HH_{N}.\label{eq:rep}
+  f\left(\bomega\right)=\int_{\mathbb{S}^{2}}K\left(\odotop\right)f\left(\bomega'\right)d\Omega',\,\,\,\, f\in\HH_{N}.         
+  \label{eq:rep}
 \end{equation}
+%
 The identity in (\ref{eq:rep}) may be verified by using the addition theorem for spherical harmonics.
-We rely on (\ref{eq:rep}) to develop a representation of functions
+We rely on (\ref{eq:rep}) to develop a localized representation of functions
 in $\HH_{N}$ which is an analogue of Lagrange interpolation on the sphere, known as hyper-interpolation.
-
-Sobolev's paper \cite{SOBOLEV-1962} contains two key results that
-we now summarize, specialized to the icosahedral rotation group:
-\begin{thm}
-\label{thm:invQ}Let Q be a quadrature rule invariant under the group
-G. Then Q is exact for all functions $f\in\HH_{N}$ if and only if
-Q is exact for functions $f$ invariant under G. 
-\end{thm}
-This theorem reduces the size of the system of nonlinear
-equations which must be solved to determine a quadrature invariant
-under the group $G$. The next result gives a formula to calculate
-the number of invariant functions under the group $G$ in a subspace
-of spherical harmonics $\Har_{n}$ of a given degree $n$. Let $q_{1}=5$
-be the number of edges meeting at a vertex of an icosahedron, $q_{2}=3$
-be the number of sides of its (triangular) face and $q_{3}=2$ denote
-the order of rotation about mid-points of opposing edges. 
-\begin{thm}
-\label{thm:Snumbers}For a given degree $n$, the number of functions
-invariant under the icosahedral rotation group in a subspace of spherical
-harmonics $\Har_{n}$ is given by
-\[
-S(n)=\left\lfloor \frac{n}{q_{1}}\right\rfloor +\left\lfloor \frac{n}{q_{2}}\right\rfloor +\left\lfloor \frac{n}{q_{3}}\right\rfloor -n+1,
-\]
-where $\left\lfloor \,\right\rfloor$ denotes the integer part.
-\end{thm}
-
-%%% Quadratures
+%
+The Funk-Radon transform is the spherical analog of the Radon transform and is defined for functions on the sphere by
+%
+\begin{equation}
+  \mathcal{G}\left[f\right]\left(\mathbf{u}\right)=\int_{\mathbb{S}^{2}} \delta\left(\mathbf{u}\cdot\mathbf{v}\right)f\left(\mathbf{v}\right)d\mathbf{v},         
+  \label{eq:funk-radon}
+\end{equation}
+%
+where $\delta$ is the Dirac mass and effectively causes the integration to be taken over the equator defined by the intersection of $\mathbb{S}^2$ and the plane $\mathbf{u}\cdot\mathbf{v} = 0$. The last result we will need is the Funk-Hecke theorem, which states that for any continuous function $f\left(t\right)$ on $\left[-1,1\right]$ and any spherical harmonic $Y_n^m$
+%
+\begin{equation}
+  \int_{\mathbb{S}^{2}} f\left(\mathbf{u}\cdot\mathbf{v}\right)Y_n^m\left(\mathbf{v}\right)d\mathbf{v} = \lambda_n Y_n^m\left(\mathbf{u}\right),         
+  \label{eq:funk-hecke}
+\end{equation}
+%
+where
+\begin{equation}
+  \lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt         
+  \label{eq:evalue}
+\end{equation}
+and $P_n$ is the $n^{\mathrm{th}}$ degree Legendre polynomial. We remark that this theorem can be extended to distributions as well. 
+%
+%%% Quadratures -- new header/section
 \vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Quadratures for the sphere\end{center}}\end{center}
 \vspace{0.25cm}
+Quadratures are at the heart of many methods for discretely sampling functions. These methods typically result from 
+discretizing an integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
 
-The main difficulty in constructing quadratures comes from the need
-to solve a large system of nonlinear equations. Without using special
-structure of these equations, general root finding or optimization
-methods typically fail. The essence of our approach is to develop
-and use such structure within a root finding method.
+While one-dimensional quadratures are well understood, developing quadratures for the sphere is an active area of research. The difficulty in constructing quadratures for the sphere is related to its topology. A variety of quadratures for the sphere already exist, ranging from exact Cartesian product quadratures to approximate quadratures found by treating nodes as charged particles and minimizing their electrostatic potential energy. 
 
-To start, there are four different types of orbits of the icosahedral
-rotation group. In general, a point on the sphere under the action
-of the group generates a total of $60$ points. However, if a point
-is a vertex of the icosahedron, then it generates a total of only
-$12$ distinct points. Also, if a point is the projection of the center
-of an icosahedron face onto the sphere, it generates $20$ distinct
-points in total. Finally, if a point is the projection onto the sphere
-of the mid-point of an edge, it generates a total of $30$ distinct
-points. When describing these different types of orbits it is sufficient
-to consider a single point, a generator of its orbit. The orbit of
-a point with spherical coordinates $\left(\theta,\phi\right)$ is
-the set $\left\{ \left(g_{i}^{-1}\theta,g_{i}^{-1}\phi\right)\:|\: g_{i}\in G\right\} $
-and, depending on the type of orbit, has cardinality $12$, $20$,
-$30$ or $60$.
+Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. 
 
-With these types of orbits in mind, we consider four types of quadratures.
-The first type assumes that all generators, except for a vertex of
-the icosahedron, give rise to orbits of size $60$, i.e., \begin{equation}
-Q_{v}\left(f\right)=w_{v}\sum_{i=1}^{12}f\left(\theta_{i}^{v},\phi_{i}^{v}\right)+\sum_{j=1}^{N_{g}}w_{j}\sum_{i=1}^{60}f\left(\theta_{i}^{\left(j\right)},\phi_{i}^{\left(j\right)}\right),\label{eq:Q-v}\end{equation}
-where $\left\{ \theta_{i}^{v},\phi_{i}^{v}\right\} _{i=1}^{12}$ are
-coordinates of the vertices of an icosahedron inscribed in the unit
-sphere, $w_{v}$ their associated weight, $N_{g}$ is the number of
-generators with coordinates $\left\{ \theta^{\left(j\right)},\phi^{\left(j\right)}\right\} _{j=1}^{N_{g}}$
-and weights $\left\{ w_{j}\right\} _{j=1}^{N_{g}}$. For each $g_{i}\in G$,
-we denote $\left(\theta_{i}^{\left(j\right)},\phi_{i}^{\left(j\right)}\right)=\left(g_{i}^{-1}\theta^{\left(j\right)},g_{i}^{-1}\phi^{\left(j\right)}\right)$.
-
-The second type of quadrature has the form
-\begin{equation}
-Q_{vf}\left(f\right)=w_{v}\sum_{i=1}^{12}f\left(\theta_{i}^{v},\phi_{i}^{v}\right)+w_{f}\sum_{i=1}^{20}f\left(\theta_{i}^{f},\phi_{i}^{f}\right)+\sum_{j=1}^{N_{g}}w_{j}\sum_{i=1}^{60}f\left(\theta_{i}^{\left(j\right)},\phi_{i}^{\left(j\right)}\right),\label{eq:Q-vf}
-\end{equation}
-where $\left\{ \theta_{i}^{f},\phi_{i}^{f}\right\} _{i=1}^{20}$ are
-coordinates of the face centers of the icosahedron projected onto
-the sphere and $w_{f}$ is the associated weight.
-
-The other quadratures are constructed in a similar manner. Using Theorem~\ref{thm:Snumbers}, we determine the number of invariant functions in the subspace $\Har_{n}$.Theorem~\ref{thm:invQ} allows us to limit the number of equations to not exceed the number of invariant functions. We solve the resulting system of equations using Newtons's method.
-
-Figure 1 shows a type 1 quadrature for $\HH_{145}$ with 7121 nodes.
-%\begin{center}
+To visualize how well a point set covers the sphere we assign at each point a Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength on the sphere and $\sigma^2=2/n\log\left(2\right)$ with $n$ the number of points. Figure~1 shows a coverage map of symmeterized version of a 64 point grid regularly used for diffusion tensor imaging at UC Berkeley. The displayed version has 128 points. Figure~2 shows a coverage map for a quadrature with 72 nodes taken from Ref.~\cite{AHR-BEY-2009}.
+\begin{center}
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-%  \myfig[0]{N145.eps}{0.25}
-%  \mycaption{Type 1 quadrature for degree $N=145$.}
-%\end{center}
+  \myfig[0]{coverage_64_full_range.eps}{0.6}
+  \mycaption{Coverage map for 64 measurement directions used at UC-Berkeley.}
+\end{center}
 %
-%\begin{center}
-%  \includegraphics[scale=0.45]{N145.eps}
-%  %\vspace{0.25cm}
-%  \begin{quote}{Figure 1: Type 1 quadrature for degree $N=145$.}\end{quote}
-%\end{center}
-
-%\vspace{3cm}
-
-
-
+\begin{center}
+  % first argument: eps-file
+  % second argument: stretching-factor relative to Column-width (<1)
+  % optional argument: rotation angle (0-360), default=0
+  \myfig[0]{coverage_72_full_range.eps}{0.6}
+  \mycaption{Coverage map for quadrature with 72 nodes from Ref.~\cite{AHR-BEY-2009}.}
+\end{center}
 %
-A useful way of measuring the efficiency of a quadrature is the ratio of the dimension of the subspace
-to be integrated to the (maximum) number of degrees of freedom in
-the quadrature rule (two coordinates and a weight for each node):
-%
-\begin{equation}
-\eta=\frac{\left(N+1\right)^{2}}{3M},\label{eq:efficiency}
-\end{equation}
-%
-where $M$ is the number of nodes. If $\eta=1$, we call the quadrature optimal.
-%
-%\begin{center}
-%  \includegraphics[scale=1.5]{Eff_new.eps}
-%  \vspace{0.25cm}
-%  \begin{quote}{Figure 2: Potential efficiency (\ref{eq:efficiency})
-%of quadrature (\ref{eq:Q-v}) as a function of degree $N$ of subspace
-%$\HH_{N}$ computed using Theorem~\ref{thm:Snumbers}. Also shown is the efficiency of the standard 
-%quadrature $\eta=2/3$.}\end{quote}
-%\end{center}
-%
-In Figure~2 we display the
-potential efficiency of quadrature $Q_{v}$ as a function of the degree
-$N$ of subspace $\HH_{N}$ using Theorem~\ref{thm:Snumbers} to count invariants and superimpose the
-actual efficiencies of computed quadratures. The behavior of efficiency
-of other quadratures is similar. For comparison, efficiency of the standard quadrature $\eta=2/3$
-is also shown. Solid dots indicate the efficiency of computed quadratures
-using our approach.
+The two figures clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley.
+
+The quadratures from Ref.~\cite{AHR-BEY-2009} will now be used to develop a localized representation of functions on the sphere, ideally suited for reconstruction of HARDI signals.
 
 
-
-%%%Local representations
+%%%Local representations -- new header/section
 \vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Local representations\end{center}}\end{center}
 \vspace{0.25cm}
 
 Using the new quadratures, we construct an alternative representation for functions on invariant
 subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$ by discretizing Eq. (\ref{eq:rep})
+%
 \begin{equation}
-f\left(\boldsymbol{\omega}\right)=\sum_{j=1}^{M}K\left(\bomega\cdot\bomega_{j}\right)w_{j}f\left(\bomega_{j}\right).\label{eq:f-semi-disc}
+  f\left(\boldsymbol{\omega}\right)=\sum_{j=1}^{M}K\left(\bomega\cdot\bomega_{j}\right)w_{j}f\left(\bomega_{j}\right).
+  \label{eq:f-semi-disc}
 \end{equation}
+%
 If $f\in\HH_{N}$, then (\ref{eq:f-semi-disc}) provides
 an exact reconstruction of the function $f$ from its values $f\left(\bomega_{1}\right),f\left(\bomega_{2}\right),\dots,f\left(\bomega_{M}\right)$.
 The functions $\left\{ K\left(\bomega\cdot\bomega_{j}\right)w_{j}\right\} _{j=1}^{M}$
 play a role similar to that of Lagrange interpolating polynomials
 and, therefore, we may think of (\ref{eq:f-semi-disc}) as an analogue
-of Lagrange interpolation on the sphere.
+of Lagrange interpolation on the sphere. Figure~3 shows a plot of one of the functions $K\left(\bomega\cdot\bomega_{j}\right)$ with the point $\bomega_{j}$ taken as the north pole, $\mathbf{e}_z$.
+\begin{center}
+  % first argument: eps-file
+  % second argument: stretching-factor relative to Column-width (<1)
+  % optional argument: rotation angle (0-360), default=0
+  \myfig[0]{splot.eps}{0.3}
+  \mycaption{The function $K\left(\bomega\cdot\mathbf{e}_z\right)$.}
+\end{center}
 
-Further localization of $K$ may be achieved by optimization techniques.
 
-
-
-%%% This starts another column
-%%% Section
+%
+%%%HARDI reconstruction -- new header/section
+\vspace{0.25cm}
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}HARDI Reconstruction\end{center}}\end{center}
+\vspace{0.25cm}
+The diffusion weighted MR signal has the form
+%
+\begin{equation}
+  s\left(\mathbf{q}\right) = s_0\int_{\mathbb{R}^3}p\left(\mathbf{r}\right)e^{-2\pi i \mathbf{q}\cdot\mathbf{r}}d^3r,
+\end{equation}
+%
+where $p\left(\mathbf{r}\right)$ is the ensemble averaged probability distribution function. To reconstruct directional information, the radial projection of $s\left(\mathbf{q}\right)$, the so-called orientation distribution function (ODF), can be used and is defined by
+%
+\begin{equation}
+  \psi\left(\mathbf{u}\right) = \int_0^{\infty} p\left(\mathbf{u}r\right) dr,\;\; \mathbf{u}\in\mathbb{S}^2
+\end{equation}
+Tuch \cite{TUCH-2004} showed that 
+%
+\begin{equation}
+  \psi\left(\mathbf{u}\right) \approx \mathcal{G}\left[s\right]\left(\mathbf{u}\right).
+\end{equation}
+%
+Similar to \cite{MICHA-2009}
+%%% Conclusions -- new header/section
 \vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Conclusions\end{center}}\end{center}
 \vspace{0.25cm}
