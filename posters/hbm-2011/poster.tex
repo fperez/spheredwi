@@ -15,7 +15,6 @@
 \usepackage{pstricks,pst-grad}
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Definition of some variables and colors
 %\renewcommand{\rho}{\varrho}
@@ -168,10 +167,12 @@
   \begin{center}
     {\sc \Huge Alternate grids for diffusion weighted imaging \\ [7mm] and associated
 reconstruction algorithms}\\ [5mm]
-    {\Large Fernando Perez and St\'{e}fan van der Walt\\
-    University of California Berkeley, Berkeley CA \\[5mm]
+    {\Large
     Cory Ahrens\\
-    Colorado School of Mines, Golden CO}
+    Colorado School of Mines, Golden CO\\[3mm]
+      St\'{e}fan van der Walt and Fernando P\'{e}rez\\
+    University of California, Berkeley
+    }
   \end{center}
 \end{minipage}
 %%% Pic2
@@ -196,6 +197,19 @@ reconstruction algorithms}\\ [5mm]
 %%% Introduction --- new header/section
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Introduction\end{center}}\end{center}
 \vspace{0.25cm}
+
+High angular resolution approaches to diffusion weighted imaging (DWI) require
+the diffusion signal to be sampled at multiple points on a spherical grid in
+q-space, either at a fixed q value (q-ball imaging) or by sampling
+three-dimensional q-space (diffusion spectrum imaging). Previous q-space
+sampling methods have been based on, e.g., minimum energy grids or iterative
+subdivision of an icosahedron [Tuch 2004]. While these grids appear to be
+almost uniform, they were not designed with function representation in
+mind. Here we introduce new spherical grids that are nearly optimal for
+representing localized functions on the sphere and indicate how they can be
+used to develop new algorithms for High Angular Resolution Diffusion Imaging
+(HARDI).
+
 We develop a systematic numerical approach for constructing
 nearly optimal quadratures invariant under the icosahedral group to
 integrate rotationally invariant subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$
@@ -207,10 +221,6 @@ the corresponding grid point. In this representation, the
 coefficients, up to a factor, are the values on the grid of the function 
 being represented. We may interpret this construction as an analogue of 
 Lagrange interpolation on the sphere. 
-
-We view our approach as the first step in constructing a local and
-multiresolution representation of functions on the sphere that respects
-rotationally invariant subspaces.  
 
 
 %%% Preliminaries  --- new header/section
@@ -272,12 +282,21 @@ While one-dimensional quadratures are well understood, developing quadratures fo
 
 Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.~\cite{AHR-BEY-2009}. 
 
-To visualize how well a point set covers the sphere we assign to each point a Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength measured from the point and $\sigma^2=2/n\log\left(2\right)$ with $n$ the number of points. Figure~1 shows a coverage map of a symmeterized version of a 64 point grid regularly used for diffusion tensor imaging at UC Berkeley. The 64 points lie in the upper hemisphere. Another 64 points where added to the grid by reflecting the original 64 points through the origin. The displayed version thus has 128 points. Figure~2 shows a coverage map for a quadrature with 72 nodes (originally distributed over the whole sphere) taken from Ref.~\cite{AHR-BEY-2009}.
+To visualize how well a point set covers the sphere we assign to each point a
+Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength
+measured from the point and $\sigma^2=2/n\log\left(2\right)$ with $n$ the
+number of points. Figure~1 shows a coverage map of a symmeterized version of a
+64 point grid regularly used for diffusion tensor imaging at the UC Berkeley
+Siemens 3T Trio scanner. The 64 points lie in the upper hemisphere. Another 64
+points where added to the grid by reflecting the original 64 points through the
+origin. The displayed version thus has 128 points. Figure~2 shows a coverage
+map for a quadrature with 72 nodes (originally distributed over the whole
+sphere) taken from Ref.~\cite{AHR-BEY-2009}.
 \begin{center}
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-  \myfig[0]{coverage_64_full_range.eps}{0.6}
+  \myfig[0]{coverage_64_full_range.eps}{0.9}
   \mycaption{Coverage map for 64 measurement directions used at UC-Berkeley.}
 \end{center}
 %
@@ -285,7 +304,7 @@ To visualize how well a point set covers the sphere we assign to each point a Ga
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-  \myfig[0]{coverage_72_full_range.eps}{0.6}
+  \myfig[0]{coverage_72_full_range.eps}{0.9}
   \mycaption{Coverage map for quadrature with 72 nodes from Ref.~\cite{AHR-BEY-2009}.}
 \end{center}
 %
@@ -356,7 +375,13 @@ We solve the resulting under-determined system for the $\psi_i$ using an $l_1$ p
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Conclusions\end{center}}\end{center}
 \vspace{0.25cm}
 
-We introduced...
+Our results at this point are preliminary, but if these grids perform
+successfully in more complex tests, we will have a principled approach to
+construction of efficient schemes for HARDI. In our scheme there is a precise
+notion of maximal order of spherical harmonic used in the representation and
+hence it becomes possible to make a principled decision, based on signal to
+noise ratio considerations, about the proper number and location of gradient
+directions for an optimal acquisition scheme.
 
 \vspace{0.25cm}
 \emph{This research was partially supported by AFOSR grant FA9550-07-1-0135,
