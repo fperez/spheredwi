@@ -405,7 +405,7 @@ def main_dwi(fbvecs='bvecs',fbvecs_miss='bvecs_missing',vmin=None):
 def main_coverage(fpoints,vmin=None, symm=False):
     bv_good,sphere,field,bv_miss = build_coverage(fpoints,symm=symm)
     show_coverage_2d(bv_good,sphere,field,bv_miss,vmin=vmin)
-    show_coverage_3d(bv_good,sphere,field,bv_miss,vmin=vmin)
+    #show_coverage_3d(bv_good,sphere,field,bv_miss,vmin=vmin)
 
 
 if __name__ == '__main__':
