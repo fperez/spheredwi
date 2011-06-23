@@ -284,22 +284,24 @@ discretizing some type of integral representation, e.g., in the case of the func
 
 \hspace{1cm}Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.\,\cite{AHR-BEY-2009}. 
 
-\hspace{1cm}To visualize how well a point set covers the sphere we assign to each point a
-Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arc length
-measured from the point and $\sigma^2=2/n\log\left(2\right)$ with $n$ the
-number of points. Fig.~1 shows a coverage map of a symmeterized version of a
-64 point grid regularly used for diffusion tensor imaging at the UC Berkeley
-Siemens 3T Trio scanner. The 64 points lie in the upper hemisphere. Another 64
-points were added to the grid by reflecting the original 64 points through the
-origin. The displayed version thus has 128 points. Fig.~2 shows a coverage
-map for a quadrature with 72 nodes (originally distributed over the whole
-sphere) taken from Ref.\,\cite{AHR-BEY-2009}.
+\hspace{1cm}To visualize how well a point set covers the sphere we assign to
+each point a Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is
+the arc length measured from the point and $\sigma^2=2/n\log\left(2\right)$
+with $n$ the number of points. Fig.~1 shows a coverage map of a symmetrized
+version of a 64 point grid regularly used for diffusion tensor imaging at the
+UC Berkeley Siemens 3T Trio scanner. The 64 sampling directions lie in a
+hemisphere, so another 64 points were added to the grid by reflecting the
+original ones through the origin. The displayed version thus has 128
+points. Fig.~2 shows a coverage map for a quadrature with a total of 72 nodes
+(originally distributed over the whole sphere) taken from
+Ref.\,\cite{AHR-BEY-2009}.
+
 \begin{center}
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-  \myfig[0]{coverage_64_full_range.eps}{0.85}
-  \mycaption{Coverage map for 64 measurement directions used at UC-Berkeley.}
+  \myfig[0]{coverage_64_full_range.eps}{0.85} \mycaption{Coverage map for 64
+    measurement directions (full set of 128 symmetrized points shown).}
 \end{center}
 %
 \begin{center}
@@ -307,7 +309,7 @@ sphere) taken from Ref.\,\cite{AHR-BEY-2009}.
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
   \myfig[0]{coverage_72_full_range.eps}{0.85}
-  \mycaption{Coverage map for quadrature with 72 nodes from Ref.\,\cite{AHR-BEY-2009}.}
+  \mycaption{Coverage map for quadrature with a total of 72 nodes from Ref.\,\cite{AHR-BEY-2009}.}
 \end{center}
 %
 Figures 1 and 2 clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley. Moreover, there are approximately half as many points for the quadrature, but the coverage is better. Thus, using the quadrature nodes as measurement directions for diffusion MRI may lead to reduced total measurement time while retaining the same or better resolution. This is currently under investigation.  
