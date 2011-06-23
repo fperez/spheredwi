@@ -1,0 +1,11 @@
+# List indices of missing directions.
+#
+# NOTE: indices are counted starting from zero!
+#
+# Lines starting with '#' are ignored, the rest of the lines can contain
+# arbitrarily many numbers, they are all read into a single array later.
+
+1
+#7 8 9
+#10 11 12 13
+#14 15 16 17 18 19

@@ -219,7 +219,7 @@ def mscatter(bmap,ax,pts,color):
     ax.scatter(rx, ry, c=color, edgecolors='none')
     
 
-def show_coverage_2d(rg,sphere,field,rm=None,sphere_colormap='jet',vmin=0):
+def show_coverage_2d(rg,sphere,field,rm=None,sphere_colormap='jet',vmin=None):
     """Show field coverage by projecting the sphere onto a flat 2d surface.
 
     Parameters
@@ -229,22 +229,24 @@ def show_coverage_2d(rg,sphere,field,rm=None,sphere_colormap='jet',vmin=0):
     from matplotlib import pyplot as plt
     from mpl_toolkits.basemap import Basemap
 
+    plt.figure()
+
     projection='moll'
     
-    nlevs = 50
+    nlevels = 56
     npts_lat,npts_lon = field.shape
     lats = np.linspace(-90,90,npts_lat)
     lons = np.linspace(-180,180,npts_lon)
     m = Basemap(projection=projection,lat_0=0,lon_0=0,resolution='c')
     x, y = m(*np.meshgrid(lons, lats))
     if vmin is None:
-        c = m.contourf(x,y,field,nlevs,cmap=plt.cm.get_cmap(sphere_colormap))
+        # Use the minimum value in the data for the color scale
+        c = m.contourf(x,y,field,nlevels,cmap=plt.cm.get_cmap(sphere_colormap))
         plt.colorbar(orientation='horizontal',format='%.2g')
     else:
-        # here we assume vmin==0!
-        clevs = np.linspace(0,1,nlevs)
-        cticks = ["%2g" % l for l in clevs]
-        c = m.contourf(x,y,field,clevs,cmap=plt.cm.get_cmap(sphere_colormap))
+        clevels = np.linspace(vmin,1,nlevels)
+        cticks = ["%2g" % l for l in clevels]
+        c = m.contourf(x,y,field,clevels,cmap=plt.cm.get_cmap(sphere_colormap))
         plt.colorbar(orientation='horizontal',ticks=[0,0.25,0.5,0.75,1])
     # Now, compute the lat/lon for the points
     mscatter(m,c.ax,rg,'g')
@@ -340,7 +342,7 @@ Norms  : %s""" % (norm_tolerance, small, norms[small])
     return pts
 
 
-def build_coverage(fname='bvecs',fname_miss=None,symm=True):
+def build_coverage(fname, fname_miss=None, symm=True):
     """Compute surface coverage for a set of directions.
 
     Parameters
@@ -395,18 +397,15 @@ def build_coverage(fname='bvecs',fname_miss=None,symm=True):
     return bv_good,sphere,field,bv_miss
 
 
-# Script-like entry points
-def main_dwi(fbvecs='bvecs',fbvecs_miss='bvecs_missing',vmin=None):
-    bv_good,sphere,field,bv_miss = build_coverage(fbvecs,fbvecs_miss)
-    #show_coverage_2d(bv_good,sphere,field,bv_miss,vmin=vmin)
-    show_coverage_3d(bv_good,sphere,field,bv_miss,vmin=vmin)
-
-
-def main_coverage(fpoints,vmin=None, symm=False):
-    bv_good,sphere,field,bv_miss = build_coverage(fpoints,symm=symm)
-    show_coverage_2d(bv_good,sphere,field,bv_miss,vmin=vmin)
-    #show_coverage_3d(bv_good,sphere,field,bv_miss,vmin=vmin)
+# Script-like entry point
+def main_coverage(fpoints, fpoints_missing=None, symm=False,
+                  vmin=None, show_3d=False):
+    bv_good,sphere,field,bv_miss = build_coverage(fpoints, fpoints_missing,
+                                                  symm=symm)
+    show_coverage_2d(bv_good, sphere, field, bv_miss, vmin=vmin)
+    if show_3d:
+        show_coverage_3d(bv_good, sphere, field, bv_miss, vmin=vmin)
 
 
 if __name__ == '__main__':
-    main_dwi()
+    main_coverage('bvecs', 'bvecs_missing', True)
