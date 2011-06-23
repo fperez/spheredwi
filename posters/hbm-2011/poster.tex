@@ -103,7 +103,7 @@
 
 \newcommand{\myfig}[3][0]{
 \begin{center}
-  \vspace{1.25cm}
+  %\vspace{1.25cm}
   \includegraphics[width=#3\hsize,angle=#1]{#2}
   \nobreak\medskip
 \end{center}}
@@ -120,11 +120,11 @@
 %\newcounter{figure}
 \setcounter{figure}{1}
 \newcommand{\mycaption}[1]{
-  \vspace{0.25cm}
+  %\vspace{0.25cm}
   \begin{quote}
     {{\sc Figure} \arabic{figure}: #1}
   \end{quote}
-  \vspace{0.25cm}
+  %\vspace{0.25cm}
   \stepcounter{figure}
 }
 
@@ -138,7 +138,7 @@
 
 \background{1. 1. 1.}{1. 1. 1.}{0.5}
 
-\vspace*{2cm}
+%\vspace*{2cm}
 
 
 \newrgbcolor{lightblue}{0. 0. 0.80}
@@ -168,7 +168,7 @@
     {\sc \Huge Alternate grids for diffusion weighted imaging \\ [7mm] and associated
 reconstruction algorithms}\\ [5mm]
     {\Large
-    Cory Ahrens\\
+    Cory Ahrens\\ \vspace{-4mm}
     Colorado School of Mines, Golden CO\\[3mm]
       St\'{e}fan van der Walt and Fernando P\'{e}rez\\
     University of California, Berkeley
@@ -187,7 +187,7 @@ reconstruction algorithms}\\ [5mm]
 \end{center}
 
 
-\vspace*{1cm}
+%\vspace*{1cm}
 
 
 %%% Begin of Multicols-Enviroment
@@ -196,7 +196,7 @@ reconstruction algorithms}\\ [5mm]
 
 %%% Introduction --- new header/section
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Introduction\end{center}}\end{center}
-\vspace{0.25cm}
+%\vspace{0.25cm}
 
 High angular resolution approaches to diffusion weighted imaging (DWI) require
 the diffusion signal to be sampled at multiple points on a spherical grid in
@@ -224,9 +224,9 @@ Lagrange interpolation on the sphere.
 
 
 %%% Preliminaries  --- new header/section
-\vspace{0.25cm}
+%\vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Preliminaries\end{center}}\end{center}
-\vspace{0.25cm}
+%\vspace{0.25cm}
 
 Here we establish notation and state some results about spherical harmonics, reproducing kernels for subspaces of spherical harmonics, the Funk-Radon transform and the Funk-Hecke theorem.
 
@@ -272,9 +272,9 @@ where $\delta$ is the Dirac mass and effectively restricts the integration to be
 where $\lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt$ and $P_n$ is the $n^{\mathrm{th}}$ degree Legendre polynomial. We remark that this theorem can be extended to distributions as well. 
 %
 %%% Quadratures -- new header/section
-\vspace{0.25cm}
+%\vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Quadratures for the sphere\end{center}}\end{center}
-\vspace{0.25cm}
+%\vspace{0.25cm}
 Quadratures are at the heart of many methods for discretely sampling functions. These methods typically result from 
 discretizing some type of integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
 
@@ -296,7 +296,7 @@ sphere) taken from Ref.~\cite{AHR-BEY-2009}.
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-  \myfig[0]{coverage_64_full_range.eps}{0.9}
+  \myfig[0]{coverage_64_full_range.eps}{0.85}
   \mycaption{Coverage map for 64 measurement directions used at UC-Berkeley.}
 \end{center}
 %
@@ -304,19 +304,19 @@ sphere) taken from Ref.~\cite{AHR-BEY-2009}.
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-  \myfig[0]{coverage_72_full_range.eps}{0.9}
+  \myfig[0]{coverage_72_full_range.eps}{0.85}
   \mycaption{Coverage map for quadrature with 72 nodes from Ref.~\cite{AHR-BEY-2009}.}
 \end{center}
 %
-Figures 1 and 2 clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley. Moreover, they are approximately half as many points for the quadrature, but the coverage is better. Thus, using the quadrature nodes as measurement directions for diffusion MRI may lead to reduced total measurement time while retaining the same or better resolution. This is currently under investigation.  
+Figures 1 and 2 clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley. Moreover, there are approximately half as many points for the quadrature, but the coverage is better. Thus, using the quadrature nodes as measurement directions for diffusion MRI may lead to reduced total measurement time while retaining the same or better resolution. This is currently under investigation.  
 
 The quadratures from Ref.~\cite{AHR-BEY-2009} will now be used to develop a localized representation of functions on the sphere, ideally suited for reconstruction of HARDI signals.
 
 
 %%%Local representations -- new header/section
-\vspace{0.25cm}
+%\vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Local representations\end{center}}\end{center}
-\vspace{0.25cm}
+%\vspace{0.25cm}
 
 Using the quadratures from Ref.~\cite{AHR-BEY-2009}, we construct an alternative representation for functions on invariant
 subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, namely $\HH_{N}$, by discretizing Eq. (\ref{eq:rep})
@@ -336,16 +336,16 @@ of Lagrange interpolation on the sphere. Figure~3 shows a plot of one of the fun
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
-  \myfig[0]{splot.eps}{0.3}
+  \myfig[0]{splot.eps}{0.25}
   \mycaption{The function $K\left(\bomega\cdot\mathbf{e}_z\right)$.}
 \end{center}
 
 
 %
 %%%HARDI reconstruction -- new header/section
-\vspace{0.25cm}
+%\vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}HARDI Reconstruction\end{center}}\end{center}
-\vspace{0.25cm}
+%\vspace{0.25cm}
 The diffusion weighted MR signal has the form
 %
 \begin{equation}
@@ -363,7 +363,7 @@ Because of the localized features found in $\psi\left(\mathbf{u}\right)$, the re
   \psi\left(\mathbf{u}\right) \approx \mathcal{G}\left[s\right]\left(\mathbf{u}\right).
 \end{equation}
 %
-Thus, using ideas similar to those found in \cite{L-C-D-H-2009}, we propose reconstructing the ODF $\psi$ from measurements of the diffusion signal $s\left(\bomega_{j}\right)$, $j=1,2,...J$ by construction the system of $J$ equations
+Thus, using ideas similar to those found in \cite{L-C-D-H-2009}, we propose to reconstruct the ODF $\psi$ from measurements of the diffusion signal $s\left(\bomega_{j}\right)$, $j=1,2,...J$ by construction the system of $J$ equations
 %
 \begin{equation}
   s\left(\bomega_{j}\right) \approx \sum_{i=1}^M \psi_i \mathcal{G}^{-1}\left[K\left(\cdot\bomega_{i}\right)\right]\left(\bomega_{j}\right), \;\;\;j=1,2,3,...J.
@@ -371,9 +371,9 @@ Thus, using ideas similar to those found in \cite{L-C-D-H-2009}, we propose reco
 %
 We solve the resulting under-determined system for the $\psi_i$ using an $l_1$ penalized least-squares minimization technique. Note that $\mathcal{G}^{-1}\left[K\left(\cdot\bomega_{i}\right)\right]\left(\bomega_{j}\right)$ can be calculated explicitly using the Funk-Hecke theorem. The coefficients $\psi_i$ can then be used to determine dominant fiber directions. Robust methods for accomplishing this are currently being developed.
 %%% Conclusions -- new header/section
-\vspace{0.25cm}
+%\vspace{0.25cm}
 \begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}Conclusions\end{center}}\end{center}
-\vspace{0.25cm}
+%\vspace{0.25cm}
 
 Our results at this point are preliminary, but if these grids perform
 successfully in more complex tests, we will have a principled approach to
@@ -383,9 +383,9 @@ hence it becomes possible to make a principled decision, based on signal to
 noise ratio considerations, about the proper number and location of gradient
 directions for an optimal acquisition scheme.
 
-\vspace{0.25cm}
-\emph{This research was partially supported by AFOSR grant FA9550-07-1-0135,
-NSF grant DMS-0612358, DOE/ORNL grants 4000038129 and DE-FG02-03ER25583.}
+%\vspace{0.25cm}
+%\emph{This research was partially supported by AFOSR grant FA9550-07-1-0135,
+%NSF grant DMS-0612358, DOE/ORNL grants 4000038129 and DE-FG02-03ER25583.}
 
 %%% References
 \bibliographystyle{plain}
