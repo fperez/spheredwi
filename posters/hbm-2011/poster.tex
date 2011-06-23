@@ -92,7 +92,14 @@
 \end{minipage}
 }}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                header                        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\header}[1]{
+%\vspace{0.25cm}
+\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{#1}\end{center}}\end{center}
+%\vspace{0.25cm}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                myfig                         %%%
@@ -193,10 +200,8 @@ reconstruction algorithms}\\ [5mm]
 %%% Begin of Multicols-Enviroment
 \begin{multicols}{3}
 
-
 %%% Introduction --- new header/section
-\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{Introduction}\end{center}}\end{center}
-%\vspace{0.25cm}
+\header{Introduction}
 
 High angular resolution approaches to diffusion weighted imaging (DWI) require
 the diffusion signal to be sampled at multiple points on a spherical grid in
@@ -224,9 +229,7 @@ Lagrange interpolation on the sphere.
 
 
 %%% Preliminaries  --- new header/section
-%\vspace{0.25cm}
-\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{Preliminaries}\end{center}}\end{center}
-%\vspace{0.25cm}
+\header{Preliminaries}
 
 Here we establish notation and state some results about spherical harmonics, reproducing kernels for subspaces of spherical harmonics, the Funk-Radon transform and the Funk-Hecke theorem.
 
@@ -272,9 +275,8 @@ where $\delta$ is the Dirac mass and effectively restricts the integration to be
 where $\lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt$ and $P_n$ is the $n^{\mathrm{th}}$ degree Legendre polynomial. We remark that this theorem can be extended to distributions as well. 
 %
 %%% Quadratures -- new header/section
-%\vspace{0.25cm}
-\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{Quadratures for the sphere}\end{center}}\end{center}
-%\vspace{0.25cm}
+\header{Quadratures for the sphere}
+
 Quadratures are at the heart of many methods for discretely sampling functions. These methods typically result from 
 discretizing some type of integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
 
@@ -314,9 +316,7 @@ The quadratures from Ref.~\cite{AHR-BEY-2009} will now be used to develop a loca
 
 
 %%%Local representations -- new header/section
-%\vspace{0.25cm}
-\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{Local representations}\end{center}}\end{center}
-%\vspace{0.25cm}
+\header{Local representations}
 
 Using the quadratures from Ref.~\cite{AHR-BEY-2009}, we construct an alternative representation for functions on invariant
 subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, namely $\HH_{N}$, by discretizing Eq. (\ref{eq:rep})
@@ -343,9 +343,8 @@ of Lagrange interpolation on the sphere. Figure~3 shows a plot of one of the fun
 
 %
 %%%HARDI reconstruction -- new header/section
-%\vspace{0.25cm}
-\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{HARDI Reconstruction}\end{center}}\end{center}
-%\vspace{0.25cm}
+\header{HARDI Reconstruction}
+
 The diffusion weighted MR signal has the form
 %
 \begin{equation}
@@ -370,10 +369,9 @@ Thus, using ideas similar to those found in \cite{L-C-D-H-2009}, we propose to r
 \end{equation}
 %
 We solve the resulting under-determined system for the $\psi_i$ using an $l_1$ penalized least-squares minimization technique. Note that $\mathcal{G}^{-1}\left[K\left(\cdot\bomega_{i}\right)\right]\left(\bomega_{j}\right)$ can be calculated explicitly using the Funk-Hecke theorem. The coefficients $\psi_i$ can then be used to determine dominant fiber directions. Robust methods for accomplishing this are currently being developed.
+
 %%% Conclusions -- new header/section
-%\vspace{0.25cm}
-\begin{center}\pbox{0.8\columnwidth}{}{linewidth=1mm,framearc=0.1,linecolor=lightblue,fillstyle=gradient,gradangle=0,gradbegin=white,gradend=whiteblue,gradmidpoint=1.0,framesep=1em}{\begin{center}\bf{Conclusions}\end{center}}\end{center}
-%\vspace{0.25cm}
+\header{Conclusions}
 
 Our results at this point are preliminary, but if these grids perform
 successfully in more complex tests, we will have a principled approach to
