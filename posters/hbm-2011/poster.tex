@@ -21,7 +21,7 @@
 %\renewcommand{\phi}{\varphi}
 \setlength{\columnsep}{3cm}
 \setlength{\columnseprule}{2mm}
-\setlength{\parindent}{0.0cm}
+\setlength{\parindent}{0cm}
 
 \newtheorem{thm}{Theorem}
 
@@ -210,7 +210,7 @@ representing localized functions on the sphere and indicate how they can be
 used to develop new algorithms for High Angular Resolution Diffusion Imaging
 (HARDI).
 
-We develop a systematic numerical approach for constructing
+\hspace{1cm} We develop a systematic numerical approach for constructing
 nearly optimal quadratures invariant under the icosahedral group to
 integrate rotationally invariant subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$
 up to a fixed order and degree. Using these grids and a reproducing
@@ -278,9 +278,9 @@ where $\lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt$ and $P
 Quadratures are at the heart of many methods for discretely sampling functions. These methods typically result from 
 discretizing some type of integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
 
-While one-dimensional quadratures are well understood, developing quadratures for the sphere is an active area of research. The difficulty in constructing quadratures for the sphere is related to its topology. A variety of quadratures for the sphere already exist, ranging from exact Cartesian product quadratures to approximate quadratures found by treating nodes as charged particles and minimizing their electrostatic potential energy. From the point of view of efficient function representation, especially of localized functions, many existing quadratures have serious drawbacks, ranging from clustering of nodes to poor conditioning of resulting matrices.
+\hspace{1cm}While one-dimensional quadratures are well understood, developing quadratures for the sphere is an active area of research. The difficulty in constructing quadratures for the sphere is related to its topology. A variety of quadratures for the sphere already exist, ranging from exact Cartesian product quadratures to approximate quadratures found by treating nodes as charged particles and minimizing their electrostatic potential energy. From the point of view of efficient function representation, especially of localized functions, many existing quadratures have serious drawbacks, ranging from clustering of nodes to poor conditioning of resulting matrices.
 
-Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.~\cite{AHR-BEY-2009}. 
+\hspace{1cm}Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.~\cite{AHR-BEY-2009}. 
 
 To visualize how well a point set covers the sphere we assign to each point a
 Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength
