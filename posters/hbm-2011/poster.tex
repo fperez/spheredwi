@@ -278,22 +278,22 @@ where $\lambda_n = 2\pi \int_{-1}^{1} f\left(t\right)P_n\left(t\right)dt$ and $P
 \header{Quadratures for the sphere}
 
 Quadratures are at the heart of many methods for discretely sampling functions. These methods typically result from 
-discretizing some type of integral representation, e.g., in the case of the functions on the sphere Eq.(\ref{eq:rep}). 
+discretizing some type of integral representation, e.g., in the case of the functions on the sphere, Eq.\,(\ref{eq:rep}). 
 
 \hspace{1cm}While one-dimensional quadratures are well understood, developing quadratures for the sphere is an active area of research. The difficulty in constructing quadratures for the sphere is related to its topology. A variety of quadratures for the sphere already exist, ranging from exact Cartesian product quadratures to approximate quadratures found by treating nodes as charged particles and minimizing their electrostatic potential energy. From the point of view of efficient function representation, especially of localized functions, many existing quadratures have serious drawbacks, ranging from clustering of nodes to poor conditioning of resulting matrices.
 
-\hspace{1cm}Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.~\cite{AHR-BEY-2009}. 
+\hspace{1cm}Since subspaces of spherical harmonics, $\HH_{N}$, are rotationally invariant it is natural to require rotational symmetry in a quadrature for the sphere. Because of the finite nature of the quadrature, only finite rotation groups can be considered. In \cite{AHR-BEY-2009}, a numerical method was presented to construct exact quadratures which are invariant under the icosahedral rotation group. These quadratures are exact for subspaces of spherical harmonics and are nearly perfectly efficient. The high efficiency of these quadratures, as compared to other more standard ones, arises because of their Gaussian nature. Moreover, these quadratures are quite uniform and have no clustering of nodes, like other spherical quadratures. For a more detailed discussion of the construction and properties of these quadratures, see Ref.\,\cite{AHR-BEY-2009}. 
 
-To visualize how well a point set covers the sphere we assign to each point a
-Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arclength
+\hspace{1cm}To visualize how well a point set covers the sphere we assign to each point a
+Gaussian density $\exp\left(-s^2/2\sigma^2\right)$, where $s$ is the arc length
 measured from the point and $\sigma^2=2/n\log\left(2\right)$ with $n$ the
-number of points. Figure~1 shows a coverage map of a symmeterized version of a
+number of points. Fig.~1 shows a coverage map of a symmeterized version of a
 64 point grid regularly used for diffusion tensor imaging at the UC Berkeley
 Siemens 3T Trio scanner. The 64 points lie in the upper hemisphere. Another 64
-points where added to the grid by reflecting the original 64 points through the
-origin. The displayed version thus has 128 points. Figure~2 shows a coverage
+points were added to the grid by reflecting the original 64 points through the
+origin. The displayed version thus has 128 points. Fig.~2 shows a coverage
 map for a quadrature with 72 nodes (originally distributed over the whole
-sphere) taken from Ref.~\cite{AHR-BEY-2009}.
+sphere) taken from Ref.\,\cite{AHR-BEY-2009}.
 \begin{center}
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
@@ -307,18 +307,18 @@ sphere) taken from Ref.~\cite{AHR-BEY-2009}.
   % second argument: stretching-factor relative to Column-width (<1)
   % optional argument: rotation angle (0-360), default=0
   \myfig[0]{coverage_72_full_range.eps}{0.85}
-  \mycaption{Coverage map for quadrature with 72 nodes from Ref.~\cite{AHR-BEY-2009}.}
+  \mycaption{Coverage map for quadrature with 72 nodes from Ref.\,\cite{AHR-BEY-2009}.}
 \end{center}
 %
 Figures 1 and 2 clearly show that the quadrature nodes are more uniformly distributed than the nodes used in diffusion tensor imaging at UC-Berkeley. Moreover, there are approximately half as many points for the quadrature, but the coverage is better. Thus, using the quadrature nodes as measurement directions for diffusion MRI may lead to reduced total measurement time while retaining the same or better resolution. This is currently under investigation.  
 
-The quadratures from Ref.~\cite{AHR-BEY-2009} will now be used to develop a localized representation of functions on the sphere, ideally suited for reconstruction of HARDI signals.
+\hspace{1cm}The quadratures from Ref.\,\cite{AHR-BEY-2009} will now be used to develop a localized representation of functions on the sphere, ideally suited for reconstruction of HARDI signals.
 
 
 %%%Local representations -- new header/section
 \header{Local representations}
 
-Using the quadratures from Ref.~\cite{AHR-BEY-2009}, we construct an alternative representation for functions on invariant
+Using the quadratures from Ref.\,\cite{AHR-BEY-2009}, we construct an alternative representation for functions on invariant
 subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, namely $\HH_{N}$, by discretizing Eq. (\ref{eq:rep})
 %
 \begin{equation}
@@ -326,12 +326,12 @@ subspaces of $L^{2}\left(\mathbb{S}^{2}\right)$, namely $\HH_{N}$, by discretizi
   \label{eq:f-semi-disc}
 \end{equation}
 %
-with $\bomega_{j}$ a quadrature point and $w_{j}$ the associated weight. If $f\in\HH_{N}$, then (\ref{eq:f-semi-disc}) provides
+with $\bomega_{j}$ a quadrature point and $w_{j}$ the associated weight. If $f\in\HH_{N}$, then Eq.\,(\ref{eq:f-semi-disc}) provides
 an exact reconstruction of the function $f$ from its values $f\left(\bomega_{1}\right),f\left(\bomega_{2}\right),\dots,f\left(\bomega_{M}\right)$.
 The functions $\left\{ K\left(\bomega\cdot\bomega_{j}\right)w_{j}\right\} _{j=1}^{M}$
 play a role similar to that of Lagrange interpolating polynomials
-and, therefore, we may think of (\ref{eq:f-semi-disc}) as an analogue
-of Lagrange interpolation on the sphere. Figure~3 shows a plot of one of the functions $K\left(\bomega\cdot\bomega_{j}\right)$ with the point $\bomega_{j}$ taken as the north pole, $\mathbf{e}_z$.
+and, therefore, we may think of Eq.\,(\ref{eq:f-semi-disc}) as an analogue
+of Lagrange interpolation on the sphere. Fig.~3 shows a plot of one of the functions $K\left(\bomega\cdot\bomega_{j}\right)$ with the point $\bomega_{j}$ taken as the north pole, $\mathbf{e}_z$.
 \begin{center}
   % first argument: eps-file
   % second argument: stretching-factor relative to Column-width (<1)
@@ -362,7 +362,7 @@ Because of the localized features found in $\psi\left(\mathbf{u}\right)$, the re
   \psi\left(\mathbf{u}\right) \approx \mathcal{G}\left[s\right]\left(\mathbf{u}\right).
 \end{equation}
 %
-Thus, using ideas similar to those found in \cite{L-C-D-H-2009}, we propose to reconstruct the ODF $\psi$ from measurements of the diffusion signal $s\left(\bomega_{j}\right)$, $j=1,2,...J$ by construction the system of $J$ equations
+Thus, using ideas similar to those found in Ref.\,\cite{L-C-D-H-2009}, we propose to reconstruct the ODF $\psi$ from measurements of the diffusion signal $s\left(\bomega_{j}\right)$, $j=1,2,...J$ by construction the system of $J$ equations
 %
 \begin{equation}
   s\left(\bomega_{j}\right) \approx \sum_{i=1}^M \psi_i \mathcal{G}^{-1}\left[K\left(\cdot\bomega_{i}\right)\right]\left(\bomega_{j}\right), \;\;\;j=1,2,3,...J.
@@ -374,12 +374,13 @@ We solve the resulting under-determined system for the $\psi_i$ using an $l_1$ p
 \header{Conclusions}
 
 Our results at this point are preliminary, but if these grids perform
-successfully in more complex tests, we will have a principled approach to
-construction of efficient schemes for HARDI. In our scheme there is a precise
-notion of maximal order of spherical harmonic used in the representation and
-hence it becomes possible to make a principled decision, based on signal to
-noise ratio considerations, about the proper number and location of gradient
-directions for an optimal acquisition scheme.
+successfully in more complex tests, we will have a principled approach
+to the construction of efficient schemes for HARDI. In our scheme
+there is a precise notion of the maximal order of spherical harmonic
+used in the representation and hence it becomes possible to make a
+principled decision, based on signal to noise ratio considerations,
+about the proper number and location of gradient directions for an
+optimal acquisition scheme.
 
 %\vspace{0.25cm}
 %\emph{This research was partially supported by AFOSR grant FA9550-07-1-0135,
