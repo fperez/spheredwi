@@ -39,9 +39,9 @@ xfit[xneg_idx] = -(X[xneg_idx])
 xfit[xpos_idx] = X[xpos_idx]
 X = xfit
 #X = X[xpos_idx]
-n_states = 2
+n_components = 2
 
-gmm = mixture.GMM(n_states=n_states, cvtype=cvtype)
+gmm = mixture.GMM(n_components=n_components, cvtype=cvtype)
 gmm.fit(X)
 
 splot = plt.subplot(111, aspect='equal')
