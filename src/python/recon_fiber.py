@@ -116,6 +116,8 @@ for kk in range(nRealizations):
     indexPos = sortedIndex[cond]
     points   = quad_pnts[indexPos, :3]
 
+    np.save('recon_data', points)
+
     # Sort by x-coordinate in descending order
     #points = sortrows(points,[-1])
 
