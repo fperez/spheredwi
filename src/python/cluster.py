@@ -17,7 +17,13 @@ reload(sph)
 norm = np.linalg.norm
 
 # Globals
-X = points
+try:
+    X = points
+except NameError:
+    print('** No data points found in current namespace.  '
+          'Loading from recon_data.npy.')
+    X = np.load('recon_data.npy')
+
 n, m = X.shape
 
 #cvtype = 'full'
