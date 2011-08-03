@@ -10,7 +10,7 @@ from __future__ import print_function, division
 # Third-party
 import numpy as np
 import matplotlib.pyplot as plt
-import regreg.api as rr
+import cvxmod as cvx
 
 # Local imports
 from sphdif import sphquad as sph
@@ -45,7 +45,7 @@ n_sample_pnts = 132
 # Create reproducing-kernel (sparse representation) matrix
 nA = sph.interp_matrix(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
 
-# Create signalA
+# Create signal
 print('Creating signal...')
 n_fibers = 2                      # number of Gaussian components (max n=3)
 b       = 3000                   # s/mm^2
@@ -73,30 +73,32 @@ for kk in range(nRealizations):
 
     # Choose regularization parameter
     # lambda > lambda_max -> zero solution
-    lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf)
+    lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf) 
     lamb = 0.1275*lambda_max
 
-    print('Solving L1 penalized system\n'
-          '\n'
-          '    ||Ax - b|| + lam |x|_1, subject to x_i >= 0.'
-          '\n\n'
-          'Here A is reproducing kernel in sparse matrix form\n'
-          'b is the measured signal and x is the quadrature points.\n\n')
-
-    A = nA
-    b = rSig
-
-    # Set up the problem
-    loss = rr.l2normsq.affine(A, -b, coef=1.)
-    sparsity = rr.l1norm(n_qpnts, lagrange=lamb)
-    constraint = rr.nonnegative(n_qpnts)
-
-    problem = rr.container(loss, sparsity, constraint)
+    print('Solving L1 penalized system with cvxmod...')
+    # For reference, original specification of the convex optimization problem
+    # using the matlab cvxopt syntax.
+    """
+    variable ndCoefsl1(nQpnts)
+    cvx_precision('low')
+    minimize( norm( nA * ndCoefsl1 - rSig.T,2) + lamb*norm(ndCoefsl1,1) )
+    subject to
+      0.0 <= ndCoefsl1
+      """
+    ndCoefsl1 = cvx.optvar('ndCoefsl1', n_qpnts)
+    nAp = cvx.param('nA', value=cvx.matrix(nA))
+    rSigp = cvx.param('rSig', value=cvx.matrix(rSig))
+    objective = cvx.minimize(cvx.norm2( nAp * ndCoefsl1 - rSigp) +
+                             lamb*cvx.norm1(ndCoefsl1) )
+    constraints = [0.0 <= ndCoefsl1]
+    prob = cvx.problem(objective, constraints)
 
     # Call the solver
-    solver = rr.FISTA(problem)
-    solver.fit(debug=False)
-    nd_coefs_l1 = solver.composite.coefs
+    prob.solve()
+
+    # Convert the cvxmod objects to plain numpy arrays for further processing
+    nd_coefs_l1 = np.array(ndCoefsl1.value).squeeze()
 
     # Cutoff those coefficients that are less than cutoff
     cutoff = nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std(ddof=1)
