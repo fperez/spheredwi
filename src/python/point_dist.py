@@ -6,11 +6,17 @@ Section Spiral as provided by Patrick Boucher on his blog [1]_.
 .. note::
 
    TODO: Try the methods in [2]_, [3]_ and [4]_.
+         Convert the MATLAB toolbox in [5]_ to Python.
+
+See also [6]_ for a discussion on point distributions on the sphere.
+
 
 .. [1] http://www.softimageblog.com/?author=1
 .. [2] http://www.math.niu.edu/~rusin/known-math/95/equispace.elect
 .. [3] http://sitemason.vanderbilt.edu/page/hmbADS
 .. [4] http://cgafaq.info/wiki/Evenly_distributed_points_on_sphere
+.. [5] http://eqsp.sourceforge.net/#pres
+.. [6] http://www.math.niu.edu/~rusin/known-math/95/sphere.faq
 
 """
 
@@ -43,6 +49,16 @@ def golden_points(N):
 
     return x, y, z
 
+def quadrature_points(N):
+    """N is ignored for these pre-calculated optimal quadrature points.
+
+    """
+    pts = np.loadtxt('qsph1-37-492DP.dat')
+    pts = pts[:, :3]
+
+    return pts.T
+    
+
 def charged_particles(N):
     """Simulate charged particles floating on the sphere.
 
@@ -51,7 +67,7 @@ def charged_particles(N):
 
 
 if __name__ == "__main__":
-    N = 200
+    N = 492
 
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
@@ -60,7 +76,7 @@ if __name__ == "__main__":
         rows, cols = subplot
         for i, (name, f) in enumerate(dists):
             x, y, z = f(N)
-            c = np.linspace(0, 1, N)
+            c = np.linspace(0, 1, len(x))
             
             ax = plt.subplot(rows, cols, i + 1, projection='3d')
             ax.set_axis_off()
@@ -70,5 +86,5 @@ if __name__ == "__main__":
 
 
     plot_point_dists([('Golden Section Spiral', golden_points),
-                      ('Golden Section Spiral', golden_points)])
+                      ('Optimal Quadrature', quadrature_points)])
     plt.show()
