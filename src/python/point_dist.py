@@ -23,7 +23,16 @@ See also [6]_ for a discussion on point distributions on the sphere.
 from __future__ import division
 
 import numpy as np
- 
+
+def sph2car(r, theta, phi):
+    """Convert spherical coordinates to Cartesian coordinates."""
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
+
+    return x, y, z
+
+
 def golden_points(N):
     """Golden Section Spiral.
 
@@ -86,12 +95,26 @@ def uniform_random(N):
     phi = np.arctan2(y, x)
     r = np.ones_like(theta)
 
-    x = r * np.sin(theta) * np.cos(phi)
-    y = r * np.sin(theta) * np.sin(phi)
-    z = r * np.cos(theta)
+    return sph2car(r, theta, phi)
 
-    return x, y, z
-    
+def saff_kuijlaars(N):
+    """
+
+    References
+    ----------
+    'Distributing many points on a sphere' by E.B. Saff and A.B.J. Kuijlaars,
+    Mathematical Intelligencer, 19.1 (1997), pp. 5--11
+
+    """
+    k = np.arange(N)
+    h = -1 + 2 * k / (N - 1)
+    theta = np.arccos(h)
+    phi = np.zeros_like(h)
+    for i in range(1, N - 1):
+        phi[i] = (phi[i - 1] + 3.6 / np.sqrt(N * (1 - h[i]**2))) % (2 * np.pi)
+
+    return sph2car(np.ones_like(theta), theta, phi)
+
 
 def charged_particles(N):
     """Simulate charged particles floating on the sphere.
@@ -114,7 +137,7 @@ if __name__ == "__main__":
             x, y, z = f(N)
 
             c = np.linspace(0, 1, len(x))
-            
+
             ax = plt.subplot(rows, cols, i + 1, projection='3d')
             ax.set_axis_off()
             ax.scatter(x, y, z, 'o', color=plt.cm.jet(c))
@@ -124,5 +147,6 @@ if __name__ == "__main__":
 
     plot_point_dists([('Golden Section Spiral', golden_points),
                       ('Optimal Quadrature', quadrature_points),
-                      ('Uniform Random', uniform_random)])
+                      ('Uniform Random', uniform_random),
+                      ('Saff/Kuijlaars', saff_kuijlaars)])
     plt.show()
