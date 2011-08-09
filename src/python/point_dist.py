@@ -57,6 +57,40 @@ def quadrature_points(N):
     pts = pts[:, :3]
 
     return pts.T
+
+def uniform_random(N):
+    """Generate points inside the sphere randomly, discard those lying
+    outside the sphere, and project the remaining points to the sphere surface.
+
+    """
+    # Try to generate enough points so that, after rejection, there will
+    # be at least N left
+
+    square_volume = 2**3
+    sphere_volume = 4 / 3 * np.pi
+    p = 1 / (1 - sphere_volume / square_volume) * 1.1 * N
+
+    x = np.random.uniform(low=-1, high=1, size=p)
+    y = np.random.uniform(low=-1, high=1, size=p)
+    z = np.random.uniform(low=-1, high=1, size=p)
+
+    r = np.sqrt(x**2 + y**2 + z**2)
+    mask = ~((r == 0) | (r > 1))
+
+    r = r[mask][:N]
+    x = x[mask][:N]
+    y = y[mask][:N]
+    z = z[mask][:N]
+
+    theta = np.arccos(z / r)
+    phi = np.arctan2(y, x)
+    r = np.ones_like(theta)
+
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
+
+    return x, y, z
     
 
 def charged_particles(N):
@@ -72,10 +106,13 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
 
-    def plot_point_dists(dists, subplot=(2, 2)):
-        rows, cols = subplot
+    def plot_point_dists(dists):
+        rows = 2
+        cols = len(dists)
+
         for i, (name, f) in enumerate(dists):
             x, y, z = f(N)
+
             c = np.linspace(0, 1, len(x))
             
             ax = plt.subplot(rows, cols, i + 1, projection='3d')
@@ -86,5 +123,6 @@ if __name__ == "__main__":
 
 
     plot_point_dists([('Golden Section Spiral', golden_points),
-                      ('Optimal Quadrature', quadrature_points)])
+                      ('Optimal Quadrature', quadrature_points),
+                      ('Uniform Random', uniform_random)])
     plt.show()
