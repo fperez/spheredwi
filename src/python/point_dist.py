@@ -144,7 +144,16 @@ def charged_particles(N, init_func=golden_points):
 
 
 if __name__ == "__main__":
-    N = 492
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.add_option('-p', '--points', dest='points', type=int,
+                      default=492, help='Number of points')
+    parser.add_option('-n', '--no-coverage', dest='no_coverage',
+                      action="store_true",
+                      help="Disable coverage plots")
+    (options, args) = parser.parse_args()
+
+    N = options.points
 
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
@@ -165,11 +174,13 @@ if __name__ == "__main__":
             ax.set_aspect('equal')
             ax.set_title(name)
 
-            ax = plt.subplot(rows, cols, cols + i + 1)
-            bv_good, sphere, field, bv_miss = \
-                     dwicoverage.build_coverage(np.vstack((x, y, z)), None, None)
-            dwicoverage.show_coverage_2d(bv_good, sphere, field, bv_miss,
-                                         vmin=0, ax=ax, markersize=10)
+            if not options.no_coverage:
+                ax = plt.subplot(rows, cols, cols + i + 1)
+                bv_good, sphere, field, bv_miss = \
+                         dwicoverage.build_coverage(np.vstack((x, y, z)),
+                                                    None, None)
+                dwicoverage.show_coverage_2d(bv_good, sphere, field, bv_miss,
+                                             vmin=0, ax=ax, markersize=10)
 
 
     plot_point_dists([('Golden Section Spiral', golden_points),
