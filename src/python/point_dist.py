@@ -116,11 +116,31 @@ def saff_kuijlaars(N):
     return sph2car(np.ones_like(theta), theta, phi)
 
 
-def charged_particles(N):
+def charged_particles(N, init_func=golden_points):
     """Simulate charged particles floating on the sphere.
 
+    Parameters
+    ----------
+    N : int
+        Number of particles to place on sphere.
+    init_func : f(N), callable
+        Function called to obtain the initial points,
+        before the simulation is started.
+
     """
-    pass
+    p = np.vstack(init_func(N))
+
+    # Arc length between two vectors on the unit sphere
+    # is arccos(a.dot(b)), since a.dot(b) = ab cos(theta)
+    # and arc length is angle * radius
+    D = np.arccos(p.T.dot(p))
+    D[np.diag_indices_from(D)] = 1
+
+    # Inverse distance squared
+    Di = 1 / D**2
+    Di[np.diag_indices_from(D)] = 0
+
+    
 
 
 if __name__ == "__main__":
@@ -128,6 +148,7 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
+    import dwicoverage
 
     def plot_point_dists(dists):
         rows = 2
@@ -143,6 +164,12 @@ if __name__ == "__main__":
             ax.scatter(x, y, z, 'o', color=plt.cm.jet(c))
             ax.set_aspect('equal')
             ax.set_title(name)
+
+            ax = plt.subplot(rows, cols, cols + i + 1)
+            bv_good, sphere, field, bv_miss = \
+                     dwicoverage.build_coverage(np.vstack((x, y, z)), None, None)
+            dwicoverage.show_coverage_2d(bv_good, sphere, field, bv_miss,
+                                         vmin=0, ax=ax, markersize=10)
 
 
     plot_point_dists([('Golden Section Spiral', golden_points),

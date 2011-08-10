@@ -199,7 +199,7 @@ def sphere_field(rp,ndirs,npts=(100,100),**kw):
     return sphere, field
 
 
-def mscatter(bmap,ax,pts,color):
+def mscatter(bmap,ax,pts,color, **kwargs):
     """Scatter plot on a basemap.
 
     This is mostly just a utility wrapper around bmap.scatter.
@@ -216,20 +216,26 @@ def mscatter(bmap,ax,pts,color):
     """
     rlon, rlat = cart2lonlat(pts)
     rx, ry = bmap(rlon, rlat)
-    ax.scatter(rx, ry, c=color, edgecolors='none')
+    ax.scatter(rx, ry, c=color, edgecolors='none', **kwargs)
     
 
-def show_coverage_2d(rg,sphere,field,rm=None,sphere_colormap='jet',vmin=None):
+def show_coverage_2d(rg, sphere, field, rm=None,
+                     sphere_colormap='jet', vmin=None,
+                     ax=None, markersize=30):
     """Show field coverage by projecting the sphere onto a flat 2d surface.
 
     Parameters
     ----------
-    rg : 
+    rg :
+
+    ax : matplotlib axis object, None
+    
     """
     from matplotlib import pyplot as plt
     from mpl_toolkits.basemap import Basemap
 
-    plt.figure()
+    if ax is None:
+        plt.figure()
 
     projection='moll'
     
@@ -237,22 +243,26 @@ def show_coverage_2d(rg,sphere,field,rm=None,sphere_colormap='jet',vmin=None):
     npts_lat,npts_lon = field.shape
     lats = np.linspace(-90,90,npts_lat)
     lons = np.linspace(-180,180,npts_lon)
-    m = Basemap(projection=projection,lat_0=0,lon_0=0,resolution='c')
+    m = Basemap(projection=projection,lat_0=0,lon_0=0,resolution='c',ax=ax)
     x, y = m(*np.meshgrid(lons, lats))
     if vmin is None:
         # Use the minimum value in the data for the color scale
         c = m.contourf(x,y,field,nlevels,cmap=plt.cm.get_cmap(sphere_colormap))
-        plt.colorbar(orientation='horizontal',format='%.2g')
+        if ax is None:
+            plt.colorbar(orientation='horizontal',format='%.2g')
     else:
         clevels = np.linspace(vmin,1,nlevels)
         cticks = ["%2g" % l for l in clevels]
         c = m.contourf(x,y,field,clevels,cmap=plt.cm.get_cmap(sphere_colormap))
-        plt.colorbar(orientation='horizontal',ticks=[0,0.25,0.5,0.75,1])
+        if ax is None:
+            plt.colorbar(orientation='horizontal',ticks=[0,0.25,0.5,0.75,1])
     # Now, compute the lat/lon for the points
-    mscatter(m,c.ax,rg,'g')
+    mscatter(m,c.ax,rg,'g', s=markersize)
     if rm is not None and rm.shape[1] > 0:
-        mscatter(m,c.ax,rm,'r')
-    plt.show()
+        mscatter(m,c.ax,rm,'r', s=markersize)
+
+    if ax is None:
+        plt.show()
 
 
 def show_coverage_3d(rg,sphere,field,rm=None,vmin=None,sphere_colormap='jet'):
@@ -342,12 +352,14 @@ Norms  : %s""" % (norm_tolerance, small, norms[small])
     return pts
 
 
-def build_coverage(fname, fname_miss=None, symm=True):
+def build_coverage(points, fname_miss=None, symm=True):
     """Compute surface coverage for a set of directions.
 
     Parameters
     ----------
-    fname : name of file containing a 3xn array of unit vectors
+    points : string or ndarray
+        File name of file containing a 3xn array of unit vectors,
+        or ndarray with vectors.
     """
 
     # Norm threshold below which we simply drop vectors assuming they were
@@ -355,7 +367,12 @@ def build_coverage(fname, fname_miss=None, symm=True):
     drop_norm = 1e-8
 
     # Load vectors from disk
-    bvecs = load_bvecs(fname)
+
+    if hasattr(points, '__array_interface__'):
+        bvecs = points
+    else:
+        bvecs = load_bvecs(points)
+
     all_idx = np.arange(bvecs.shape[1])
     if fname_miss is None:
         # If no missing directions are given, make an empty 3x0 array so that
