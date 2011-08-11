@@ -142,12 +142,25 @@ def charged_particles(N, init_func=golden_points):
     # We can derive the formulas for the cost function and derivative,
     # but for now we'll do it numerically
 
-    def cost(p):
+    # Notes:
+    #
+    # It is quite possible for the simulation to carry on
+    # indefinitely, with points simply rotating around the sphere.  It
+    # may therefore be necessary to rotate the points so that at least
+    # two remain in the same position with every iteration.
+    #
+    # Direction of repulsive force between two vectors, a and b:
+    #
+    # t = a x (a x b); t = t / |t|
+
+    def forces(theta, phi):
         """
+        Determine the electrostatic force on each particle.
+        
         Parameters
         ----------
-        p : ndarray
-            Parameter array containing [theta0, phi0, theta1, phi1, ...].
+        theta, phi : ndarray
+            Angles of points on the unit sphere.
 
         Notes
         -----
@@ -197,8 +210,8 @@ def charged_particles(N, init_func=golden_points):
         http://en.wikipedia.org/wiki/Great-circle_distance#Formulae
 
         """
-        theta = np.atleast_2d(p[::2])
-        phi = np.atleast_2d(p[1::2])
+        theta = np.atleast_2d(theta)
+        phi = np.atleast_2d(phi)
 
         dp = phi.T - phi
         cdp = np.cos(dp)
@@ -214,14 +227,10 @@ def charged_particles(N, init_func=golden_points):
         D[np.diag_indices_from(D)] = 1
         Di = 1 / D**2
         Di[np.diag_indices_from(D)] = 0
-         
-    import scipy.optimize as opt       
+        
+        E = np.sum(Di)
 
-    p = np.vstack((theta, phi))
-    cost(p)
-    
-#    opt.fmin_cg(
-
+    forces(theta, phi)
     
 
 
