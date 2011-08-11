@@ -10,6 +10,8 @@ Section Spiral as provided by Patrick Boucher on his blog [1]_.
 
 See also [6]_ for a discussion on point distributions on the sphere.
 
+See [7]_ for a discussion on interpolation on the sphere.
+
 
 .. [1] http://www.softimageblog.com/?author=1
 .. [2] http://www.math.niu.edu/~rusin/known-math/95/equispace.elect
@@ -17,6 +19,7 @@ See also [6]_ for a discussion on point distributions on the sphere.
 .. [4] http://cgafaq.info/wiki/Evenly_distributed_points_on_sphere
 .. [5] http://eqsp.sourceforge.net/#pres
 .. [6] http://www.math.niu.edu/~rusin/known-math/95/sphere.faq
+.. [7] http://web.maths.unsw.edu.au/~rsw/Sphere/
 
 """
 
@@ -69,7 +72,16 @@ def quadrature_points(N):
     """N is ignored for these pre-calculated optimal quadrature points.
 
     """
-    pts = np.loadtxt('qsph1-37-492DP.dat')
+    pts = np.loadtxt('data/qsph1-37-492DP.dat')
+    pts = pts[:, :3]
+
+    return pts.T
+
+def min_energy(N):
+    """N is ignored for these pre-calculated minimum energy points.
+
+    """
+    pts = np.loadtxt('data/min_energy_straight_line_484DP.txt')
     pts = pts[:, :3]
 
     return pts.T
@@ -261,7 +273,7 @@ if __name__ == "__main__":
 
             ax = plt.subplot(rows, cols, i + 1, projection='3d')
             ax.set_axis_off()
-            ax.scatter(x, y, z, 'o', color=plt.cm.jet(c))
+            ax.scatter(x, y, z, 'o', color=plt.cm.jet(c), s=12)
             ax.set_aspect('equal')
             ax.set_title(name)
 
@@ -271,14 +283,14 @@ if __name__ == "__main__":
                          dwicoverage.build_coverage(np.vstack((x, y, z)),
                                                     None, None)
                 dwicoverage.show_coverage_2d(bv_good, sphere, field, bv_miss,
-                                             vmin=0, ax=ax, markersize=10)
+                                             vmin=0, ax=ax, markersize=8)
 
 
     plot_point_dists([('Golden Section Spiral', golden_points),
                       ('Optimal Quadrature', quadrature_points),
                       ('Uniform Random', uniform_random),
                       ('Saff/Kuijlaars', saff_kuijlaars),
-                      ('Charged Particles', charged_particles)])
+                      ('Minimum Energy', min_energy)])
     plt.show()
 
 

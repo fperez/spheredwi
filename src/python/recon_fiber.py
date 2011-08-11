@@ -25,7 +25,7 @@ from numpy.linalg import norm
 #-----------------------------------------------------------------------------
 
 # Load quadrature
-qsph1_37_492DP = np.loadtxt('qsph1-37-492DP.dat')
+qsph1_37_492DP = np.loadtxt('data/qsph1-37-492DP.dat')
 quad_pnts = qsph1_37_492DP[:, :3]
 N = 18        # maximum degree of subspace
 n_qpnts = 492  # number of points in quadrature
@@ -38,7 +38,7 @@ n_qpnts = 492  # number of points in quadrature
 ## n_qpnts = len(quad_pnts)
 
 # Sample signal on lower degree quadrature
-qsph1_16_132DP = np.loadtxt('qsph1-16-132DP.dat')
+qsph1_16_132DP = np.loadtxt('data/qsph1-16-132DP.dat')
 sample_pnts  = qsph1_16_132DP[:, :3]
 n_sample_pnts = 132
 
