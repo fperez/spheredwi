@@ -32,6 +32,13 @@ def sph2car(r, theta, phi):
 
     return x, y, z
 
+def car2sph(x, y, z):
+    r = np.sqrt(x**2 + y**2 + z**2)
+    theta = np.arccos(z / r)
+    phi = np.arctan2(y, x)
+
+    return r, theta, phi
+
 
 def golden_points(N):
     """Golden Section Spiral.
@@ -128,17 +135,87 @@ def charged_particles(N, init_func=golden_points):
         before the simulation is started.
 
     """
-    p = np.vstack(init_func(N))
+    x, y, z = init_func(N)
+    r, theta, phi = car2sph(x, y, z)
+    r.fill(1)
 
-    # Arc length between two vectors on the unit sphere
-    # is arccos(a.dot(b)), since a.dot(b) = ab cos(theta)
-    # and arc length is angle * radius
-    D = np.arccos(p.T.dot(p))
-    D[np.diag_indices_from(D)] = 1
+    # We can derive the formulas for the cost function and derivative,
+    # but for now we'll do it numerically
 
-    # Inverse distance squared
-    Di = 1 / D**2
-    Di[np.diag_indices_from(D)] = 0
+    # To compute arc distance (distance along great circle on sphere)
+    # in spherical coords, see http://en.wikipedia.org/wiki/Haversine_formula
+    #
+    # In Cartesian coordinates, it's found using the dot product:
+    #
+    #  a.dot(b) = a b cos(angle), therefore angle = arccos(a.dot(b) / (a b))
+    #
+    # The arc distance is then radius * angle
+
+    # Note: arccos is numerically unstable near -1 and 1
+
+    def cost(p):
+        """
+        Parameters
+        ----------
+        p : ndarray
+            Parameter array containing [theta0, phi0, theta1, phi1, ...].
+
+        """
+        theta = np.atleast_2d(p[::2])
+        phi = np.atleast_2d(p[1::2])
+
+        # Convert to latitude / longitude, for which these formulaes
+        # are typically given
+        theta -= np.pi/2
+
+        # Traditional Haversine
+        D = 2 * np.arcsin(np.sqrt(
+                np.sin((theta.T - theta) / 2)**2 + \
+                np.cos(theta) * np.cos(theta.T) * np.sin((phi.T - phi) / 2)**2))
+
+        # Special case of the Vincenty formula, to give more accurate results
+        # for antipodal points
+        #
+        # See http://en.wikipedia.org/wiki/Great-circle_distance#Formulae
+
+        dp = phi.T - phi
+        cdp = np.cos(dp)
+
+        # Compute arc lengths between nodes
+        D = np.arctan2(np.sqrt((np.cos(theta) * np.sin(dp))**2 + \
+                               (np.cos(theta.T) * np.sin(theta) - \
+                                np.sin(theta.T) * np.cos(theta) * cdp)**2),
+                       np.sin(theta.T) * np.sin(theta) + \
+                       np.cos(theta.T) * np.cos(theta) * cdp)
+
+        ## # Dot-product based method. Badly conditioned due to
+        ## # arccos.
+        ## # Note: takes traditional spherical coordinates,
+        ## # not lat/long as input
+        
+        ## x, y, z = sph2car(np.ones_like(theta), theta, phi)
+        ## C = np.vstack((x, y, z))
+        ## D = np.arccos(C.T.dot(C))
+
+        ## # Spherical-harmonics derived method. Badly conditioned due
+        ## # to arccos.
+        ## # Note: takes traditional spherical coordinates,
+        ## # not lat/long as input
+        
+        ## D = np.arccos(np.sin(theta) * np.sin(theta.T)
+        ##               + np.cos(theta) * np.cos(theta.T) * np.cos(phi.T - phi))
+                       
+        # Inverse distance squared
+        D[np.diag_indices_from(D)] = 1
+        Di = 1 / D**2
+        Di[np.diag_indices_from(D)] = 0
+         
+    import scipy.optimize as opt       
+
+    p = np.vstack((theta, phi))
+    cost(p)
+    
+#    opt.fmin_cg(
 
     
 
@@ -186,5 +263,28 @@ if __name__ == "__main__":
     plot_point_dists([('Golden Section Spiral', golden_points),
                       ('Optimal Quadrature', quadrature_points),
                       ('Uniform Random', uniform_random),
-                      ('Saff/Kuijlaars', saff_kuijlaars)])
+                      ('Saff/Kuijlaars', saff_kuijlaars),
+                      ('Charged Particles', charged_particles)])
     plt.show()
+
+
+############# Tests #############
+
+from numpy.testing import *
+
+def test_sph2car():
+    x, y, z = sph2car([1], [np.pi / 2], [0])
+    assert_almost_equal(x, 1, decimal=5)
+    assert_almost_equal(y, 0, decimal=5)
+    assert_almost_equal(z, 0, decimal=5)
+
+def test_car2sph():
+    r, theta, phi = car2sph(1, 0, 0)
+    assert_almost_equal(r, 1, decimal=5)
+    assert_almost_equal(theta, np.pi / 2, decimal=5)
+    assert_almost_equal(phi, 0, decimal=5)
+
+    r, theta, phi = car2sph(0, 1, 0)
+    assert_almost_equal(r, 1, decimal=5)
+    assert_almost_equal(theta, np.pi / 2, decimal=5)
+    assert_almost_equal(phi, np.pi / 2, decimal=5)
