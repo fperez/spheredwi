@@ -142,23 +142,59 @@ def charged_particles(N, init_func=golden_points):
     # We can derive the formulas for the cost function and derivative,
     # but for now we'll do it numerically
 
-    # To compute arc distance (distance along great circle on sphere)
-    # in spherical coords, see http://en.wikipedia.org/wiki/Haversine_formula
-    #
-    # In Cartesian coordinates, it's found using the dot product:
-    #
-    #  a.dot(b) = a b cos(angle), therefore angle = arccos(a.dot(b) / (a b))
-    #
-    # The arc distance is then radius * angle
-
-    # Note: arccos is numerically unstable near -1 and 1
-
     def cost(p):
         """
         Parameters
         ----------
         p : ndarray
             Parameter array containing [theta0, phi0, theta1, phi1, ...].
+
+        Notes
+        -----
+        There are several ways of computing arc lengths on the sphere.  Some of
+        these suffer from numeric instability, mainly due to `arccos` being so
+        sensitive around 1 and -1.
+
+        For example, in Cartesian coordinates, the distance can be
+        computed using the dot product.  Since,
+
+        ::
+
+          a.dot(b) = a b cos(rho)
+
+        we have that the included angle, rho, is given by
+        ``arccos(a.dot(b) / ab)``.  The arc length is then ``R * rho``
+        where R is the sphere radius.
+
+        Similarly, in spherical coordinates, the included angle
+        is computed as::
+
+          arccos(cos(theta1) * cos(theta2)
+                 + sin(theta1) * sin(theta2) * cos(phi2 - phi1))
+
+        In order to address numerical issues, the Haversine
+        formula may be used, but that formule, in turn, also
+        suffers from round-off errors when dealing with anti-podal vectors.
+
+        To avoid these issues, it is recommended using the Vincenty
+        formula for distances on ellipsoids, specialised for the
+        sphere.
+
+        .. note::
+
+           Many of the formulas given on this topic use latitude
+           and longitude, whereas in physics the elevation is
+           measured downwards from the z axis.
+
+           To convert formulas, substitude cos for sin for
+           single angles, and leave trigonometric identities
+           in place when operating on angle differences.  Or,
+           alternatively, simply subtract pi/2 from the elevation
+           before using them.
+
+        References
+        ----------
+        http://en.wikipedia.org/wiki/Great-circle_distance#Formulae
 
         """
         theta = np.atleast_2d(p[::2])
@@ -167,16 +203,6 @@ def charged_particles(N, init_func=golden_points):
         # Convert to latitude / longitude, for which these formulaes
         # are typically given
         theta -= np.pi/2
-
-        # Traditional Haversine
-        D = 2 * np.arcsin(np.sqrt(
-                np.sin((theta.T - theta) / 2)**2 + \
-                np.cos(theta) * np.cos(theta.T) * np.sin((phi.T - phi) / 2)**2))
-
-        # Special case of the Vincenty formula, to give more accurate results
-        # for antipodal points
-        #
-        # See http://en.wikipedia.org/wiki/Great-circle_distance#Formulae
 
         dp = phi.T - phi
         cdp = np.cos(dp)
@@ -187,23 +213,6 @@ def charged_particles(N, init_func=golden_points):
                                 np.sin(theta.T) * np.cos(theta) * cdp)**2),
                        np.sin(theta.T) * np.sin(theta) + \
                        np.cos(theta.T) * np.cos(theta) * cdp)
-
-        ## # Dot-product based method. Badly conditioned due to
-        ## # arccos.
-        ## # Note: takes traditional spherical coordinates,
-        ## # not lat/long as input
-        
-        ## x, y, z = sph2car(np.ones_like(theta), theta, phi)
-        ## C = np.vstack((x, y, z))
-        ## D = np.arccos(C.T.dot(C))
-
-        ## # Spherical-harmonics derived method. Badly conditioned due
-        ## # to arccos.
-        ## # Note: takes traditional spherical coordinates,
-        ## # not lat/long as input
-        
-        ## D = np.arccos(np.sin(theta) * np.sin(theta.T)
-        ##               + np.cos(theta) * np.cos(theta.T) * np.cos(phi.T - phi))
                        
         # Inverse distance squared
         D[np.diag_indices_from(D)] = 1
