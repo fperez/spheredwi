@@ -200,20 +200,16 @@ def charged_particles(N, init_func=golden_points):
         theta = np.atleast_2d(p[::2])
         phi = np.atleast_2d(p[1::2])
 
-        # Convert to latitude / longitude, for which these formulaes
-        # are typically given
-        theta -= np.pi/2
-
         dp = phi.T - phi
         cdp = np.cos(dp)
 
         # Compute arc lengths between nodes
-        D = np.arctan2(np.sqrt((np.cos(theta) * np.sin(dp))**2 + \
-                               (np.cos(theta.T) * np.sin(theta) - \
-                                np.sin(theta.T) * np.cos(theta) * cdp)**2),
-                       np.sin(theta.T) * np.sin(theta) + \
-                       np.cos(theta.T) * np.cos(theta) * cdp)
-                       
+        D = np.arctan2(np.sqrt((np.sin(theta) * np.sin(dp))**2 + \
+                               (np.sin(theta.T) * np.cos(theta) - \
+                                np.cos(theta.T) * np.sin(theta) * cdp)**2),
+                       np.cos(theta.T) * np.cos(theta) + \
+                       np.sin(theta.T) * np.sin(theta) * cdp)
+
         # Inverse distance squared
         D[np.diag_indices_from(D)] = 1
         Di = 1 / D**2
