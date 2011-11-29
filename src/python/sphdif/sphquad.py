@@ -117,6 +117,89 @@ def inv_funk_radon_kernel(mu, N):
     return ker.sum() / (8*np.pi)
 
 
+def inv_funk_radon_even_kernel(mu, N):
+    """Reproducing kernel
+
+    Calculate inverse Funk-Radon transform and inverse spherical
+    Laplacian of reproducing kernel for even degree subspace 
+    of spherical harmonics of maximum degree N, i.e., calculates
+      H(\mu) = \Delta^-1 G^-1 K_e(\mu),
+    where \Delta is the spherical Laplacian and G is the Funk-Radon 
+    transporm. The calculation is done in spectral space.
+
+    Parameters
+    ----------
+        mu = cos(theta)   (a scaler)
+         N = maximum degree of subspace
+    """
+
+    # Check that -1 <= mu <= 1
+    mu = np.clip(mu, -1, 1)
+
+    # Need Legendre polynomials
+    legPolys = legp(mu, N)
+    p_at_zero = legp(0, N)
+
+    coefs_num = 2*np.arange(0, N+1) + 1
+    coefs_den = np.arange(2,N+1,2) * (np.arange(2,N+1,2) + 1)
+
+    ker = coefs_num[2::2]*legPolys[2::2] / (p_at_zero[2::2] * coefs_den)
+
+    return -ker.sum() / (8.0*np.pi*np.pi)
+
+
+def even_kernel(mu, N):
+    """Reproducing kernel
+
+    Calculate of reproducing kernel for even subspace of spherical
+    harmonics of maximum degree N.
+
+    Parameters
+    ----------
+        mu = cos(theta)   (a scaler)
+         N = maximum degree of subspace
+    """
+
+    # Check that -1 <= mu <= 1
+    mu = np.clip(mu, -1, 1)
+
+    # Need Legendre polynomials
+    legPolys = legp(mu, N)
+  
+
+    coefs = 2*np.arange(0, N+1) + 1
+   
+    ker = coefs[0::2]*legPolys[0::2] 
+
+    return ker.sum() / (4.0*np.pi)
+
+
+def kernel(mu, N):
+    """Reproducing kernel
+
+    Calculate of reproducing kernel for subspace of spherical
+    harmonics of maximum degree N.
+
+    Parameters
+    ----------
+        mu = cos(theta)   (a scaler)
+         N = maximum degree of subspace
+    """
+
+    # Check that -1 <= mu <= 1
+    mu = np.clip(mu, -1, 1)
+
+    # Need Legendre polynomials
+    legPolys = legp(mu, N)
+ 
+    coefs = 2*np.arange(0, N+1) + 1
+   
+    ker = coefs*legPolys 
+
+    return ker.sum() / (4.0*np.pi)
+
+
+
 def legp(x, n):
     """Legendre polynomials: calculation of Legendre polynomials up degree N
 
