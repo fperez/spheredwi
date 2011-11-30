@@ -38,6 +38,31 @@ def interp_matrix(qpnts, spnts, npgrid, nsamp, deg_max):
     return A
 
 
+def interp_matrix_new(qpnts, spnts, npgrid, nsamp, deg_max):
+    """Create matrix associated with inversion based on Aganj et al.
+    formalism.
+
+    Parameters
+    ----------
+    qpnts = quadrature points
+    spnts = sample points
+    npgrid = number of points in grid
+    nsamp  = number of sample points
+    deg_max = maximum degree of spherical harmonic subspace
+    """
+    # Initialize
+    A = np.zeros((nsamp,npgrid))
+
+    # Create matrix
+    for i in xrange(nsamp):
+        for j in xrange(npgrid):
+            cosTheta = np.dot(spnts[i], qpnts[j])
+            if(abs(cosTheta)>1):
+                cosTheta = np.sign(cosTheta)
+            A[i,j] = inv_funk_radon_even_kernel(cosTheta, deg_max)
+    return A
+
+
 def rand_sig(u, b, n, theta):
     """Create random signal on the sphere
 
@@ -60,6 +85,8 @@ def rand_sig(u, b, n, theta):
     lambda1 = 1700e-6
     lambda2 = 300e-6
     lambda3 = 300e-6
+
+
 
     rotationMatrix = rotation3Dz(theta)
 
@@ -86,7 +113,7 @@ def rand_sig(u, b, n, theta):
         s = exp(-b * dot(u1p, dot(D1,u1p)) )   # Single mode
     elif n==2:
         s = 0.5 * (exp(-b * dot(u1p, dot(D1,u1p)) ) +
-                  exp(-b * dot(u2p, dot(D2,u2p)) ) )
+                   exp(-b * dot(u2p, dot(D2,u2p)) ) )
     elif n==3:
         s = (1.0/3) * (exp(-b * dot(u1p, dot(D1,u1p)) ) +
                        exp(-b * dot(u2p, dot(D2,u2p)) ) +
@@ -145,7 +172,7 @@ def inv_funk_radon_even_kernel(mu, N):
 
     ker = coefs_num[2::2]*legPolys[2::2] / (p_at_zero[2::2] * coefs_den)
 
-    return -ker.sum() / (8.0*np.pi*np.pi)
+    return ker.sum() / (8.0*np.pi*np.pi)
 
 
 def even_kernel(mu, N):

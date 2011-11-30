@@ -27,8 +27,12 @@ from numpy.linalg import norm
 # Load quadrature
 qsph1_37_492DP = np.loadtxt('data/qsph1-37-492DP.dat')
 quad_pnts = qsph1_37_492DP[:, :3]
-N = 18        # maximum degree of subspace
+N = 18         # maximum degree of subspace
 n_qpnts = 492  # number of points in quadrature
+
+#quad_pnts_up_hem = quad_pnts[(np.where(quad_pnts[:,2]>0))]
+#n_qpnts,nn = quad_pnts_up_hem.shape
+#quad_pnts = quad_pnts_up_hem
 
 ## # Alternative quadrature points
 ## from dipy.data import get_sphere
@@ -42,15 +46,20 @@ qsph1_16_132DP = np.loadtxt('data/qsph1-16-132DP.dat')
 sample_pnts  = qsph1_16_132DP[:, :3]
 n_sample_pnts = 132
 
+#sample_pnts_up_hem = sample_pnts[(np.where(sample_pnts[:,2]>0))]
+#n_sample_pnts,nn = sample_pnts_up_hem.shape
+#sample_pnts = sample_pnts_up_hem
+
+
 # Create reproducing-kernel (sparse representation) matrix
-nA = sph.interp_matrix(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
+nA = sph.interp_matrix_new(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
 
 # Create signal
 print('Creating signal...')
 n_fibers = 2                      # number of Gaussian components (max n=3)
-b       = 3000                   # s/mm^2
-r_angle = -np.pi/4
-signal = np.zeros(n_sample_pnts)
+b        = 4000                   # s/mm^2
+r_angle  = -np.pi/3
+signal   =  np.zeros(n_sample_pnts)
 for i in range(n_sample_pnts):
     signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)
 
@@ -74,7 +83,7 @@ for kk in range(nRealizations):
     # Choose regularization parameter
     # lambda > lambda_max -> zero solution
     lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf) 
-    lamb = 0.1275*lambda_max
+    lamb = 0.1*lambda_max
 
     print('Solving L1 penalized system with cvxmod...')
     # For reference, original specification of the convex optimization problem
@@ -108,7 +117,7 @@ for kk in range(nRealizations):
     sortedIndex = nd_coefs_l1_trim.argsort()[::-1]
     # number of significant coefficients
     nSig = (nd_coefs_l1_trim > 0).sum()
-    print('Compression: %0.5g' % (nSig/n_qpnts))
+    print('Precentage compression: %0.5g' % (100*(1.00 - (nSig/(1.0*n_qpnts)))))
 
     # Used for taking only some of the points---now using the whole sphere
     # Let -1.5 -> 0 and get only the hemisphere with x>0
@@ -116,7 +125,7 @@ for kk in range(nRealizations):
     indexPos = sortedIndex[cond]
     points   = quad_pnts[indexPos, :3]
 
-    np.save('recon_data', points)
+    np.savetxt('recon_data.dat', points)
 
     # Sort by x-coordinate in descending order
     #points = sortrows(points,[-1])
