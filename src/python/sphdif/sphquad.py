@@ -7,7 +7,7 @@
 # Third-party
 import numpy as np
 import matplotlib.pyplot as plt
-
+from scipy.special import expn
 norm = np.linalg.norm
 
 #-----------------------------------------------------------------------------
@@ -85,8 +85,6 @@ def rand_sig(u, b, n, theta):
     lambda1 = 1700e-6
     lambda2 = 300e-6
     lambda3 = 300e-6
-
-
 
     rotationMatrix = rotation3Dz(theta)
 
@@ -225,6 +223,29 @@ def kernel(mu, N):
 
     return ker.sum() / (4.0*np.pi)
 
+def even_pODF(omega, qpoints, c, N):
+    """Given the coefficients, evaluate model at a specific direction omega
+
+
+    Parameters
+    ----------
+     omega   = unit vector at which model is evaluated
+         N   = maximum degree of subspace
+         c   = coefficients from minimization problem
+     qpoints = quadrature points corresponding to coefficients c
+    """
+
+    n,m = qpoints.shape
+
+    sum = 0.0
+    for i in range(n):
+      mu = np.dot(omega,qpoints[i,:])
+      mu = np.clip(mu, -1.0, 1.0)
+
+      sum += c[i]*even_kernel(mu, N)
+    
+
+    return sum
 
 
 def legp(x, n):
@@ -242,7 +263,6 @@ def legp(x, n):
 
     Returns
     -------
-
     Array of polynomial evaluations.  If x was a 1d array of length p, the
     return array has shape (n, p).
     """
@@ -259,6 +279,32 @@ def legp(x, n):
     for i in range(1, n):
         p[i+1] = ((2*i + 1)*x*p[i] - i*p[i-1] ) / (i+1)
     return p
+
+
+
+
+def exp_integral(x):
+    """Returns truncated iterated logarithm
+       y = log( -log(x) )
+    where if x<delta, x = delta and if 1-delta < x, 
+    x = 1-delta.
+    """
+    gamma = 0.577215665
+    return (-gamma - expn(x,1) - np.log(x))
+
+
+def ilog(x,delta):
+    """Returns truncated iterated logarithm
+       y = log( -log(x) )
+    where if x<delta, x = delta and if 1-delta < x, 
+    x = 1-delta.
+    """
+    if(delta < x and x < 1.0 - delta):
+        return np.log( -np.log(x) )
+    elif(x < delta):
+        return np.log( -np.log(delta) )
+    else: 
+        return np.log( -np.log(1.0 - delta) )
 
 
 def rotation3Dz(theta):
@@ -445,3 +491,96 @@ def mean_shift(X, bandwidth=None):
     labels = np.argmax(cluster_votes, axis=0)
 
     return cluster_centers, labels
+
+
+def saff_kuijlaars(N):
+    """
+
+    References
+    ----------
+    'Distributing many points on a sphere' by E.B. Saff and A.B.J. Kuijlaars,
+    Mathematical Intelligencer, 19.1 (1997), pp. 5--11
+
+    """
+    k = np.arange(N)
+    h = -1 + 2.0 * k / (N - 1)
+    theta = np.arccos(h)
+    phi = np.zeros_like(h)
+    for i in range(1, N - 1):
+        phi[i] = (phi[i - 1] + 3.6 / np.sqrt(N * (1 - h[i]**2))) % (2.0 * np.pi)
+
+    return sph2car(np.ones_like(theta), theta, phi)
+
+
+def sph2car(r, theta, phi):
+    """Convert spherical coordinates to Cartesian coordinates."""
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
+
+    return x, y, z
+
+def car2sph(x, y, z):
+    r = np.sqrt(x**2 + y**2 + z**2)
+    theta = np.arccos(z / r)
+    phi = np.arctan2(y, x)
+
+    return r, theta, phi
+
+
+
+def sample_pODF(nsamples,qpoints,coefs,N):
+    """Sample the pODF using a rejection technique.
+
+    Parameters
+    ----------
+    nsamples : number of random samples to return
+    coefs    : significant coefs for model reconstruction
+    qpoints  : quadrature points corresponding to coefs
+    N        : maximum degree subspace of spherical harmonics
+
+
+
+    Returns
+    -------
+    nsample random points chosen according to pODF
+
+
+    Notes
+    -----
+    The reconstructed pODF is not non-negative, i.e., it has some small negative values.
+    Thus, it's not strictly a PDF. Right now, I'm ignoring these small negative values.
+    This needs to be looked at more carefully. CDA--12/24/2011.
+    """
+    points = np.zeros((nsamples,3))
+
+    #Maximum of pODF
+    C = ( (N + 1.0)**2 / (4.0 * np.pi) ) * coefs.sum()
+
+
+    number_of_samples = 0
+    while number_of_samples < nsamples:
+      
+      #Random sample on the sphere
+      rphi = np.random.uniform( 0.0, 2.0*np.pi)
+      rmu  = np.random.uniform(-1.0, 1.0)
+  
+      rsin_theta = np.sqrt(1.0 - rmu**2)
+      
+      x,y,z = rsin_theta * np.cos(rphi), rsin_theta * np.sin(rphi), rmu
+
+      f = even_pODF(np.array([x,y,z]),qpoints,coefs,N)
+
+      #Uniform random used for rejection
+      rho = np.random.uniform(0.0, 1.0)
+      
+      if C*rho < f:
+        #Accept random point
+        points[number_of_samples,:] = np.array([x,y,z])
+        number_of_samples += 1
+
+      
+
+
+    return points
+
