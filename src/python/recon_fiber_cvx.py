@@ -18,6 +18,10 @@ import cvxmod as cvx
 from sphdif import sphquad as sph
 reload(sph)  # For interactive development
 
+# Load Fortran kernels
+from sphdif import even_pODF_f   as epODF
+from sphdif import sample_pODF_f as spODF
+
 
 # Make global some frequently used functions
 from numpy import dot
@@ -82,19 +86,13 @@ for kk in range(nRealizations):
     # Add noise to signal
     rSig = signal + noise
     rSig = abs(rSig)                 #phase is not used in MRI
-    
-    #Take ln(-ln(signal))
-    #for jj in range(n_sample_pnts):
-    #  rSig[jj] = sph.ilog(rSig[jj],0.001)
 
 
     # Choose regularization parameter
     # lambda > lambda_max -> zero solution
     lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf) 
-    #lamb = 0.015*lambda_max
 
     lamb = 0.5125*lambda_max
-
 
     print('Solving L1 penalized system with cvxmod...')
     # For reference, original specification of the convex optimization problem
@@ -158,9 +156,11 @@ for kk in range(nRealizations):
 
     k = np.zeros(x.shape)
 
+    (ncoefs,) = coefs.shape
+
     for i in range(npts):
       for j in range(npts):
-        k[i,j] = sph.even_pODF(np.array([x[i,j], y[i,j], z[i,j]]),points,coefs,N)
+         k[i,j] = epODF.even_podf_f(np.array([x[i,j], y[i,j], z[i,j]]),points,coefs,N,ncoefs)
 
     s = k
                       
@@ -171,8 +171,8 @@ for kk in range(nRealizations):
     #--Start clustering -- maybe need to use a different set of nodes to evaluate pODF
     #
     # Sample reconstructed pODF using rejection technique -- it's not strictly non-negative!!
-    nsamples = 100
-    sampled_points = sph.sample_pODF(nsamples,points,coefs,N)
+    nsamples = 500
+    sampled_points = spODF.sample_podf_f(nsamples,N,points,coefs,ncoefs) 
 
 
 
