@@ -1,0 +1,222 @@
+#LyX 1.6.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{amsfonts}
+\end_preamble
+\use_default_options false
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 2
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Subsubsection
+Digital Phantoms
+\end_layout
+
+\begin_layout Standard
+A digital phantom generation tool was developed which can simulate the diffusion
+-weighted signal for one or more fibres represented by different discrete
+ orbits.
+ This is work is an extension of the phantom developed by
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Correia2009"
+
+\end_inset
+
+ who supported only semi-circular functions with analytically calculated
+ derivatives.The idea here is that we can create any orbitual function 
+\begin_inset Formula $f(t):\mathbb{R}\rightarrow\mathbb{R}^{3}$
+\end_inset
+
+ and calculate numerically its derivatives at small steps 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+.
+ We expect that many segments of the discrete 
+\begin_inset Formula $f$
+\end_inset
+
+ will fall into every voxel in the volume and that more curved parts of
+ 
+\begin_inset Formula $f$
+\end_inset
+
+ will have higher representation in the voxel than less curved parts.
+ For every segment we can find the main direction of the orbit 
+\begin_inset Formula $\mathbf{v}=\frac{f(t+1)-f(t)}{\Delta t}$
+\end_inset
+
+ and calculate the rotation matrix 
+\begin_inset Formula $\mathbf{R}$
+\end_inset
+
+ that rotates 
+\begin_inset Formula $\hat{\mathbf{x}}=(1,0,0)$
+\end_inset
+
+ to 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+.
+ Then the signal for each element of the fibre for a given b-value 
+\begin_inset Formula $b$
+\end_inset
+
+ and a given gradient sampling direction 
+\begin_inset Formula $\hat{\mathbf{g}}$
+\end_inset
+
+, is given from 
+\begin_inset Formula \begin{equation}
+\Delta S=S_{0}\exp(-b\hat{\mathbf{g}}^{T}\mathbf{R}\bm{\Lambda}\mathbf{R}^{T}\hat{\mathbf{g}})\label{eq:step_signal}\end{equation}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+where 
+\begin_inset Formula $S_{0}$
+\end_inset
+
+ is the unattenuated signal of the fibre, and the diffusion tensor is given
+ by
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Formula \begin{equation}
+\bm{\Lambda}=\left(\begin{array}{ccc}
+\lambda_{\parallel} & 0 & 0\\
+0 & \lambda_{\perp} & 0\\
+0 & 0 & \lambda_{\perp}\end{array}\right)\label{eq:step_tensor}\end{equation}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+Therefore the total signal of the voxel for one gradient direction is given
+ by the summations of all the contributions of the 
+\begin_inset Formula $K$
+\end_inset
+
+ elements in the voxel 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+S_{vox}=\sum_{i=1}^{K}\Delta S_{i}\label{eq:digital_phantom_signal}\end{equation}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align left
+In addition, we can generate simulations of more than one fibres and add
+ them all together to create complex configurations.
+ This is acceptable because the diffusion signal is additive i.e.
+ the signal of a crossing of two fibres is equal to the sum of the the signals
+ of the individual fibres.
+ Finally, we can increase the thickness of the fibers using a typical radial
+ kernel and/or add different levels of noise (Rician).
+ 
+\end_layout
+
+\begin_layout Standard
+The way these digital phantoms are created offer the capability to simulate
+ partial volume effects.
+ If partial volume effects are not desired then we need to normalize with
+ the number of fibre elements for each voxel (This function is implemented
+ in dipy.sims.phantom.orbitual_phantom).
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset Formula $20$
+\end_inset
+
+.
+ On the right a helicoidal fibre clear of noise.
+ For both phantoms 
+\begin_inset Formula $S_{0}=100$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda_{\parallel}=1.4\cdot10^{-3}$
+\end_inset
+
+ 
+\lang british
+$m^{2}/sec$
+\lang english
+
+\begin_inset Formula $\lambda_{\perp}=.35\cdot10^{-3}m^{2}/sec$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
