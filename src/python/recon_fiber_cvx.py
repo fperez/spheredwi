@@ -7,6 +7,8 @@
 #-----------------------------------------------------------------------------
 from __future__ import print_function, division
 
+from enthought.mayavi import mlab
+
 # Third-party
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,6 +17,11 @@ import cvxmod as cvx
 # Local imports
 from sphdif import sphquad as sph
 reload(sph)  # For interactive development
+
+# Load Fortran kernels
+from sphdif import even_pODF_f   as epODF
+from sphdif import sample_pODF_f as spODF
+
 
 # Make global some frequently used functions
 from numpy import dot
@@ -27,8 +34,12 @@ from numpy.linalg import norm
 # Load quadrature
 qsph1_37_492DP = np.loadtxt('data/qsph1-37-492DP.dat')
 quad_pnts = qsph1_37_492DP[:, :3]
-N = 18        # maximum degree of subspace
+N = 18         # maximum degree of subspace
 n_qpnts = 492  # number of points in quadrature
+
+#quad_pnts_up_hem = quad_pnts[(np.where(quad_pnts[:,2]>0))]
+#n_qpnts,nn = quad_pnts_up_hem.shape
+#quad_pnts = quad_pnts_up_hem
 
 ## # Alternative quadrature points
 ## from dipy.data import get_sphere
@@ -42,15 +53,20 @@ qsph1_16_132DP = np.loadtxt('data/qsph1-16-132DP.dat')
 sample_pnts  = qsph1_16_132DP[:, :3]
 n_sample_pnts = 132
 
+#sample_pnts_up_hem = sample_pnts[(np.where(sample_pnts[:,2]>0))]
+#n_sample_pnts,nn = sample_pnts_up_hem.shape
+#sample_pnts = sample_pnts_up_hem
+
+
 # Create reproducing-kernel (sparse representation) matrix
-nA = sph.interp_matrix(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
+nA = sph.interp_matrix_new(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
 
 # Create signal
 print('Creating signal...')
 n_fibers = 2                      # number of Gaussian components (max n=3)
-b       = 3000                   # s/mm^2
-r_angle = -np.pi/4
-signal = np.zeros(n_sample_pnts)
+b        = 4000                   # s/mm^2
+r_angle  = -np.pi/2
+signal   =  np.zeros(n_sample_pnts)
 for i in range(n_sample_pnts):
     signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)
 
@@ -69,12 +85,14 @@ for kk in range(nRealizations):
 
     # Add noise to signal
     rSig = signal + noise
-    rSig = abs(rSig)      # only real part is used in MRI
+    rSig = abs(rSig)                 #phase is not used in MRI
+
 
     # Choose regularization parameter
     # lambda > lambda_max -> zero solution
     lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf) 
-    lamb = 0.1275*lambda_max
+
+    lamb = 0.5125*lambda_max
 
     print('Solving L1 penalized system with cvxmod...')
     # For reference, original specification of the convex optimization problem
@@ -101,95 +119,61 @@ for kk in range(nRealizations):
     nd_coefs_l1 = np.array(ndCoefsl1.value).squeeze()
 
     # Cutoff those coefficients that are less than cutoff
-    cutoff = nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std(ddof=1)
+    cutoff =  nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std(ddof=1)
     nd_coefs_l1_trim = np.where(nd_coefs_l1 > cutoff, nd_coefs_l1, 0)
 
     # Get indices needed for sorting coefs, in reverse order.
     sortedIndex = nd_coefs_l1_trim.argsort()[::-1]
     # number of significant coefficients
     nSig = (nd_coefs_l1_trim > 0).sum()
-    print('Compression: %0.5g' % (nSig/n_qpnts))
+    print('Precentage compression: %0.5g' % (100*(1.00 - (nSig/(1.0*n_qpnts)))))
 
     # Used for taking only some of the points---now using the whole sphere
     # Let -1.5 -> 0 and get only the hemisphere with x>0
     cond  = np.where(quad_pnts[sortedIndex[:nSig], 0] >= -1.5)
     indexPos = sortedIndex[cond]
     points   = quad_pnts[indexPos, :3]
+   
+    coefs    = nd_coefs_l1_trim[indexPos]
 
-    np.save('recon_data', points)
-
-    # Sort by x-coordinate in descending order
-    #points = sortrows(points,[-1])
-
-    # Unported matlab sources
-    """
-    # Start clustering algorithm using cosine distance
-    nClusters = 4
-    ZZ = linkage(points,'single','cosine')
-    [h, t, p] = dendrogram(ZZ,nClusters)
-
-    # Check if there's more than one point in cluster if so, take mean.
-    p1 = points(t==1,1:3)
-    if(sum(t==1)==1)
-      mp1 = p1 mp1 = mp1./norm(mp1)
-      mw1 = ndCoefsl1(indexPos(t==1))
-    elseif(sum(t==1)>1)
-      mp1 = mean(p1) mp1 = mp1./norm(mp1)
-      mw1 = mean(ndCoefsl1(indexPos(t==1)))
-    end
-
-    p2 = points(t==2,1:3)
-    if(sum(t==2)==1)
-      mp2 = p2 mp2 = mp2./norm(mp2)
-      mw2 = ndCoefsl1(indexPos(t==2))
-    elseif(sum(t==2)>1)
-      mp2 = mean(p2) mp2 = mp2./norm(mp2)
-      mw2 = mean(ndCoefsl1(indexPos(t==2)))
-    end
-
-    p3 = points(t==3,1:3)
-    if(sum(t==3)==1)
-      mp3 = p3 mp3 = mp3./norm(mp3)
-      mw3 = ndCoefsl1(indexPos(t==3))
-    elseif(sum(t==3)>1)
-      mp3 = mean(p3) mp3 = mp3./norm(mp3)
-      mw3 = mean(ndCoefsl1(indexPos(t==3)))
-    end
-
-    p4 = points(t==4,1:3)
-    if(sum(t==4)==1)
-      mp4 = p4 mp4 = mp4./norm(mp4)
-      mw4 = ndCoefsl1(indexPos(t==4))
-    elseif(sum(t==4)>1)
-      mp4 = mean(p4) mp4 = mp4./norm(mp4)
-      mw4 = mean(ndCoefsl1(indexPos(t==4)))
-    end
-
-    # Centroids of the four clusters
-    mpoints = [mp1 mp2 mp3 mp4]
-
-    # Sorted by decreasing x values
-    mpoints = sortrows(mpoints,[-1])
-
-    # Find angle between fiber 1 and pos-x axis -- Should be 0
-    a1(kk) = acos(dot(mpoints(1,1:3),[1 0 0]))*180/pi
-
-    if(mpoints(2,2)>0)
-      a2(kk) = acos(dot(mpoints(2,1:3),[cos(-rAngle)  sin(-rAngle) 0]))*180/pi
-    else
-      a2(kk) = acos(dot(mpoints(2,1:3),[cos(-rAngle) -sin(-rAngle) 0]))*180/pi
-    end
-
-    # Find anlge between fibers
-    ab(kk) = acos(dot(mpoints(1,1:3),mpoints(2,1:3)))*180/pi
-
-    # ratio of mean coefficients --- indication of volume fraction?
-    r(kk) = mw1/mw2
+    np.savetxt('recon_data.dat', points)
 
 
-# Get statistics
-angle1  = mean(a1); std1     = sqrt(var(a1))
-angle2  = mean(a2); std2     = sqrt(var(a2))
-anglebw = mean(ab); stdbw    = sqrt(var(ab))
-ratio   = mean(r);  stdratio = sqrt(var(r))
-    """
+    #--Visualize signal
+    # Create a spherical mesh
+    npts = 101
+    r    = 1.0 
+    pi   = np.pi
+    cos  = np.cos
+    sin  = np.sin
+    theta, phi = np.mgrid[0:pi:npts*1j, 0:2*pi:npts*1j]
+
+    x = r*sin(theta)*cos(phi)
+    y = r*sin(theta)*sin(phi)
+    z = r*cos(theta)
+
+    mlab.figure(1, bgcolor=(1, 1, 1), fgcolor=(0, 0, 0), size=(600, 400))
+
+    k = np.zeros(x.shape)
+
+    (ncoefs,) = coefs.shape
+
+    for i in range(npts):
+      for j in range(npts):
+         k[i,j] = epODF.even_podf_f(np.array([x[i,j], y[i,j], z[i,j]]),points,coefs,N,ncoefs)
+
+    s = k
+                      
+    mlab.mesh(k*x, k*y, k*z, scalars=s, colormap='jet')
+    mlab.show()
+
+    
+    #--Start clustering -- maybe need to use a different set of nodes to evaluate pODF
+    #
+    # Sample reconstructed pODF using rejection technique -- it's not strictly non-negative!!
+    nsamples = 500
+    sampled_points = spODF.sample_podf_f(nsamples,N,points,coefs,ncoefs) 
+
+
+
+
