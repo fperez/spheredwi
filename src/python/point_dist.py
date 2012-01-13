@@ -168,7 +168,7 @@ def charged_particles(N, init_func=golden_points):
     def forces(theta, phi):
         """
         Determine the electrostatic force on each particle.
-        
+
         Parameters
         ----------
         theta, phi : ndarray
@@ -239,11 +239,11 @@ def charged_particles(N, init_func=golden_points):
         D[np.diag_indices_from(D)] = 1
         Di = 1 / D**2
         Di[np.diag_indices_from(D)] = 0
-        
+
         E = np.sum(Di)
 
     forces(theta, phi)
-    
+
 
 
 if __name__ == "__main__":
