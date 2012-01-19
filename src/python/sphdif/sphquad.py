@@ -7,7 +7,7 @@
 # Third-party
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.special import expn
+from   scipy.special import expn
 norm = np.linalg.norm
 
 #-----------------------------------------------------------------------------
@@ -199,6 +199,31 @@ def even_kernel(mu, N):
     return ker.sum() / (4.0*np.pi)
 
 
+
+def even_kernel_der(mu, N):
+    """Derivative of reproducing kernel on
+    even subspaces of maximum degree N.
+
+    Parameters
+    ----------
+        mu = cos(theta)   (a scaler)
+         N = maximum degree of subspace
+    """
+
+    # Check that -1 <= mu <= 1
+    mu = np.clip(mu, -1, 1)
+
+    #Derivatives of Legendre polynomials
+    DlegPolys = legp_der(mu, N)
+  
+    coefs = 2*np.arange(0, N+1) + 1
+   
+    ker = coefs[0::2]*DlegPolys[0::2] 
+
+    return ker.sum() / (4.0*np.pi)
+
+
+
 def kernel(mu, N):
     """Reproducing kernel
 
@@ -248,6 +273,90 @@ def even_pODF(omega, qpoints, c, N):
     return sum
 
 
+def even_pODF_opt(angles,*args): # qpoints, c, N):
+    """Given the coefficients, evaluate model at a specific direction (theta,phi)
+
+
+    Parameters
+    ----------
+     angles  = (theta,phi) -- polar angle, azimuthal angle
+         N   = maximum degree of subspace
+         c   = coefficients from minimization problem
+     qpoints = quadrature points corresponding to coefficients c
+    """
+
+    qpoints = args[0]
+    c       = args[1]
+    N       = args[2]
+
+    n,m = qpoints.shape
+
+    theta,phi = angles[0], angles[1]
+    omega = np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)])
+
+    sum = 0.0
+    for i in range(n):
+      mu = np.dot(omega,qpoints[i,:])
+      mu = np.clip(mu, -1.0, 1.0)
+
+      sum += c[i]*even_kernel(mu, N)
+    
+
+    return -(1.0e4)*sum
+
+def even_pODF_opt_grad(angles, *args):
+    """Given the coefficients, evaluate gradient
+    of model at a specific direction (theta,phi) 
+    returns 2x1 gradient
+
+    Parameters
+    ----------
+     omega   = unit vector at which model is evaluated
+         N   = maximum degree of subspace
+         c   = coefficients from minimization problem
+     qpoints = quadrature points corresponding to coefficients c
+    """
+
+    qpoints = args[0]
+    c       = args[1]
+    N       = args[2]
+
+    n,m = qpoints.shape
+
+
+    theta,phi = angles[0], angles[1]
+    omega = np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)])
+
+    #Partial in theta direction
+    sum = 0.0
+    for i in range(n):
+      mu = np.dot(omega,qpoints[i,:])
+      mu = np.clip(mu, -1.0, 1.0)
+
+      r_i, theta_i, phi_i = car2sph(qpoints[i,0],qpoints[i,1],qpoints[i,2])
+
+      sum += c[i]*even_kernel_der(mu, N)*(-np.cos(theta_i)*np.cos(theta) + np.cos(phi - phi_i)*np.cos(theta)*np.sin(theta_i))
+    
+    p_theta = sum
+
+    #Partial in phi direction
+    sum = 0.0
+    for i in range(n):
+      mu = np.dot(omega,qpoints[i,:])
+      mu = np.clip(mu, -1.0, 1.0)
+
+      r_i, theta_i, phi_i = car2sph(qpoints[i,0],qpoints[i,1],qpoints[i,2])
+
+      sum += c[i]*even_kernel_der(mu, N)*( -np.sin(phi - phi_i)*np.sin(theta)*np.sin(theta_i) )
+
+    p_phi = sum
+
+
+
+    return -(1.0e4)*np.array([p_theta,p_phi])
+
+
+
 def legp(x, n):
     """Legendre polynomials: calculation of Legendre polynomials up degree N
 
@@ -280,6 +389,43 @@ def legp(x, n):
         p[i+1] = ((2*i + 1)*x*p[i] - i*p[i-1] ) / (i+1)
     return p
 
+def legp_der(x, n):
+    """Derivative of Legendre polynomials: calculation of derivatives of 
+    Legendre polynomials up degree N evaluated at x = cos(theta)
+
+    Parameters
+    ----------
+      x : scalar or 1d array
+        cos(theta)
+      n : int
+        highest degree
+
+    Returns
+    -------
+    Array of polynomial evaluations.  If x was a 1d array of length p, the
+    return array has shape (n, p).
+    """
+    if isinstance(x, np.ndarray):
+        assert x.ndim==1, "x must be scalar or 1d array"
+        shape = (n+1, x.shape[0])
+    else:
+        shape = (n+1, )
+
+    #Legendre polynomials at mu needed for recursion
+    p = legp(x, n)
+
+    #Initialize recursion
+    dp = np.zeros(shape)
+    dp[0] = 0
+
+    if n<=1:
+        return dp
+    dp[1] = 1
+
+    for i in range(1, n):
+        dp[i+1] = ( (2*i + 1)*(p[i] + x*dp[i]) - i*dp[i-1] ) / (i+1)
+
+    return dp
 
 
 
@@ -370,7 +516,7 @@ def estimate_bandwidth(X, quantile=0.3):
     distances = spherical_distances(X, X)
     distances = np.triu(distances, 1)
     distances_sorted = np.sort(distances[distances > 0])
-    bandwidth = distances_sorted[floor(quantile * len(distances_sorted))]
+    bandwidth = distances_sorted[np.floor(quantile * len(distances_sorted))]
     return bandwidth
 
 
@@ -552,7 +698,7 @@ def sample_pODF(nsamples,qpoints,coefs,N):
     Thus, it's not strictly a PDF. Right now, I'm ignoring these small negative values.
     This needs to be looked at more carefully. CDA--12/24/2011.
     """
-    points = np.zeros((nsamples,3))
+    points = np.zeros((nsamples,4))
 
     #Maximum of pODF
     C = ( (N + 1.0)**2 / (4.0 * np.pi) ) * coefs.sum()
@@ -569,18 +715,69 @@ def sample_pODF(nsamples,qpoints,coefs,N):
       
       x,y,z = rsin_theta * np.cos(rphi), rsin_theta * np.sin(rphi), rmu
 
-      f = even_pODF(np.array([x,y,z]),qpoints,coefs,N)
+      f = np.abs(even_pODF(np.array([x,y,z]),qpoints,coefs,N))
 
       #Uniform random used for rejection
       rho = np.random.uniform(0.0, 1.0)
       
       if C*rho < f:
         #Accept random point
-        points[number_of_samples,:] = np.array([x,y,z])
+        points[number_of_samples,:] = np.array([x,y,z,f/C])
         number_of_samples += 1
-
-      
 
 
     return points
+
+
+
+def similarity_matrix(points, sigma):
+    """Compute a similarity matrix for a set of points. 
+    The points are assumed to lie on the surface of the same sphere.
+
+    Parameters
+    ----------
+    points: array [npnts, 3]
+
+    sigma: scalar used in  
+
+    Returns
+    -------
+    S : array [npnts, npnts]
+    """
+    distances_squared = spherical_distances(points, points)**2
+
+  
+    return np.exp( -distances_squared / (2.0 * sigma) ) 
+
+
+
+
+def laplacian(points, sigma):
+    """Compute a graph Laplacian for a set of points. 
+    The points are assumed to lie on the surface of the same sphere.
+
+    Parameters
+    ----------
+    points: array [npnts, 3]
+
+    sigma: scalar used in  
+
+    Returns
+    -------
+    L : array [npnts, npnts]
+    """
+
+    S = similarity_matrix(points, sigma)
+   
+    (npnts,npnts) = S.shape    
+
+    D = np.zeros_like(S)
+
+    for i in range(npnts):
+      #D[i,i] = 1.0 / np.sqrt(S[i,:].sum()) 
+      D[i,i] = S[i,:].sum()
+
+
+    return (D - S) #(np.eye(npnts,npnts) - np.dot(D,np.dot(S,D)))
+
 
