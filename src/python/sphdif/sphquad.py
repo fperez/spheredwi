@@ -69,9 +69,9 @@ def rand_sig(u, b, n, theta):
     Parameters
     ----------
       u = unit vector
-      b = ?
+      b = 
       n = # of signal components
-      theta = ?
+      theta = angle between vectors v1 and v2
 
      lambda1 = 1700e-6 mm^2/s --typical #s
      lambda2 =  300e-6  "
@@ -81,42 +81,39 @@ def rand_sig(u, b, n, theta):
     # Locally used names
     from numpy import dot, exp
 
-    # Diffusion tensor parameters
+    # Diffusion tensor parameters -- diffusion along x-axis
     lambda1 = 1700e-6
     lambda2 = 300e-6
     lambda3 = 300e-6
 
-    rotationMatrix = rotation3Dz(theta)
-
     # diagonal diffusion tensor for "prolate white matter"
     D1 = np.diag([lambda1, lambda2, lambda3])
-    D2 = np.diag([lambda1, lambda2, lambda3])
+    D2 = D1
     D3 = D1
 
-    # orthonormal e-vectors of diffusion tensor
-    V1 = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=float).reshape(3, 3)
-    V2 = np.array([1, 0, 0, 0, 1, 0, 0, 0, 1], dtype=float).reshape(3, 3)
-    V3 = V1
+    # rotation of diffusion tensor
+    rotationMatrix = rotation3Dy(theta)
+    D1 = dot(dot(rotationMatrix,D1),rotationMatrix.T)
 
-    V2 = dot(rotationMatrix, V2)
-    V3 = dot(rotationMatrix, dot(rotationMatrix, V3))
+    # 
+    rotationMatrix = rotation3Dz(-theta)
+    D2 = dot(dot(rotationMatrix,D2),rotationMatrix.T)
 
-    # Change basis to diagonalize diffusion tensor
-    u1p = dot(V1.T, u)
-    u2p = dot(V2.T, u)
-    u3p = dot(V3.T, u)
+    angle = np.arccos(np.cos(theta)*np.cos(theta))*180/np.pi
+
+    
 
     # XXX - check with cory these semantics
     if n==1:
-        s = exp(-b * dot(u1p, dot(D1,u1p)) )   # Single mode
+        s = exp(-b * dot(u, dot(D1,u)) )   # Single mode
     elif n==2:
-        s = 0.5 * (exp(-b * dot(u1p, dot(D1,u1p)) ) +
-                   exp(-b * dot(u2p, dot(D2,u2p)) ) )
+        s = 0.5 * (exp(-b * dot(u, dot(D1,u)) ) +
+                   exp(-b * dot(u, dot(D2,u)) ) )
     elif n==3:
-        s = (1.0/3) * (exp(-b * dot(u1p, dot(D1,u1p)) ) +
-                       exp(-b * dot(u2p, dot(D2,u2p)) ) +
-                       exp(-b * dot(u3p, dot(D3,u3p)) ) )
-    return s
+        s = (1.0/3) * (exp(-b * dot(u, dot(D1,u)) ) +
+                       exp(-b * dot(u, dot(D2,u)) ) +
+                       exp(-b * dot(u, dot(D3,u)) ) )
+    return (angle,s)
 
 
 def inv_funk_radon_kernel(mu, N):
@@ -302,7 +299,7 @@ def even_pODF_opt(angles,*args): # qpoints, c, N):
       sum += c[i]*even_kernel(mu, N)
     
 
-    return -(1.0e4)*sum
+    return -(N+1)**2 * sum
 
 def even_pODF_opt_grad(angles, *args):
     """Given the coefficients, evaluate gradient
@@ -353,7 +350,7 @@ def even_pODF_opt_grad(angles, *args):
 
 
 
-    return -(1.0e4)*np.array([p_theta,p_phi])
+    return -(N + 1)**2 * np.array([p_theta,p_phi])
 
 
 
@@ -453,8 +450,41 @@ def ilog(x,delta):
         return np.log( -np.log(1.0 - delta) )
 
 
+
+
+def rotation3Dx(theta):
+    """Create a 3D  rotation matrix for rotation about x-axis.
+                    (1     0      0  )
+        R(theta) =  (0  cos(x) sin(x))
+                    (0 -sin(x) cos(x))  
+    """
+    rmat = np.zeros((3,3))
+    rmat[0,0], rmat[0,1], rmat[0,2] = 1.0,      0.0,          0.0
+    rmat[1,0], rmat[1,1], rmat[1,2] = 0.0,  np.cos(theta), np.sin(theta)
+    rmat[2,0], rmat[2,1], rmat[2,2] = 0.0, -np.sin(theta), np.cos(theta)
+        
+    return rmat
+
+
+def rotation3Dy(theta):
+    """Create a 3D  rotation matrix for rotation about y-axis.
+                    ( cos(x)  0  -sin(x))
+        R(theta) =  (   0     1     0   )
+                    ( sin(x)  0   cos(x))
+    """
+    rmat = np.zeros((3,3))
+    rmat[0,0], rmat[0,1], rmat[0,2] = np.cos(theta), 0.0, -np.sin(theta)
+    rmat[1,0], rmat[1,1], rmat[1,2] =      0.0,      1.0,     0.0
+    rmat[2,0], rmat[2,1], rmat[2,2] = np.sin(theta), 0.0,  np.cos(theta)
+
+    return rmat
+
+
 def rotation3Dz(theta):
     """Create a 3D  rotation matrix for rotation about z-axis.
+                   ( cos(x) sin(x)  0)
+        R(theta) = (-sin(x) cos(x)  0)
+                   (   0       0    1) 
     """
     rmat = np.zeros((3,3))
     rmat[0,0] = rmat[1,1] = np.cos(theta)
@@ -781,3 +811,26 @@ def laplacian(points, sigma):
     return (D - S) #(np.eye(npnts,npnts) - np.dot(D,np.dot(S,D)))
 
 
+
+
+def sort(points,eps):
+
+  (n,m) = points.shape
+
+  index = np.zeros((n,n))
+  
+  for i in range(n):
+
+    p = points[i,:]
+
+    for j in range(n):
+
+      dij = np.arccos(np.dot(p,points[j,:]))
+
+      if dij < eps and i != j:
+
+        index[j,i] = j
+
+
+
+  return index
