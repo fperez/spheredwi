@@ -7,14 +7,14 @@
 #-----------------------------------------------------------------------------
 from __future__ import print_function, division
 
-#from enthought.mayavi import mlab
+from enthought.mayavi import mlab
 
 # Third-party
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.linalg as la
 import cvxpy as cvx
-from scipy.optimize import fmin_bfgs
+from scipy.optimize import fmin_bfgs, fmin
 
 # Local imports
 from sphdif import sphquad as sph
@@ -36,16 +36,20 @@ import Pycluster as pyc
 # Main script
 #-----------------------------------------------------------------------------
 
-
 viz_fibers = False
 
 # Load quadrature
-qsph1_37_492DP = np.loadtxt('data/qsph1-37-492DP.dat')
-quad_pnts = qsph1_37_492DP[:, :3]
-#qsph1_44_672DP = np.loadtxt('data/qsph1-44-672DP.dat')
-#quad_pnts = qsph1_44_672DP[:, :3]
-N = 18         # maximum degree of subspace
-n_qpnts = 492  # number of points in quadrature
+#qsph1_37_492DP = np.loadtxt('data/qsph1-37-492DP.dat')
+#quad_pnts = qsph1_37_492DP[:, :3]
+#N = 18         # maximum degree of subspace
+#n_qpnts = 492  # number of points in quadrature
+#
+qsph1_19_132DP = np.loadtxt('data/qsph1-19-132DP.dat')
+quad_pnts = qsph1_19_132DP[:, :3]
+N = 9          # maximum degree of subspace
+n_qpnts = 132  # number of points in quadrature
+
+
 
 #quad_pnts_up_hem = quad_pnts[(np.where(quad_pnts[:,2]>0))]
 #n_qpnts,nn = quad_pnts_up_hem.shape
@@ -59,9 +63,9 @@ n_qpnts = 492  # number of points in quadrature
 ## n_qpnts = len(quad_pnts)
 
 # Sample signal on lower degree quadrature
-qsph1_16_132DP = np.loadtxt('data/qsph1-16-132DP.dat')
-sample_pnts  = qsph1_16_132DP[:, :3]
-n_sample_pnts = 132
+qsph1_14_72DP = np.loadtxt('data/qsph1-14-72DP.dat')
+sample_pnts  = qsph1_14_72DP[:, :3]
+n_sample_pnts = 72
 
 #sample_pnts_up_hem = sample_pnts[(np.where(sample_pnts[:,2]>0))]
 #n_sample_pnts,nn = sample_pnts_up_hem.shape
@@ -72,48 +76,53 @@ n_sample_pnts = 132
 nA = sph.interp_matrix_new(quad_pnts, sample_pnts, n_qpnts, n_sample_pnts, N)
 
 # Create signal
-print('Creating signal...')
-n_fibers = 1                      # number of Gaussian components (max n=3)
+n_fibers = 2                      # number of Gaussian components (max n=3)
 b        = 4000                   # s/mm^2
-#rangle  = -np.pi/2
-#signal  =  np.zeros(n_sample_pnts)
-#for i in range(n_sample_pnts):
-#    signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, rangle)
 
 SNR = []
-nRealizations = 1
-nAngles       = 1
+nRealizations = 20
+nAngles       = 3
 
-angles_true  = np.zeros(nAngles)
-angles_mean  = np.zeros(nAngles)
+angles_true  = np.zeros(nAngles + 1)
+angles_mean  = np.zeros(nAngles + 1)
+angles_std   = np.zeros(nAngles + 1)
 angles_spect = np.zeros((nRealizations,))
-angles_kmean = np.zeros((nRealizations,))
+angles_clust = np.zeros((nRealizations,6))
 
 
-for jj in range(nAngles):
+
+for jj in range(nAngles,-1,-1): #range(nAngles + 1):
 
   #Generate signal
-  rangle  = -np.pi/2.0 
+  rangle  =  np.arccos(1.0/2.0**0.25) + (np.pi/4.0)*(jj/(1.0*nAngles))   
   signal  =  np.zeros(n_sample_pnts)
-  angles_true[jj] = rangle * 180 / np.pi
- 
+  #angles_true[jj] = rangle * 180 / np.pi
+  
+  print('\n')
+  print('Creating signal...')
   for i in range(n_sample_pnts):
-    signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, rangle)
+    (angles_true[jj],signal[i]) = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, rangle)
 
 
+  s_energy = norm(signal,2)
+  snr = 20.0
+  tau = 10.0**(-snr/10.0) * s_energy
+  print('Signal to noise ratio: %0.5g' % snr)
 
 
+  #Start Monte Carlo simulations
   for kk in range(nRealizations):
+    print('\n')
     print('Realization: %2g' % kk)
+
     # Make Rician noise
-    sigma  = 0.0                       # standard deviation
-    noiseR = sigma * np.random.randn(*signal.shape)
-    noiseI = sigma * np.random.randn(*signal.shape)
+    noiseR = np.random.randn(*signal.shape)
+    noiseI = np.random.randn(*signal.shape)
     noise  = noiseR + 1j*noiseI
-
-    SNR.append(10 * np.log10(norm(signal,2)/norm(noise,2)))
-    print('Signal to noise ratio: %0.5g' % SNR[kk])
-
+    
+    # Normalize to get desired SNR
+    noise = noise*(tau/norm(noise))
+   
     # Add noise to signal
     rSig = signal + noise
     rSig = abs(rSig)                 #phase is not used in MRI
@@ -123,7 +132,7 @@ for jj in range(nAngles):
     # lambda > lambda_max -> zero solution
     lambda_max = 2*norm(dot(nA.T, rSig.T), np.inf) 
 
-    lamb = 0.65*lambda_max
+    lamb = 1.0e-8*lambda_max
     
     print('Solving L1 penalized system with cvxpy...')
 
@@ -144,7 +153,7 @@ for jj in range(nAngles):
     nd_coefs_l1 = np.array(coefs.value).squeeze()
 
     # Cutoff those coefficients that are less than cutoff
-    cutoff =  nd_coefs_l1.mean() + 2.5*nd_coefs_l1.std(ddof=1)
+    cutoff =  nd_coefs_l1.mean() + 2.0*nd_coefs_l1.std(ddof=1)
     nd_coefs_l1_trim = np.where(nd_coefs_l1 > cutoff, nd_coefs_l1, 0)
 
     # Get indices needed for sorting coefs, in reverse order.
@@ -157,29 +166,29 @@ for jj in range(nAngles):
     # Let -1.5 -> 0 and get only the hemisphere with x>0
   
     #cond     = np.where(quad_pnts[:, 0] >= -quad_pnts[:, 1])
-    cond  = np.where(quad_pnts[sortedIndex[:nSig], 0] >= -1.5)
-    indexPos = sortedIndex[cond]
-    points   = quad_pnts[indexPos, :3]
+    cond      = np.where(quad_pnts[sortedIndex[:nSig], 0] >= -2.5)
+    indexPos  = sortedIndex[cond]
+    points    = quad_pnts[indexPos, :3]
    
-    coefs    = nd_coefs_l1_trim[indexPos]
+    coefs     = nd_coefs_l1_trim[indexPos]
     (ncoefs,) = coefs.shape
   
 
-
+    print('Start maximization step...')
+    #Start maximization process
     args = (points,coefs,N)
-    angles = np.zeros((nSig,2))
-  
+    angles = np.zeros((nSig,2))  
     for i in range(nSig):
-      print('point: %0.5g' % i)
       x0 = sph.car2sph(points[i,0],points[i,1],points[i,2])[1:3]
-      xopt = fmin_bfgs(sph.even_pODF_opt,x0,fprime=sph.even_pODF_opt_grad,args=args,gtol=1.0e-5)
-      print('xopt theta: %0.5g' % xopt[0]) 
-      print('xopt phi: %0.5g' % xopt[1]) 
+#      xopt = fmin_bfgs(sph.even_pODF_opt,x0,fprime=sph.even_pODF_opt_grad,args=args,gtol=1.0e-4,maxiter=100)
+      xopt = fmin(sph.even_pODF_opt,x0,args=args, xtol = 0.00001, ftol = 0.00001,disp=0)
       angles[i,:] = xopt
 
+    #convert back to (x,y,z)
     mpoints = np.zeros_like(points)
     for i in range(nSig):
       mpoints[i,:] = np.array([np.sin(angles[i,0])*np.cos(angles[i,1]),np.sin(angles[i,0])*np.sin(angles[i,1]), np.cos(angles[i,0])])
+
 
     if viz_fibers == True:
       #---------------------------------------------------------------------------
@@ -204,73 +213,38 @@ for jj in range(nAngles):
       mlab.show()
 
 
+
+    print('Start clustering step...')
     #---------------------------------------------------------------------------
     #--Start clustering -- maybe need to use a different set of nodes to evaluate pODF
     #
-    # Sample reconstructed pODF using rejection technique -- it's not strictly non-negative!!
-    nsamples = 1000
-    sampled_points = spODF.sample_podf_f(nsamples,N,points,coefs,ncoefs) 
-
-    cond     = np.where(sampled_points[:, 0] >= -sampled_points[:, 1])
-    c_points = sampled_points[cond, :][0]
+    nclusters = 4
+    (indx,error,nf) = pyc.kcluster(mpoints,nclusters=nclusters,npass=500,dist='u')
+    (cmdata,cmmask) = pyc.clustercentroids(mpoints,np.ones_like(mpoints),indx)
     
-    #im = np.where(c_points[:,3] > c_points[:,3].mean())
-    #c_points = c_points[im,0:3][0]
-
-    #k-means 
-    nclusters = 2
-    (indx,error,nf) = pyc.kcluster(c_points,nclusters=nclusters,npass=500,dist='u')
-    (cdata,cmask) = pyc.clustercentroids(c_points,np.ones_like(c_points),indx)
-
-    i_cl1 = np.where(indx == 0)
-    i_cl2 = np.where(indx == 1)
-
-    cl1   = c_points[i_cl1]
-    cl2   = c_points[i_cl2]  
-
-    cl1m  = np.array([cl1[:,0].mean(), cl1[:,1].mean(), cl1[:,2].mean()]) 
-    cl1m  = cl1m / norm(cl1m)
-
-    cl2m  = np.array([cl2[:,0].mean(), cl2[:,1].mean(), cl2[:,2].mean()]) 
-    cl2m  = cl2m / norm(cl2m)
-    
-    angles_kmean[kk] = np.arccos(np.dot(cl1m,cl2m))*180.0/np.pi
+    angles_clust[kk,0] = np.arccos(np.dot(cmdata[0,:],cmdata[1,:]))*180/np.pi
+    angles_clust[kk,1] = np.arccos(np.dot(cmdata[0,:],cmdata[2,:]))*180/np.pi
+    angles_clust[kk,2] = np.arccos(np.dot(cmdata[0,:],cmdata[3,:]))*180/np.pi
+    angles_clust[kk,3] = np.arccos(np.dot(cmdata[1,:],cmdata[2,:]))*180/np.pi
+    angles_clust[kk,4] = np.arccos(np.dot(cmdata[1,:],cmdata[3,:]))*180/np.pi
+    angles_clust[kk,5] = np.arccos(np.dot(cmdata[2,:],cmdata[3,:]))*180/np.pi
+    print('Done with realization.')
 
 
-    #Spectral clustering
-    L = sph.laplacian(c_points,1.0)
-    (ev, v) = la.eig(L)
-    evals = np.abs(ev)
-    index = evals.argsort()
-    e_sorted = evals[index]
-    n_evals  = e_sorted/e_sorted[-1]
- 
-    indx2 = np.where(np.abs(n_evals - 1) > 0.15 )
-    (ncls,) = indx2[0].shape
 
-    v_sorted = v[:,index]
 
-    v0 = np.real(v_sorted[:,0])
-    v1 = np.real(v_sorted[:,1])
 
-    pos = np.where(v1 > 0.0)
-    neg = np.where(v1 < 0.0)
+  angles_clust.sort()  
+  angles_mean[jj] = angles_clust[:,0].mean() 
+  angles_std[jj]  = angles_clust[:,0].std() 
+   
+
+
+  print('\n')
+  print('Mean angle: %5.5g' % angles_mean[jj])
+  print('Std dev   : %5.5g' % angles_std[jj])
+  print('True angle: %5.5g' % angles_true[jj])
+  print('\n')
   
-    g1  = c_points[pos,:][0]
-    g2  = c_points[neg,:][0]
     
-    g1m = np.array([g1[:,0].mean(), g1[:,1].mean(), g1[:,2].mean()]) 
-    g1m = g1m / norm(g1m)
-
-    g2m = np.array([g2[:,0].mean(), g2[:,1].mean(), g2[:,2].mean()]) 
-    g2m = g2m / norm(g2m)    
-  
-    angles_spect[kk] = np.arccos(np.dot(g1m,g2m))*180.0/np.pi
-     
-    
-
-  #angles_mean[jj] = angles_real.mean() 
-  #print('Mean angle: %5.5g' % angles_mean[jj])
-  
-
 
