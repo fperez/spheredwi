@@ -3,30 +3,6 @@ import scipy as sp
 
 import sphere
 
-def kernel_matrix(s_theta, s_phi, q_theta, q_phi,
-                  kernel=inv_funk_radon_even_kernel, N=18):
-    """Construct the kernel matrix, A.
-
-    Parameters
-    ----------
-    s_theta, s_phi : (P,) ndarray
-        Sampling points (inclination and azimuthal angles).
-    q_theta, q_phi : (Q,) ndarray
-        Quadrature points (inclination and azimuthal angles).
-    N : int
-        Maximum degree of spherical harmonic subspace.
-
-    """
-    P = len(s_theta)
-    Q = len(q_theta)
-
-    s_theta = s_theta[:, None]
-    s_phi = s_phi[:, None]
-
-    cos_theta = sphere.cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
-
-    return kernel(cos_theta, N)
-
 
 def std_kernel(mu, N):
     A = np.zeros_like(mu)
@@ -124,3 +100,28 @@ def kernel_reconstruct(kernels_theta, kernels_phi, weights,
         PDF_recon += w * kernel(cos_theta, N)
 
     return PDF_recon
+
+
+def kernel_matrix(s_theta, s_phi, q_theta, q_phi,
+                  kernel=inv_funk_radon_even_kernel, N=18):
+    """Construct the kernel matrix, A.
+
+    Parameters
+    ----------
+    s_theta, s_phi : (P,) ndarray
+        Sampling points (inclination and azimuthal angles).
+    q_theta, q_phi : (Q,) ndarray
+        Quadrature points (inclination and azimuthal angles).
+    N : int
+        Maximum degree of spherical harmonic subspace.
+
+    """
+    P = len(s_theta)
+    Q = len(q_theta)
+
+    s_theta = s_theta[:, None]
+    s_phi = s_phi[:, None]
+
+    cos_theta = sphere.cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
+
+    return kernel(cos_theta, N)
