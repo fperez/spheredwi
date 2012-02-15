@@ -76,6 +76,11 @@ def car2sph(x, y, z):
     x, y, z : float or array_like
         Cartesian coordinates.
 
+    Returns
+    -------
+    r, theta, phi : float or array_like
+        Radius, inclination and azimuth angles.
+
     Notes
     -----
     If you have a 3-column array with coordinate values, call
@@ -87,6 +92,23 @@ def car2sph(x, y, z):
     phi = np.arctan2(y, x)
 
     return r, theta, phi
+
+
+def sph2car(r, theta, phi):
+    """Convert Cartesian to spherical coordinates.
+
+    Parameters
+    ----------
+    r, theta, phi : float or array_like
+        Radius, inclination and azimuth angles.
+
+    """
+    x = r * np.cos(phi) * np.sin(theta)
+    y = r * np.sin(phi) * np.sin(theta)
+    z = r * np.cos(theta)
+
+    return x, y, z
+
 
 def sph2latlon(theta, phi):
     """Convert spherical coordinates to latitude and longitude.
