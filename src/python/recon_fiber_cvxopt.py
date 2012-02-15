@@ -7,7 +7,10 @@
 #-----------------------------------------------------------------------------
 from __future__ import print_function, division
 
-from enthought.mayavi import mlab
+try:
+    from mayavi import mlab
+except ImportError:
+    from enthought.mayavi import mlab
 
 # Third-party
 import numpy as np
