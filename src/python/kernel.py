@@ -92,11 +92,12 @@ def kernel_reconstruct(kernels_theta, kernels_phi, weights,
         Reconstruction of the PDF on the specified grid.
 
     """
-    P, Q = len(theta_grid), len(phi_grid)
+    P, Q = len(grid_theta), len(grid_phi)
     PDF_recon = np.zeros((P, Q))
 
     for (k_theta, k_phi, w) in zip(kernels_theta, kernels_phi, weights):
-        cos_theta = sphere.cos_inc_angle(grid_theta[:, None], grid_phi, k_theta, k_phi)
+        cos_theta = sphere.cos_inc_angle(grid_theta[:, None], grid_phi,
+                                         k_theta, k_phi)
         PDF_recon += w * kernel(cos_theta, N)
 
     return PDF_recon
