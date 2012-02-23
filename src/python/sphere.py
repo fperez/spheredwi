@@ -1,8 +1,5 @@
 import numpy as np
 
-import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
-
 import os
 
 def arc_length(theta1, phi1, theta2, phi2):
@@ -161,6 +158,8 @@ def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
     basemap_args.setdefault('resolution', 'c')
     basemap_args.setdefault('ax', ax)
 
+    from mpl_toolkits.basemap import Basemap
+
     m = Basemap(**basemap_args)
     m.drawmapboundary()
     lat, lon = sph2latlon(theta, phi)
@@ -168,6 +167,36 @@ def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
     m.pcolor(x, y, r, vmin=vmin, vmax=vmax);
 
     return m
+
+def surf_grid_3D(r, theta, phi, scale_radius=False):
+    """Draw a function r = f(theta, phi), evaluated on a grid, on the sphere.
+
+    Parameters
+    ----------
+    r : (M, N) ndarray
+        Function values.
+    theta : (M,) ndarray
+        Inclination / polar angles of function values.
+    phi : (N,) ndarray
+        Azimuth angles of function values.
+    scale_radius : bool
+        Whether to scale the radius with the function value (changes the
+        surface height to reflect function values).
+
+    """
+    try:
+        from enthought.mayavi import mlab
+    except ImportError:
+        from mayavi import mlab
+
+    phi, theta = np.meshgrid(phi, theta)
+    if scale_radius:
+        x, y, z = sph2car(r, theta, phi)
+    else:
+        x, y, z = sph2car(np.ones_like(theta), theta, phi)
+
+    mlab.mesh(x, y, z, scalars=r)
+    mlab.show()
 
 def quadrature_points(N=72):
     """Load quadrature points on the sphere.
