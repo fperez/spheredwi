@@ -8,9 +8,9 @@ def single_tensor(gradients, bvals, S0=1, evals=None, rotation=None, SNR=None):
 
     Parameters
     -----------
-    gradients : (N, 3) ndarray
+    gradients : (N, 3) or (M, N, 3) ndarray
         Measurement gradients / directions, also known as b-vectors, as 3D unit
-        vectors.
+        vectors (either in a list or on a grid).
     bvals : (N,) array
         B-values for measurements.  The b-value is also ``b = \tau |q|^2``,
         where ``\tau`` is the time allowed for attenuation and ``q`` is the
@@ -53,6 +53,9 @@ def single_tensor(gradients, bvals, S0=1, evals=None, rotation=None, SNR=None):
     if rotation is None:
         rotation = np.eye(3)
 
+    out_shape = gradients.shape[:gradients.ndim - 1]
+
+    gradients = gradients.reshape(-1, 3)
     R = np.asarray(rotation)
     S = np.zeros(len(gradients))
     D = R.dot(np.diag(evals)).dot(R.T)
@@ -64,15 +67,15 @@ def single_tensor(gradients, bvals, S0=1, evals=None, rotation=None, SNR=None):
         std = S0 / SNR
         S = S + np.random.randn(len(S)) * std
 
-    return S
+    return S.reshape(out_shape)
 
 def single_tensor_ODF(r, evals=None, rotation=None):
     """Simulated ODF with a single tensor.
 
     Parameters
     ----------
-    r : (3,N) ndarray
-        Measurement positions in (x, y, z).
+    r : (N,3) or (M,N,3) ndarray
+        Measurement positions in (x, y, z), either as a list or on a grid.
     evals : (3,)
         Eigenvalues of diffusion tensor.
     rotation : (3, 3) ndarray
@@ -97,11 +100,31 @@ def single_tensor_ODF(r, evals=None, rotation=None):
     if rotation is None:
         rotation = np.eye(3)
 
+    out_shape = r.shape[:r.ndim - 1]
+
     R = np.asarray(rotation)
     Di = np.linalg.inv(R.dot(np.diag(evals)).dot(R.T))
+    r = r.reshape(-1, 3)
     P = np.zeros(len(r))
     for (i, u) in enumerate(r):
-        u.shape = (3, 1)
         P[i] = u.T.dot(Di).dot(u)**(3 / 2)
 
-    return  1 / (4 * np.pi * np.prod(evals)**1/2 * P)
+    return  (1 / (4 * np.pi * np.prod(evals)**1/2 * P)).reshape(out_shape)
+
+if __name__ == "__main__":
+    import sphere
+
+    D = 150
+    theta_grid = np.linspace(0, np.pi, D)
+    phi_grid = np.linspace(0, 2 * np.pi, D)
+
+    mg_phi, mg_theta = np.meshgrid(phi_grid, theta_grid)
+    xyz = np.dstack(sphere.sph2car(np.ones(mg_theta.shape), mg_theta, mg_phi))
+
+    ODF = single_tensor_ODF(xyz, rotation=None)
+    signal = single_tensor(gradients=xyz,
+                           bvals=1000 * np.ones(D * D), rotation=None,
+                           S0=1, SNR=None)
+
+    sphere.surf_grid_3D(ODF, theta_grid, phi_grid, scale_radius=True)
+    sphere.surf_grid_3D(signal, theta_grid, phi_grid, scale_radius=True)
