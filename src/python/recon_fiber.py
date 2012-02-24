@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import regreg.api as rr
 
 # Local imports
+import sphdif
 from sphdif import sphquad as sph
 reload(sph)  # For interactive development
 
@@ -52,7 +53,7 @@ b        = 4000                   # s/mm^2
 r_angle  = -np.pi/4
 signal   =  np.zeros(n_sample_pnts)
 for i in range(n_sample_pnts):
-    signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)
+    signal[i] = sph.rand_sig(sample_pnts[i, :3].T, b, n_fibers, r_angle)[1]
 
 SNR = []
 
@@ -115,7 +116,7 @@ for kk in range(nRealizations):
     indexPos = sortedIndex[cond]
     points   = quad_pnts[indexPos, :3]
 
-    np.save('recon_data', points)
+    sphdif.io.save('recon_data', points)
 
     # Sort by x-coordinate in descending order
     #points = sortrows(points,[-1])

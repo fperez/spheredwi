@@ -11,6 +11,7 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 from scikits.learn import mixture
 
+import sphdif
 import sphdif.sphquad as sph
 reload(sph)
 
@@ -22,7 +23,7 @@ try:
 except NameError:
     print('** No data points found in current namespace.  '
           'Loading from recon_data.npy.')
-    X = np.load('recon_data.npy')
+    X = sphdif.io.load('recon_data.npy')
 
 n, m = X.shape
 
