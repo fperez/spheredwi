@@ -1,12 +1,13 @@
 import numpy as np
 import coord
 
-try:
-    from enthought.mayavi import mlab
-except ImportError:
-    from mayavi import mlab
-except ImportError:
-    print "Warning: Could not load Mayavi!"
+def get_mlab():
+    try:
+        from enthought.mayavi import mlab
+    except ImportError:
+        from mayavi import mlab
+
+    return mlab
 
 
 def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
@@ -65,11 +66,11 @@ def surf_grid_3D(r, theta, phi, scale_radius=False):
     """
     phi, theta = np.meshgrid(phi, theta)
     if scale_radius:
-        x, y, z = coord.sph2car(r, theta, phi)
+        x, y, z = coord.sph2car(theta, phi, r)
     else:
-        x, y, z = coord.sph2car(np.ones_like(theta), theta, phi)
+        x, y, z = coord.sph2car(theta, phi)
 
-    mlab.mesh(x, y, z, scalars=r)
+    get_mlab().mesh(x, y, z, scalars=r)
 
 def scatter(theta, phi, basemap=None, **scatter_args):
     if basemap is None:
@@ -92,9 +93,9 @@ def scatter_3D(theta, phi, scalar=None, **points3d_args):
     if scalar is None:
         scalar = np.ones_like(theta)
 
-    x, y, z = coord.sph2car(np.ones_like(theta), theta, phi)
+    x, y, z = coord.sph2car(theta, phi)
 
-    mlab.points3d(x, y, z, scalar, **points3d_args)
+    get_mlab().points3d(x, y, z, scalar, **points3d_args)
 
 def show():
-    mlab.show()
+    get_mlab().show()
