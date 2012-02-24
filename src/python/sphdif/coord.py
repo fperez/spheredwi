@@ -11,8 +11,8 @@ def car2sph(x, y, z):
 
     Returns
     -------
-    r, theta, phi : float or array_like
-        Radius, inclination and azimuth angles.
+    theta, phi, r : float or array_like
+        Inclination and azimuth angles, and radius.
 
     Notes
     -----
@@ -24,15 +24,15 @@ def car2sph(x, y, z):
     theta = np.arccos(z / r)
     phi = np.arctan2(y, x)
 
-    return r, theta, phi
+    return theta, phi, r
 
 
-def sph2car(r, theta, phi):
+def sph2car(theta, phi, r=[1]):
     """Convert Cartesian to spherical coordinates.
 
     Parameters
     ----------
-    r, theta, phi : float or array_like
+    theta, phi, r : float or array_like
         Radius, inclination and azimuth angles.
 
     """
