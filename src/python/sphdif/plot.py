@@ -66,6 +66,7 @@ def surf_grid_3D(r, theta, phi, scale_radius=False):
     else:
         x, y, z = coord.sph2car(np.ones_like(theta), theta, phi)
 
+    mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
     mlab.mesh(x, y, z, scalars=r)
 
 def scatter(theta, phi, basemap=None, **scatter_args):
@@ -90,6 +91,8 @@ def scatter_3D(theta, phi, scalar=None, **points3d_args):
         scalar = np.ones_like(theta)
 
     x, y, z = coord.sph2car(np.ones_like(theta), theta, phi)
+
+    mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
     mlab.points3d(x, y, z, scalar, **points3d_args)
 
 def show():
