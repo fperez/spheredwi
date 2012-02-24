@@ -1,6 +1,14 @@
 import numpy as np
 import coord
 
+try:
+    from enthought.mayavi import mlab
+except ImportError:
+    from mayavi import mlab
+except ImportError:
+    print "Warning: Could not load Mayavi!"
+
+
 def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
     """Draw a function r = f(theta, phi), evaluated on a grid, on the sphere.
 
@@ -55,18 +63,12 @@ def surf_grid_3D(r, theta, phi, scale_radius=False):
         surface height to reflect function values).
 
     """
-    try:
-        from enthought.mayavi import mlab
-    except ImportError:
-        from mayavi import mlab
-
     phi, theta = np.meshgrid(phi, theta)
     if scale_radius:
         x, y, z = coord.sph2car(r, theta, phi)
     else:
         x, y, z = coord.sph2car(np.ones_like(theta), theta, phi)
 
-    mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
     mlab.mesh(x, y, z, scalars=r)
 
 def scatter(theta, phi, basemap=None, **scatter_args):
@@ -92,13 +94,7 @@ def scatter_3D(theta, phi, scalar=None, **points3d_args):
 
     x, y, z = coord.sph2car(np.ones_like(theta), theta, phi)
 
-    mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
     mlab.points3d(x, y, z, scalar, **points3d_args)
 
 def show():
-    try:
-        from enthought.mayavi import mlab
-    except ImportError:
-        from mayavi import mlab
-
     mlab.show()
