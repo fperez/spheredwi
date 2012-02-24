@@ -1,6 +1,1 @@
-import sphere
-import coord
-import plot
-import kernel
-import linalg
-import signal_sim
+from . import sphere, coord, plot, kernel, linalg, signal_sim, io

@@ -24,6 +24,7 @@ reload(sph)  # For interactive development
 # Load Fortran kernels
 from sphdif import even_pODF_f   as epODF
 from sphdif import sample_pODF_f as spODF
+import sphdif
 
 
 # Make global some frequently used functions
@@ -139,7 +140,7 @@ for kk in range(nRealizations):
    
     coefs    = nd_coefs_l1_trim[indexPos]
 
-    np.savetxt('recon_data.dat', points)
+    sphdif.io.save('recon_data', points)
 
 
     #--Visualize signal

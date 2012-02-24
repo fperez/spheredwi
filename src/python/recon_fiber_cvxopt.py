@@ -27,7 +27,6 @@ reload(sph)  # For interactive development
 from sphdif import even_pODF_f   as epODF
 from sphdif import sample_pODF_f as spODF
 
-
 # Make global some frequently used functions
 from numpy import dot
 from numpy.linalg import norm as norm
