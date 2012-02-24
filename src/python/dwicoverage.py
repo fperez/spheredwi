@@ -15,6 +15,9 @@ from cStringIO import StringIO
 # Third-party
 import numpy as np
 from numpy import pi, sin, cos, arccos,  arctan, exp, log, sqrt
+import os
+
+data_path = os.path.join(os.path.dirname(__file__), './data')
 
 #-----------------------------------------------------------------------------
 # Functions and classes
@@ -306,23 +309,27 @@ def load_bvecs(fname='bvecs'):
 
     Parameters
     ----------
-      fname : string or file
+    fname : string or file
+        Name of file in data directory.
 
-      The input file should contain a 3xn array.  If not, the array is
-      transposed and it's accepted if the result is then 3xn, otherwise a
-      ValueError is raised.  This means that if the input is 3x3, the rows are
-      interpreted as (x,y,z) and the columns as (p1,p2,p3) for the three
-      points.
+    Notes
+    -----
+    The input file should contain a 3xN array.  If not, the array is
+    transposed and it's accepted if the result is then 3xN, otherwise a
+    ValueError is raised.  This means that if the input is 3x3, the rows are
+    interpreted as (x,y,z) and the columns as (p1,p2,p3) for the three
+    points.
 
     Returns
     -------
-      pts : a 2-d array of dimensions (3,N)
-      """
+    pts : (3, N) ndarray
+        Data points.
 
+    """
     # If vectors are found with norms less than this, sound the alarm
     norm_tolerance = 0.99
     # Load the file declaring the point set
-    pts = np.loadtxt(fname)
+    pts = np.loadtxt(os.path.join(data_path, fname))
     # Sanity check
     if pts.ndim != 2:
         raise ValueError("Input file must be a 2-d array, %s-dims given" %
@@ -382,7 +389,7 @@ def build_coverage(points, fname_miss=None, symm=True):
     else:
         # Preprocess the input to read it as a 1-d list while skipping comment
         # lines.
-        tmp = open(fname_miss).read()
+        tmp = open(os.path.join(data_path, fname_miss)).read()
         bad_raw = StringIO(' '.join(l for l in tmp.splitlines()
                                     if not l.strip().startswith('#')))
         bad_idx = np.loadtxt(bad_raw,int)
