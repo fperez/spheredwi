@@ -1,7 +1,10 @@
 import numpy as np
 import scipy as sp
+import scipy.special
 
+import coord
 import sphere
+import plot
 
 
 def std_kernel(mu, N):
@@ -134,3 +137,16 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi,
     cos_theta = sphere.cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
 
     return kernel(cos_theta, N)
+
+
+def kernel_plot(kernel, grid_density=150, N=14):
+    theta_grid = np.linspace(0, np.pi, grid_density)
+    phi_grid = np.linspace(0, 2 * np.pi, grid_density)
+
+    kernel_vals = kernel(sphere.cos_inc_angle(0, 0, theta_grid[:, None], phi_grid), N)
+
+    plot.surf_grid_3D(kernel_vals, theta_grid, phi_grid, scale_radius=True)
+
+
+if __name__ == "__main__":
+    kernel_plot(even_kernel)
