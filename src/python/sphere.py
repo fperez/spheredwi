@@ -196,6 +196,37 @@ def surf_grid_3D(r, theta, phi, scale_radius=False):
         x, y, z = sph2car(np.ones_like(theta), theta, phi)
 
     mlab.mesh(x, y, z, scalars=r)
+
+def scatter(theta, phi, basemap=None, **scatter_args):
+    if basemap is None:
+        z = np.array([0, 0])
+        basemap = surf_grid(z, z, z, projection='moll')
+
+    lat, lon = sph2latlon(theta, phi)
+    x, y = basemap(lon, lat)
+    basemap.scatter(x, y, **scatter_args)
+
+def scatter_3D(theta, phi, scalar=None, **points3d_args):
+    points3d_args.setdefault('scale_factor', 0.1)
+    points3d_args.setdefault('color', (1, 0, 0))
+
+    try:
+        from enthought.mayavi import mlab
+    except ImportError:
+        from mayavi import mlab
+
+    if scalar is None:
+        scalar = np.ones_like(theta)
+
+    x, y, z = sph2car(np.ones_like(theta), theta, phi)
+    mlab.points3d(x, y, z, scalar, **points3d_args)
+
+def show():
+    try:
+        from enthought.mayavi import mlab
+    except ImportError:
+        from mayavi import mlab
+
     mlab.show()
 
 def quadrature_points(N=72):
@@ -249,12 +280,3 @@ def cos_inc_angle(theta1, phi1, theta2, phi2):
     """
     return np.sin(theta1) * np.sin(theta2) * np.cos(phi1 - phi2) \
            + np.cos(theta1) * np.cos(theta2)
-
-def scatter(theta, phi, basemap=None, **scatter_args):
-    if basemap is None:
-        z = np.array([0, 0])
-        basemap = surf_grid(z, z, z, projection='moll')
-
-    lat, lon = sph2latlon(theta, phi)
-    x, y = basemap(lon, lat)
-    basemap.scatter(x, y, **scatter_args)

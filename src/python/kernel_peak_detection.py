@@ -17,7 +17,7 @@ from signal_sim import single_tensor, single_tensor_ODF
 # Experiment configuration
 # ========================
 
-gamma = np.deg2rad(10)  # Angle separating fibers
+gamma = np.deg2rad(45)  # Angle separating fibers
 D = 150 # Grid density for plots (higher => more dense)
 
 # ====================================
@@ -32,133 +32,56 @@ theta132, phi132, w132 = sphere.quadrature_points(N=132)
 # If b is too low, the signal does not attenuate enough to measure.
 # Too high, the signal to noise ratio increases.
 
-# Make up somewhat realistic b-values
-b = 995 + np.random.normal(scale=4, size=Q)
-
-R0 = rotation_around_axis([0, 1, 0], gamma / 2.)
-R1 = rotation_around_axis([0, 1, 0], -gamma / 2.)
-
-xyz = np.column_stack(sphere.sph2car(np.ones_like(theta), theta, phi))
-
-S = single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
-S += single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
+angles = np.array([gamma / 2., -gamma / 2])
+R0 = rotation_around_axis([0, 1, 0], angles[0])
+R1 = rotation_around_axis([0, 1, 0], angles[1])
 
 # ================
 # Q-Space Sampling
 # ================
 
+# Note: We sample our signal in Q-space on the low-order quadrature points
+# here, but wwe could just as well have used other, random points on the
+# sphere.
+
+theta, phi = theta72, phi72
+Q = len(theta)
+b = 995 + np.random.normal(scale=4, size=Q) # Make up somewhat realistic b-values
+xyz = np.column_stack(sphere.sph2car(np.ones_like(theta), theta, phi))
+E = single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
+E += single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
+
 # ===========================-=====
 # ODF-domain: Sparse reconstruction
 # =================================
 
-# ==========================
-# ODF-domain: Peak detection
-# ==========================
+# Minimising the L1 penalized system
+#
+# ||Xb - y||_2^2 + lambda ||x||_1 subject to x_i >= 0.
+#
+# Here, X is reproducing Q-space kernel, y is the Q-space signal vector
+# and b are the coefficents.
+#
+# Note that the L1 penalization of b forces it to be sparse.  This also implies
+# that the ODF-domain signal is sparse, since the kernels in A (the reproducing
+# kernel matrix in ODF-space) are localised, thus the product Ab is sparse.
+# The product Xb is *not* sparse--the kernels in F are donut shaped, and not
+# localized.
+
+# See the the low-rank approximation wiki for more detail on these types of
+# problems: http://ugcs.caltech.edu/~srbecker/wiki/Main_Page
+
+theta_odf, phi_odf = theta132, phi132
+kernel = inv_funk_radon_even_kernel
+kernel_N = 16
+X = kernel_matrix(theta, phi, theta_odf, phi_odf, kernel=kernel, N=kernel_N)
+y = E
 
 
-## # Sample signal at several points
-## # We choose the lower order quadrature points purely for convenience
-## samples = np.zeros((72,))
-## for (theta, phi, sigma) in zip(pdf_theta, pdf_phi, pdf_sigma):
-##     samples += peak(theta, phi, sigma, q_theta_72, q_phi_72)
+from sklearn import linear_model
 
-
-## # # Fitting
-
-
-
-## def compare_reconstruction(s_theta, s_phi, q_theta, q_phi,
-##                            kernel_weights, kernel, kernel_N,
-##                            density):
-
-##     mask = (kernel_weights != 0)
-##     masked_theta = q_theta[mask]
-##     masked_phi = q_phi[mask]
-##     masked_weights = kernel_weights[mask]
-
-##     f, (ax0, ax1) = plt.subplots(1, 2, figsize=[10, 5])
-
-##     lat = np.linspace(-90, 90, density)
-##     lon = np.linspace(-180, 180, density)
-##     theta_grid, phi_grid = sphere.latlon2sph(lat, lon)
-
-##     m = sphere.surf_grid(PDF(theta_grid[:, None], phi_grid),
-##                          theta_grid, phi_grid,
-##                          vmin=0, vmax=1, ax=ax0)
-
-##     sphere.scatter(s_theta, s_phi, basemap=m)
-
-##     PDF_recon = kernel_reconstruct(masked_theta, masked_phi, masked_weights,
-##                                    theta_grid, phi_grid,
-##                                    kernel=kernel, N=kernel_N)
-
-##     m = sphere.surf_grid(PDF_recon, theta_grid, phi_grid, vmin=0, ax=ax1)
-
-##     sphere.scatter(q_theta, q_phi,
-##                    c=kernel_weights / kernel_weights.max(), cmap=plt.cm.gray,
-##                    basemap=m)
-
-
-
-## # Use coefficients from quadrature to do a direct fit
-
-## q_theta, q_phi, q_w = q_theta_72, q_phi_72, q_w_72
-## s_theta, s_phi = q_theta, q_phi
-
-## kernel = std_kernel
-## kernel_N = 16
-## kernel_weights = samples * q_w
-## kernel_weights[kernel_weights < 5e-2] = 0
-
-## compare_reconstruction(s_theta, s_phi, q_theta, q_phi,
-##                        kernel_weights, kernel, kernel_N, density=D)
-
-## print 'Coefficients left after thresholding:', len(np.nonzero(kernel_weights)[0])
-
-## # <markdowncell>
-
-## # Minimising the L1 penalized system
-## #
-## # $$\Vert A\mathbf{x} - \mathbf{b} \Vert_2^2 + \lambda \vert \mathbf{x} \vert_1\quad
-## # \mathrm{subject\ to}\quad x_i >= 0.$$
-## #
-## # Here, $A$ is reproducing kernel in sparse matrix form, $\mathbf{b}$ is the measured signal
-## # and $\mathbf{x}$ are the coefficents in the sparse represenation.
-## #
-## # See the <a href="http://ugcs.caltech.edu/~srbecker/wiki/Main_Page">sparse and low-rank approximation wiki</a>
-## # for more detail.
-
-
-
-
-
-
-## # Use the low-order quadrature points as sampling points
-## # in this experiment, since they're fairly equally spaced
-## # across the sphere (unlike in the previous example,
-## # we don't need them to be on the quadrature points).
-## #
-## # We use a finer representation of the function
-## # to best establish the fiber directions.
-## #
-## s_theta, s_phi = q_theta_72, q_phi_72
-## q_theta, q_phi, q_w = q_theta_492, q_phi_492, q_w_492
-
-## kernel = std_kernel
-## kernel_N = 16
-## X = kernel_matrix(s_theta, s_phi, q_theta, q_phi,
-##                   kernel=kernel, N=kernel_N)
-## y = samples
-
-## # # Penalise measurements with low absolute value
-## # E = np.diag(1 + np.sqrt(np.abs(s / s.max())))
-## # A = E.dot(A)
-## # b = E.dot(b)
-
-## from sklearn import linear_model
-
-## alpha = 0.01
-## L = linear_model.Lasso(alpha=alpha, copy_X=True)
+alpha = 0.0001
+L = linear_model.Lasso(alpha=alpha, copy_X=True)
 
 ## #L = linear_model.OrthogonalMatchingPursuit(copy_X=True, n_nonzero_coefs=5)
 
@@ -168,14 +91,35 @@ S += single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
 ## #rho = a / (a + b)
 ## #L = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=False, copy_X=True)
 
-## beta = L.fit(X, y).coef_
+## # # Penalise measurements with low absolute value
+## # P = np.diag(1 + np.sqrt(np.abs(s / s.max())))
+## # X = P.dot(X)
+## # y = P.dot(y)
+
+beta = L.fit(X, y).coef_
+
+nnz = np.sum(beta != 0)
+print 'Compression: %.2f%%' % ((len(beta) - nnz) / len(beta) * 100)
+print 'Non-zero coefficients: %d/%d' % (nnz, len(beta))
+print 'Error (Q-space):', np.linalg.norm(X.dot(beta) - y)
 
 ## beta[beta < 1e-5] = 0
 
-## compare_reconstruction(s_theta, s_phi, q_theta, q_phi,
-##                        beta, kernel, kernel_N, density=D)
 
-## plt.show()
+# ==========================
+# ODF-domain: Peak detection
+# ==========================
 
-## print "Number of coefficients: %d" % np.sum(beta != 0)
+mask = (beta != 0)
+print theta_odf[mask], phi_odf[mask]
+sphere.scatter_3D(theta_odf, phi_odf, color=(0, 0, 1))
+sphere.scatter_3D(theta_odf[mask], phi_odf[mask], 1 + beta[mask]/beta.max(),
+                  transparent=True, color=(1, 0, 0), scale_mode='scalar',
+                  scale_factor=0.1, opacity=0.7)
 
+f1_r, f1_theta, f1_phi = sphere.car2sph(*R0.dot([1, 0, 0]))
+f2_r, f2_theta, f2_phi = sphere.car2sph(*R1.dot([1, 0, 0]))
+sphere.scatter_3D(f1_theta, f1_phi, color=(0, 1, 0), scale_factor=0.15)
+sphere.scatter_3D(f2_theta, f2_phi, color=(0, 1, 0), scale_factor=0.15)
+
+sphere.show()

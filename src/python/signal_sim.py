@@ -127,4 +127,7 @@ if __name__ == "__main__":
                            S0=1, SNR=None)
 
     sphere.surf_grid_3D(ODF, theta_grid, phi_grid, scale_radius=True)
+    sphere.show()
+
     sphere.surf_grid_3D(signal, theta_grid, phi_grid, scale_radius=True)
+    sphere.show()

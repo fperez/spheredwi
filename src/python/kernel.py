@@ -107,12 +107,20 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi,
                   kernel=inv_funk_radon_even_kernel, N=18):
     """Construct the kernel matrix, A.
 
+    The kernel projects sampling points to evaluation points.  Therefore,
+    s_theta and s_phi are constrained by where you sampled, whereas q_theta and
+    q_phi can be arbitrary (that's where the kernel is being evaluated).
+
+    To phrase this another way, (s_theta, s_phi) define the location of the
+    kernels [and, hence, the weights], whereas (q_theta, q_phi) is where we
+    want to evaluate them.
+
     Parameters
     ----------
     s_theta, s_phi : (P,) ndarray
         Sampling points (inclination and azimuthal angles).
     q_theta, q_phi : (Q,) ndarray
-        Quadrature points (inclination and azimuthal angles).
+        Evaluation points (inclination and azimuthal angles).
     N : int
         Maximum degree of spherical harmonic subspace.
 
