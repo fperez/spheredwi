@@ -26,22 +26,7 @@ See [7]_ for a discussion on interpolation on the sphere.
 from __future__ import division
 
 import numpy as np
-
-def sph2car(r, theta, phi):
-    """Convert spherical coordinates to Cartesian coordinates."""
-    x = r * np.sin(theta) * np.cos(phi)
-    y = r * np.sin(theta) * np.sin(phi)
-    z = r * np.cos(theta)
-
-    return x, y, z
-
-def car2sph(x, y, z):
-    r = np.sqrt(x**2 + y**2 + z**2)
-    theta = np.arccos(z / r)
-    phi = np.arctan2(y, x)
-
-    return r, theta, phi
-
+from sphdif import coord
 
 def golden_points(N):
     """Golden Section Spiral.
@@ -112,9 +97,8 @@ def uniform_random(N):
 
     theta = np.arccos(z / r)
     phi = np.arctan2(y, x)
-    r = np.ones_like(theta)
 
-    return sph2car(r, theta, phi)
+    return coord.sph2car(theta, phi)
 
 def saff_kuijlaars(N):
     """
@@ -132,7 +116,7 @@ def saff_kuijlaars(N):
     for i in range(1, N - 1):
         phi[i] = (phi[i - 1] + 3.6 / np.sqrt(N * (1 - h[i]**2))) % (2 * np.pi)
 
-    return sph2car(np.ones_like(theta), theta, phi)
+    return coord.sph2car(theta, phi)
 
 
 def charged_particles(N, init_func=golden_points):
@@ -148,7 +132,7 @@ def charged_particles(N, init_func=golden_points):
 
     """
     x, y, z = init_func(N)
-    r, theta, phi = car2sph(x, y, z)
+    theta, phi, r = car2sph(x, y, z)
     r.fill(1)
 
     # We can derive the formulas for the cost function and derivative,
@@ -293,24 +277,3 @@ if __name__ == "__main__":
                       ('Minimum Energy', min_energy)])
     plt.show()
 
-
-############# Tests #############
-
-from numpy.testing import *
-
-def test_sph2car():
-    x, y, z = sph2car([1], [np.pi / 2], [0])
-    assert_almost_equal(x, 1, decimal=5)
-    assert_almost_equal(y, 0, decimal=5)
-    assert_almost_equal(z, 0, decimal=5)
-
-def test_car2sph():
-    r, theta, phi = car2sph(1, 0, 0)
-    assert_almost_equal(r, 1, decimal=5)
-    assert_almost_equal(theta, np.pi / 2, decimal=5)
-    assert_almost_equal(phi, 0, decimal=5)
-
-    r, theta, phi = car2sph(0, 1, 0)
-    assert_almost_equal(r, 1, decimal=5)
-    assert_almost_equal(theta, np.pi / 2, decimal=5)
-    assert_almost_equal(phi, np.pi / 2, decimal=5)
