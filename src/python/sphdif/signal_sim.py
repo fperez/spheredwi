@@ -112,23 +112,19 @@ def single_tensor_ODF(r, evals=None, rotation=None):
     return  (1 / (4 * np.pi * np.prod(evals)**1/2 * P)).reshape(out_shape)
 
 if __name__ == "__main__":
-    import coord
-    import plot
+    import sphere, coord, plot
 
-    D = 150
-    theta_grid = np.linspace(0, np.pi, D)
-    phi_grid = np.linspace(0, 2 * np.pi, D)
-
-    mg_phi, mg_theta = np.meshgrid(phi_grid, theta_grid)
-    xyz = np.dstack(coord.sph2car(np.ones(mg_theta.shape), mg_theta, mg_phi))
+    npts = 150
+    theta, phi = sphere.mesh(npts)
+    xyz = np.dstack(coord.sph2car(theta, phi))
 
     ODF = single_tensor_ODF(xyz, rotation=None)
     signal = single_tensor(gradients=xyz,
-                           bvals=1000 * np.ones(D * D), rotation=None,
+                           bvals=1000 * np.ones(npts * npts), rotation=None,
                            S0=1, SNR=None)
 
-    plot.surf_grid_3D(ODF, theta_grid, phi_grid, scale_radius=True)
+    plot.surf_grid_3D(ODF, theta, phi, scale_radius=True)
     plot.show()
 
-    plot.surf_grid_3D(signal, theta_grid, phi_grid, scale_radius=True)
+    plot.surf_grid_3D(signal, theta, phi, scale_radius=True)
     plot.show()
