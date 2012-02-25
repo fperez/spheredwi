@@ -119,3 +119,35 @@ def cos_inc_angle(theta1, phi1, theta2, phi2):
     """
     return np.sin(theta1) * np.sin(theta2) * np.cos(phi1 - phi2) \
            + np.cos(theta1) * np.cos(theta2)
+
+def mesh(npts=(101, 101), closed=False):
+    """Generate a meshgrid on the unit sphere.
+
+    Uniformly sample the polar angle, theta, and the azimuthal angle, phi.
+
+    Parameters
+    ----------
+    npts : int or tuple
+        Number of angle points sampled.
+    closed : bool
+        Whether to generate an open mesh (like `np.ogrid`)
+        or a closed mesh like `np.mgrid` or `np.meshgrid`.
+        By default, an open grid is generated.
+
+    Returns
+    -------
+    theta, phi : (N,) or (N,M) ndarray
+        Sampling of the polar angle.  Shape depends on ``open``.
+
+    """
+    if np.isscalar(npts):
+        npts = (npts, npts)
+
+    theta = np.linspace(0, np.pi, npts[0])[:, None]
+    phi = np.linspace(0, 2 * np.pi, npts[1])
+
+    if open:
+        return theta, phi
+    else:
+        mg_phi, mg_theta = np.meshgrid(phi_grid, theta_grid)
+        return mg_theta, mg_phi
