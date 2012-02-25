@@ -27,7 +27,7 @@ def car2sph(x, y, z):
     return theta, phi, r
 
 
-def sph2car(theta, phi, r=[1]):
+def sph2car(theta, phi, r=None):
     """Convert Cartesian to spherical coordinates.
 
     Parameters
@@ -36,6 +36,9 @@ def sph2car(theta, phi, r=[1]):
         Radius, inclination and azimuth angles.
 
     """
+    if r is None:
+        r = np.ones_like(theta + phi)
+
     x = r * np.cos(phi) * np.sin(theta)
     y = r * np.sin(phi) * np.sin(theta)
     z = r * np.cos(theta)

@@ -46,7 +46,7 @@ R1 = rotation_around_axis([0, 1, 0], angles[1])
 theta, phi = theta72, phi72
 Q = len(theta)
 b = 995 + np.random.normal(scale=4, size=Q) # Make up somewhat realistic b-values
-xyz = np.column_stack(coord.sph2car(np.ones_like(theta), theta, phi))
+xyz = np.column_stack(coord.sph2car(theta, phi))
 E = single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
 E += single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
 
@@ -116,8 +116,8 @@ plot.scatter_3D(theta_odf[mask], phi_odf[mask], 1 + beta[mask]/beta.max(),
                   transparent=True, color=(1, 0, 0), scale_mode='scalar',
                   scale_factor=0.1, opacity=0.7)
 
-f1_r, f1_theta, f1_phi = coord.car2sph(*R0.dot([1, 0, 0]))
-f2_r, f2_theta, f2_phi = coord.car2sph(*R1.dot([1, 0, 0]))
+f1_theta, f1_phi, f1_r = coord.car2sph(*R0.dot([1, 0, 0]))
+f2_theta, f2_phi, f2_r = coord.car2sph(*R1.dot([1, 0, 0]))
 plot.scatter_3D(f1_theta, f1_phi, color=(0, 1, 0), scale_factor=0.15)
 plot.scatter_3D(f2_theta, f2_phi, color=(0, 1, 0), scale_factor=0.15)
 
