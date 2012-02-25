@@ -90,7 +90,7 @@ def quadrature_points(N=72):
                  492: 'qsph1-37-492DP.dat'}
 
     q_pts = np.loadtxt(os.path.join(basedir, quad_file[N]))
-    _, q_theta, q_phi = coord.car2sph(*q_pts[:, :3].T)
+    q_theta, q_phi, _ = coord.car2sph(*q_pts[:, :3].T)
     q_w = q_pts[:, 3]
 
     return q_theta, q_phi, q_w
