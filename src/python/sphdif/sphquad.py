@@ -38,13 +38,14 @@ def interp_matrix(qpnts, spnts, npgrid, nsamp, deg_max):
     return A
 
 
-def interp_matrix_new(qpnts, spnts, npgrid, nsamp, deg_max):
+def interp_matrix_new(qpnts, w, spnts, npgrid, nsamp, deg_max):
     """Create matrix associated with inversion based on Aganj et al.
     formalism.
 
     Parameters
     ----------
     qpnts = quadrature points
+    w     = quadrature weight
     spnts = sample points
     npgrid = number of points in grid
     nsamp  = number of sample points
@@ -59,7 +60,7 @@ def interp_matrix_new(qpnts, spnts, npgrid, nsamp, deg_max):
             cosTheta = np.dot(spnts[i], qpnts[j])
             if(abs(cosTheta)>1):
                 cosTheta = np.sign(cosTheta)
-            A[i,j] = inv_funk_radon_even_kernel(cosTheta, deg_max)
+            A[i,j] = w[j] * inv_funk_radon_even_kernel(cosTheta, deg_max)
     return A
 
 
@@ -813,24 +814,3 @@ def laplacian(points, sigma):
 
 
 
-def sort(points,eps):
-
-  (n,m) = points.shape
-
-  index = np.zeros((n,n))
-  
-  for i in range(n):
-
-    p = points[i,:]
-
-    for j in range(n):
-
-      dij = np.arccos(np.dot(p,points[j,:]))
-
-      if dij < eps and i != j:
-
-        index[j,i] = j
-
-
-
-  return index
