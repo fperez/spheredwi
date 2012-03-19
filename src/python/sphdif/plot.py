@@ -48,7 +48,7 @@ def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
 
     return m
 
-def surf_grid_3D(r, theta, phi, scale_radius=False):
+def surf_grid_3D(r, theta, phi, scale_radius=False, **mesh_args):
     """Draw a function r = f(theta, phi), evaluated on a grid, on the sphere.
 
     Parameters
@@ -62,6 +62,8 @@ def surf_grid_3D(r, theta, phi, scale_radius=False):
     scale_radius : bool
         Whether to scale the radius with the function value (changes the
         surface height to reflect function values).
+    mesh_args : dict / kwds
+        Keyword arguments passed to the ``mlab.mesh`` call.
 
     """
     phi, theta = np.meshgrid(phi, theta)
@@ -70,7 +72,7 @@ def surf_grid_3D(r, theta, phi, scale_radius=False):
     else:
         x, y, z = coord.sph2car(theta, phi)
 
-    get_mlab().mesh(x, y, z, scalars=r)
+    return get_mlab().mesh(x, y, z, scalars=r, **mesh_args)
 
 def scatter(theta, phi, basemap=None, **scatter_args):
     if basemap is None:
