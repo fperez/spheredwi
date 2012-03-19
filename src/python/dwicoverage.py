@@ -17,138 +17,13 @@ import numpy as np
 from numpy import pi, sin, cos, arccos,  arctan, exp, log, sqrt
 import os
 
+from sphdif import coord, sphere, plot
+
 data_path = os.path.join(os.path.dirname(__file__), './data')
 
 #-----------------------------------------------------------------------------
 # Functions and classes
 #-----------------------------------------------------------------------------
-
-def where2(cond):
-    """Return both where cond is true and where it's false.
-
-    Note: the return value is a single index array, NOT a 1-element tuple (in
-    contrast to np.where), so this function isn't useful for multidimensional
-    inputs.
-
-    Parameters
-    ----------
-    cond : 1-d array
-    """
-    return cond.nonzero()[0], (~cond).nonzero()[0]
-
-
-def cart2spherical(rcart,normalized=False):
-    """Convert array of *unit* 3-vectors in cartesian coordinates to spherical.
-
-    This computes the spherical coordinates (r, theta, phi) for the input
-    array, where theta is the polar angle and phi is the azimuthal one.
-
-    Parameters
-    ----------
-    rcart : 3xn or nx3 array
-      Array of points in R^3 to be converted.
-
-    normalized : boolean, optional (False)
-      If true, assume the input vectors are all normalized.  This avoids
-      computing the norms internally.  In this case, the r vector (see below)
-      will NOT be returned.
-
-    Returns
-    -------
-    r, theta, phi : 1-d arrays
-      The spherical coordinates of the input arrays.
-    """
-    # Tolerance: points with x-coordinate below this are considered to lie
-    # precisely on the y-z plane, to avoid issues of numerical error when
-    # taking arctangents.
-    eps = 1e-6
-
-    # Validate dimensionality of input
-    rs = rcart.shape
-    if rcart.ndim != 2 or not (rs[0]==3 or rs[1]==3):
-        raise ValueError("input must be shaped 3xN or Nx3, shape given: %s" % rs)
-    if rs[1] == 3:
-        rcart = rcart.T
-
-    # Compute r and extract normalized x/y/z components (used for inversion
-    # calculations)
-    if normalized:
-        x,y,z = rcart
-    else:
-        r = sqrt((rcart**2).sum(0))
-        x,y,z = rcart/r
-
-    # Theta, the latitude angle, is easy
-    theta = arccos(z)
-
-    # Getting phi (longitude angle) right is tricky...
-    yz,xyz    = where2(abs(x)<eps)
-    xpos,xneg = where2(x>0)
-    ypos,yneg = where2(y>0)
-
-    phi = arctan(y/x)
-    phi[xneg] += pi
-    phi[np.intersect1d(xpos,yneg)] += 2*pi
-    phi[np.intersect1d(yz,ypos)] = pi/2
-    phi[np.intersect1d(yz,yneg)] = 3*pi/2
-
-    if normalized:
-        return theta, phi
-    else:
-        return r, theta, phi
-
-
-def cart2lonlat(rcart, normalized=False):
-    """Convert array of 3-vectors in cartesian coordinates to longitude/latitude.
-
-    Parameters
-    ----------
-    rcart : 3xn array
-      Array of points in R^3 to be converted.
-
-    normalized : boolean, optional (False)
-      If true, assume the input vectors are all normalized.  See cart2spherical
-      for details.
-
-    Returns
-    -------
-    lon : 1d array
-      Longitude in degrees,  in the [-180,180] range.
-    lat : 1d array
-      Latitude in degrees, in the [-90,90] range.
-    """
-    # We don't need the radial coordinates here, only the angles
-    theta, phi = cart2spherical(rcart,normalized)[1:]
-
-    # Convert phi/theta to longitude/latitude
-    lon = (phi-pi)*(180/pi)
-    lat = (theta-pi/2)*(180/pi)
-    return lon, lat
-
-
-def sphere_mesh(r=1.0, npts=(101,101)):
-    """Create mesh for a sphere.
-
-    Uniformly sample the spherical angles theta, phi (in physics convention,
-    where theta is the polar angle and phi is the azimuthal one).
-
-    Parameters
-    ----------
-
-    r : float
-      radius of sphere
-
-    npts : pair of floats
-      The number of points for the theta and phi grids."""
-
-    np_theta = npts[0]*1j
-    np_phi = npts[1]*1j
-    theta, phi = np.mgrid[0:pi:np_theta,0:2*pi:np_phi]
-    x = r*sin(theta)*cos(phi)
-    y = r*sin(theta)*sin(phi)
-    z = r*cos(theta)
-    return x,y,z
-
 
 def vec_norms(vecs):
     """Return the L2 norms of an array of vectors.
@@ -164,7 +39,7 @@ def symmetrize(v1,v2):
     return np.hstack([v1,-v1]), np.hstack([v2,-v2])
 
 
-def dwi_coverage(rp,rs,ndirs=None):
+def dwi_coverage(rp, rs, ndirs=None):
     """Compute coverage from points at rp on spherical mesh at rs.
     """
     # If the number of directions isn't given, we assume the total would be
@@ -176,103 +51,65 @@ def dwi_coverage(rp,rs,ndirs=None):
     # each gaussian as providing good coverage for the disk within its FWHM, so
     # we simply take 4pi/(ndirs*area_fwhm). With fwhm = 2*sqrt(2 ln2)*sigma, we
     # then get:
-    sigma2 = 2.0/(ndirs*log(2))
+    sigma2 = 2.0 / (ndirs * log(2))
     # Precompute the actual factor that goes into the exponent of the gaussians
     # just once.
-    sfac = -1.0/(2*sigma2)
+    sfac = -1.0 / (2 * sigma2)
 
     # Unpack the mesh coordinates to construct the field at these points
-    xs,ys,zs = rs
+    xs, ys, zs = np.rollaxis(rs, -1)
     field = np.zeros_like(xs)
     # Actual field computation
-    for xp,yp,zp in rp.T:
-        arc = arccos(xs*xp+ys*yp+zs*zp)
+    for xp, yp, zp in rp.T:
+        arc = arccos(xs * xp + ys * yp + zs * zp)
         field += exp(sfac*arc**2)
+
     # Since the units are completely arbitrary, return a normalized value
-    return field/field.max()
+    return field / field.max()
 
 
-def sphere_field(rp,ndirs,npts=(100,100),**kw):
-    """Compute coverage field on a sphere."""
-    sphere = sphere_mesh(1.0,npts)
-    # compute scalar field from point distribution xp,yp,zp at xs,ys,zs on the
-    # sphere mesh
-    field = dwi_coverage(rp,sphere,ndirs)
-    #print 'fshape:',field.shape # dbg
-    return sphere, field
-
-
-def mscatter(bmap,ax,pts,color, **kwargs):
-    """Scatter plot on a basemap.
-
-    This is mostly just a utility wrapper around bmap.scatter.
-
-    Parameters
-    ----------
-
-    bmap : basemap instance
-    ax : matplotlib axes instance
-      This should be the axes associated with map drawing from bmap, since
-      ultimately ax.scatter() will be called.
-    pts :
-
-    """
-    rlon, rlat = cart2lonlat(pts)
-    rx, ry = bmap(rlon, rlat)
-    ax.scatter(rx, ry, c=color, edgecolors='none', **kwargs)
-
-
-def show_coverage_2d(rg, sphere, field, rm=None,
-                     sphere_colormap='jet', vmin=None,
-                     ax=None, markersize=30):
+def show_coverage_2d(rg, field, rm=None, projection='moll',
+                     vmin=None, markersize=30):
     """Show field coverage by projecting the sphere onto a flat 2d surface.
 
     Parameters
     ----------
-    rg :
-
-    ax : matplotlib axis object, None
+    rg : (M, 3) ndarray
+        Gradient directions in Cartesian coordinates.
+    field : (M, N) ndarray
+        Field values on a grid.  The grid is on ``theta = [0, pi]`` and
+        ``phi = [0, 2 * pi]``.
+    rm : (M, 3) ndarray
+        Missing / dropped gradient directions.
+    projection : 'moll', 'ortho', etc.
+        Basemap projection.
 
     """
-    from matplotlib import pyplot as plt
-    from mpl_toolkits.basemap import Basemap
+    import matplotlib.pyplot as plt
 
-    if ax is None:
-        plt.figure()
+    npts_lat, npts_lon = field.shape
+    theta = np.linspace(0, np.pi, npts_lat)
+    phi = np.linspace(0, 2 * np.pi, npts_lon)
 
-    projection='moll'
+    m = plot.surf_grid(field, theta, phi,
+                       projection=projection, vmin=vmin)
+    plt.colorbar(orientation='horizontal', format='%.2g')
 
-    nlevels = 56
-    npts_lat,npts_lon = field.shape
-    lats = np.linspace(-90,90,npts_lat)
-    lons = np.linspace(-180,180,npts_lon)
-    m = Basemap(projection=projection,lat_0=0,lon_0=0,resolution='c',ax=ax)
-    x, y = m(*np.meshgrid(lons, lats))
-    if vmin is None:
-        # Use the minimum value in the data for the color scale
-        c = m.contourf(x,y,field,nlevels,cmap=plt.cm.get_cmap(sphere_colormap))
-        if ax is None:
-            plt.colorbar(orientation='horizontal',format='%.2g')
-    else:
-        clevels = np.linspace(vmin,1,nlevels)
-        cticks = ["%2g" % l for l in clevels]
-        c = m.contourf(x,y,field,clevels,cmap=plt.cm.get_cmap(sphere_colormap))
-        if ax is None:
-            plt.colorbar(orientation='horizontal',ticks=[0,0.25,0.5,0.75,1])
-    # Now, compute the lat/lon for the points
-    mscatter(m,c.ax,rg,'g', s=markersize)
+    x, y, z = rg
+    theta, phi, rho = coord.car2sph(x, y, z)
+    plot.scatter(theta, phi, basemap=m, color='g', s=markersize)
+
     if rm is not None and rm.shape[1] > 0:
-        mscatter(m,c.ax,rm,'r', s=markersize)
+        x, y, z = rm
+        theta, phi, rho = coord.car2sph(x, y, z)
+        plot.scatter(theta, phi, basemap=m, color='r', s=markersize)
 
-    if ax is None:
-        plt.show()
+    plt.show()
 
 
-def show_coverage_3d(rg,sphere,field,rm=None,vmin=None,sphere_colormap='jet'):
+def show_coverage_3d(rg, field, rm=None, vmin=None, sphere_colormap='jet'):
     """
     """
-    from enthought.mayavi import mlab
-
     # Resolution with which the small spheres are drawn
     pt_resolution = 20
     # Size factor for small spheres
@@ -280,23 +117,26 @@ def show_coverage_3d(rg,sphere,field,rm=None,vmin=None,sphere_colormap='jet'):
 
     # missing directions in red, if any
     if rm is not None:
-        xm,ym,zm = rm
-        mlab.points3d(xm,ym,zm,color=(1,0,0),scale_factor=scale_factor,
-                      resolution=pt_resolution,
-                      name='Bad directions')
+        xm, ym, zm = rm
+        theta, phi, rho = coord.car2sph(xm, ym, zm)
+        plot.scatter_3D(theta, phi, resolution=pt_resolution,
+                        scale_factor=scale_factor, name='Bad direction')
 
     # 'good' directions in green
-    xg,yg,zg = rg
+    xg, yg, zg = rg
+    theta, phi, rho = coord.car2sph(xg, yg, zg)
 
     # As simple spheres
-    mlab.points3d(xg,yg,zg,color=(0,1,0),scale_factor=scale_factor,
-                  resolution=pt_resolution,
-                  name='Good directions')
+    plot.scatter_3D(theta, phi, color=(0, 1, 0), scale_factor=scale_factor,
+                    resolution=pt_resolution, name='Good directions')
 
-    xs,ys,zs = sphere  # unpack mesh coordinates for mlab.mesh call
-    s=mlab.mesh(xs, ys, zs, scalars=field,vmin=vmin,
-              colormap=sphere_colormap,name='Coverage')
-    mlab.colorbar(s,orientation='horizontal')
+    npts_lat, npts_lon = field.shape
+    theta = np.linspace(0, np.pi, npts_lat)
+    phi = np.linspace(0, 2 * np.pi, npts_lon)
+    s = plot.surf_grid_3D(field, theta, phi, vmin=vmin, name='Coverage')
+
+    mlab = plot.get_mlab()
+    mlab.colorbar(s, orientation='horizontal')
     mlab.show()
 
 
@@ -365,7 +205,7 @@ def build_coverage(points, fname_miss=None, symm=True):
     Parameters
     ----------
     points : string or ndarray
-        File name of file containing a 3xn array of unit vectors,
+        File name of file containing a 3xN array of unit vectors,
         or ndarray with vectors.
     """
 
@@ -409,14 +249,19 @@ def build_coverage(points, fname_miss=None, symm=True):
 
     # The full bvecs lists contains every vector and its opposite direction
     if symm:
-        bv_good,bv_miss = symmetrize(bv_good,bv_miss)
+        bv_good, bv_miss = symmetrize(bv_good, bv_miss)
     # Find the total number of bvecs.  We do this now rather than taking
     # len(bvecs) to properly account for the possibly dropped B0 term.
     nvecs = bv_good.shape[1] + bv_miss.shape[1]
 
     # Now compute and draw the coverage field generated by the 'good'
     # directions
-    sphere, field = sphere_field(bv_good,nvecs)
+
+    # compute scalar field from point distribution bv_good on the
+    # sphere mesh
+    theta, phi = sphere.mesh(closed=True)
+    xyz = np.dstack(coord.sph2car(theta, phi))
+    field = dwi_coverage(bv_good, xyz, nvecs)
 
     return bv_good,sphere,field,bv_miss
 
@@ -426,10 +271,11 @@ def main_coverage(fpoints, fpoints_missing=None, symm=False,
                   vmin=None, show_3d=False):
     bv_good,sphere,field,bv_miss = build_coverage(fpoints, fpoints_missing,
                                                   symm=symm)
-    show_coverage_2d(bv_good, sphere, field, bv_miss, vmin=vmin)
+    show_coverage_2d(bv_good, field, bv_miss, vmin=vmin)
     if show_3d:
-        show_coverage_3d(bv_good, sphere, field, bv_miss, vmin=vmin)
+        show_coverage_3d(bv_good, field, bv_miss, vmin=vmin)
 
 
 if __name__ == '__main__':
-    main_coverage('bvecs', 'bvecs_missing', True)
+    main_coverage('bvecs', fpoints_missing='bvecs_missing',
+                  symm=True, vmin=None, show_3d=True)
