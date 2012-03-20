@@ -1,0 +1,11 @@
+.. AUTO-GENERATED FILE -- DO NOT EDIT!
+
+.. toctree::
+
+   generated/sphdif.coord
+   generated/sphdif.kernel
+   generated/sphdif.linalg
+   generated/sphdif.plot
+   generated/sphdif.signal_sim
+   generated/sphdif.sph_io
+   generated/sphdif.sphere
