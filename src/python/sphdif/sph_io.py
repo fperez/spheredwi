@@ -11,6 +11,7 @@ def temp_storage(f):
             os.mkdir(data_path)
         return f(*args, **kwargs)
 
+    first_check_temp_dir.__doc__ = f.__doc__
     return first_check_temp_dir
 
 @temp_storage
@@ -19,8 +20,8 @@ def save(file, arr):
 
     """
 
-    file = os.path.join(data_path, file)
-    return np.save(file, arr)
+    f = os.path.join(data_path, file)
+    return np.save(f, arr)
 
 @temp_storage
 def load(file):
@@ -28,5 +29,5 @@ def load(file):
 
     """
 
-    file = os.path.join(data_path, file)
-    return np.load(file)
+    f = os.path.join(data_path, file)
+    return np.load(f)
