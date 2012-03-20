@@ -1,5 +1,10 @@
 sphdif API
 ==========
 
-.. include:: generated/gen.txt
+.. toctree::
+   :hidden:
+
+   api
+
+.. include:: api.txt
 
