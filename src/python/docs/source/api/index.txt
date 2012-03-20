@@ -1,0 +1,5 @@
+sphdif API
+==========
+
+.. include:: generated/gen.txt
+
