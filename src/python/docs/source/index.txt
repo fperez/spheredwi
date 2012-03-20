@@ -1,0 +1,12 @@
+====================
+sphdif documentation
+====================
+
+Contents
+========
+
+.. toctree::
+   :maxdepth: 1
+
+   api/index.txt
+
