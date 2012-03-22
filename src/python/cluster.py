@@ -9,7 +9,7 @@ from math import floor
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
-from scikits.learn import mixture
+from sklearn import mixture
 
 import sphdif
 import sphdif.sphquad as sph
