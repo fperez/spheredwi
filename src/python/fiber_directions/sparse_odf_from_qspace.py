@@ -1,4 +1,6 @@
 from __future__ import division
+import sys
+sys.path.insert(0, '..')
 
 import numpy as np
 import scipy as sp
@@ -11,6 +13,7 @@ from sphdif.kernel import (kernel_matrix, std_kernel, even_kernel,
                            inv_funk_radon_even_kernel, kernel_reconstruct)
 from sphdif.linalg import rotation_around_axis
 from sphdif.signal_sim import single_tensor, single_tensor_ODF
+from sphdif import sph_io
 
 # ========================
 # Experiment configuration
@@ -96,6 +99,9 @@ L = linear_model.Lasso(alpha=alpha, copy_X=True)
 ## # y = P.dot(y)
 
 beta = L.fit(X, y).coef_
+
+sph_io.savez('odf_coeffs', theta=theta, phi=phi, beta=beta,
+             separation=gamma)
 
 nnz = np.sum(beta != 0)
 print 'Compression: %.2f%%' % ((len(beta) - nnz) / len(beta) * 100)
