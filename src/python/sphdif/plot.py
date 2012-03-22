@@ -36,7 +36,6 @@ def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
     basemap_args.setdefault('lat_0', 0)
     basemap_args.setdefault('lon_0', 0)
     basemap_args.setdefault('resolution', 'c')
-    basemap_args.setdefault('ax', ax)
 
     from mpl_toolkits.basemap import Basemap
 
@@ -44,7 +43,7 @@ def surf_grid(r, theta, phi, ax=None, vmin=None, vmax=None, **basemap_args):
     m.drawmapboundary()
     lat, lon = coord.sph2latlon(theta, phi)
     x, y = m(*np.meshgrid(lon, lat))
-    m.pcolor(x, y, r, vmin=vmin, vmax=vmax);
+    m.pcolor(x, y, r, vmin=vmin, vmax=vmax)
 
     return m
 
@@ -62,6 +61,8 @@ def surf_grid_3D(r, theta, phi, scale_radius=False, **mesh_args):
     scale_radius : bool
         Whether to scale the radius with the function value (changes the
         surface height to reflect function values).
+    ax : mpl axis, optional
+        If specified, draw onto this existing axis instead.
     mesh_args : dict / kwds
         Keyword arguments passed to the ``mlab.mesh`` call.
 
@@ -74,7 +75,7 @@ def surf_grid_3D(r, theta, phi, scale_radius=False, **mesh_args):
 
     return get_mlab().mesh(x, y, z, scalars=r, **mesh_args)
 
-def scatter(theta, phi, basemap=None, **scatter_args):
+def scatter(theta, phi, basemap=None, ax=None, **scatter_args):
     if basemap is None:
         z = np.array([0, 0])
         basemap = surf_grid(z, z, z, projection='moll')

@@ -266,7 +266,7 @@ if __name__ == "__main__":
                 bv_good, sphere, field, bv_miss = \
                          dwicoverage.build_coverage(np.vstack((x, y, z)),
                                                     None, None)
-                dwicoverage.show_coverage_2d(bv_good, sphere, field, bv_miss,
+                dwicoverage.show_coverage_2d(bv_good, field, bv_miss,
                                              vmin=0, ax=ax, markersize=8)
 
 
