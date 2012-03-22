@@ -69,7 +69,7 @@ def dwi_coverage(rp, rs, ndirs=None):
 
 
 def show_coverage_2d(rg, field, rm=None, projection='moll',
-                     vmin=None, markersize=30):
+                     vmin=None, markersize=30, ax=None):
     """Show field coverage by projecting the sphere onto a flat 2d surface.
 
     Parameters
@@ -92,19 +92,17 @@ def show_coverage_2d(rg, field, rm=None, projection='moll',
     phi = np.linspace(0, 2 * np.pi, npts_lon)
 
     m = plot.surf_grid(field, theta, phi,
-                       projection=projection, vmin=vmin)
-    plt.colorbar(orientation='horizontal', format='%.2g')
+                       projection=projection, vmin=vmin, ax=ax)
+    plt.colorbar(orientation='horizontal', format='%.2g', ax=ax)
 
     x, y, z = rg
     theta, phi, rho = coord.car2sph(x, y, z)
-    plot.scatter(theta, phi, basemap=m, color='g', s=markersize)
+    plot.scatter(theta, phi, basemap=m, color='g', s=markersize, ax=ax)
 
     if rm is not None and rm.shape[1] > 0:
         x, y, z = rm
         theta, phi, rho = coord.car2sph(x, y, z)
-        plot.scatter(theta, phi, basemap=m, color='r', s=markersize)
-
-    plt.show()
+        plot.scatter(theta, phi, basemap=m, color='r', s=markersize, ax=ax)
 
 
 def show_coverage_3d(rg, field, rm=None, vmin=None, sphere_colormap='jet'):
@@ -272,6 +270,10 @@ def main_coverage(fpoints, fpoints_missing=None, symm=False,
     bv_good,sphere,field,bv_miss = build_coverage(fpoints, fpoints_missing,
                                                   symm=symm)
     show_coverage_2d(bv_good, field, bv_miss, vmin=vmin)
+
+    import matplotlib.pyplot as plt
+    plt.show()
+
     if show_3d:
         show_coverage_3d(bv_good, field, bv_miss, vmin=vmin)
 
