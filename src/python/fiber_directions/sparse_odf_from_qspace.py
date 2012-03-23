@@ -100,7 +100,7 @@ L = linear_model.Lasso(alpha=alpha, copy_X=True)
 
 beta = L.fit(X, y).coef_
 
-sph_io.savez('odf_coeffs', theta=theta, phi=phi, beta=beta,
+sph_io.savez('odf_coeffs', theta=theta_odf, phi=phi_odf, beta=beta,
              separation=gamma)
 
 nnz = np.sum(beta != 0)
