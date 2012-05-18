@@ -1,0 +1,615 @@
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Notes on diffusion MRI
+\end_layout
+
+\begin_layout Author
+Cory Ahrens
+\end_layout
+
+\begin_layout Date
+November 1, 2010
+\end_layout
+
+\begin_layout Section
+Representing spherical functions
+\end_layout
+
+\begin_layout Subsection
+Reproducing kernel
+\end_layout
+
+\begin_layout Standard
+Here we'll present a derivation of the reproducing kernel representation
+ for functions 
+\begin_inset Formula $f\in L^{2}\left(\mathbb{S}^{2}\right)$
+\end_inset
+
+, where 
+\begin_inset Formula $\mathbb{S}^{2}$
+\end_inset
+
+ is the unit sphere in 
+\begin_inset Formula $\mathbb{R}^{3}$
+\end_inset
+
+.
+ We start by defining the subspace of spherical harmonics
+\begin_inset Formula \begin{equation}
+\mathcal{H}_{N}=\mathrm{span}\left\{ Y_{l}^{m}:|m|\le l,\:0\le l\le N\right\} \label{eq:Hn}\end{equation}
+
+\end_inset
+
+of maximum degree 
+\begin_inset Formula $N$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $f\in\mathcal{H}_{N}$
+\end_inset
+
+.
+ Then, by definition, 
+\begin_inset Formula \begin{equation}
+f\left(\omega\right)=\sum_{l=0}^{N}\sum_{|m|\le l}f_{l}^{m}Y_{l}^{m}\left(\omega\right),\label{eq:Ylm_rep}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula \begin{equation}
+f_{l}^{m}=\int_{\mathbb{S}^{2}}\overline{Y}_{l}^{m}\left(\omega\right)f\left(\omega\right)d\omega,\label{eq:f_lm}\end{equation}
+
+\end_inset
+
+with an over-bar denoting complex conjugation.
+ In Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Ylm_rep"
+
+\end_inset
+
+), we change the order of summation and integration to obtain
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:RK_rep"
+
+\end_inset
+
+
+\begin_inset Formula \begin{align}
+f\left(\omega\right) & =\sum_{l=0}^{N}\sum_{|m|\le l}\int_{\mathbb{S}^{2}}\overline{Y}_{l}^{m}\left(\omega'\right)f\left(\omega'\right)d\omega'Y_{l}^{m}\left(\omega\right)\nonumber \\
+ & =\sum_{l=0}^{N}\int_{\mathbb{S}^{2}}\sum_{|m|\le l}\overline{Y}_{l}^{m}\left(\omega'\right)Y_{l}^{m}\left(\omega\right)f\left(\omega'\right)d\omega'\nonumber \\
+ & =\sum_{l=0}^{N}\int_{\mathbb{S}^{2}}\frac{2l+1}{4\pi}P_{l}\left(\omega\cdot\omega'\right)f\left(\omega'\right)d\omega'\nonumber \\
+ & =\int_{\mathbb{S}^{2}}\sum_{l=0}^{N}\frac{2l+1}{4\pi}P_{l}\left(\omega\cdot\omega'\right)f\left(\omega'\right)d\omega'\nonumber \\
+f\left(\omega\right) & =\int_{\mathbb{S}^{2}}K\left(\omega\cdot\omega'\right)f\left(\omega'\right)d\omega',\label{eq:RK_rep}\end{align}
+
+\end_inset
+
+where we used the Addition theorem to go from the second to third line and
+ defined the reproducing kernel 
+\begin_inset Formula $K$
+\end_inset
+
+ as
+\begin_inset Formula \begin{equation}
+K\left(\mu\right)=\sum_{l=0}^{N}\frac{2l+1}{4\pi}P_{l}\left(\mu\right).\label{eq:RK}\end{equation}
+
+\end_inset
+
+If 
+\begin_inset Formula $f\in\mathcal{H}_{N}$
+\end_inset
+
+, then operating on 
+\begin_inset Formula $f$
+\end_inset
+
+ with 
+\begin_inset Formula $\int_{\mathbb{S}^{2}}K\left(\omega'\cdot\omega\right)\:\cdot\: d\omega'$
+\end_inset
+
+ reproduces 
+\begin_inset Formula $f$
+\end_inset
+
+, hence the name reproducing kernel.
+ We can now discretize Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:RK_rep"
+
+\end_inset
+
+) to get the representation
+\begin_inset Formula \begin{equation}
+f\left(\omega\right)=\sum_{i=1}^{M}w_{i}K\left(\omega\cdot\omega_{i}\right)f\left(\omega_{i}\right),\label{eq:rk_rep}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\left\{ \omega_{i},w_{i}\right\} _{i=1}^{M}$
+\end_inset
+
+ are quadrature nodes and weights.
+ Note that the quadrature needs to be exact for spherical harmonics up to
+ and including degree 
+\begin_inset Formula $2N.$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The function 
+\begin_inset Formula $K$
+\end_inset
+
+ is analogous to the 
+\begin_inset Formula $\mathrm{sinc}$
+\end_inset
+
+ kernel on the line and, like the 
+\begin_inset Formula $\mathrm{sinc}$
+\end_inset
+
+ kernel can be further localized by extending its spectrum to zero smoothly.
+ Here we have the spectral representation in term of Legendre polynomials,
+ instead of Fourier modes.
+ We write
+\begin_inset Formula \begin{equation}
+\tilde{K}\left(\mu\right)=\sum_{l=0}^{N}\frac{2l+1}{4\pi}P_{l}\left(\mu\right)+\sum_{l=N+1}^{N'}\frac{2l+1}{4\pi}a_{l}P_{l}\left(\mu\right)\label{eq:extension}\end{equation}
+
+\end_inset
+
+and choose the filter coefficients to increase localization.
+ One way to do this is by considering the following minimization problem.
+ Given 
+\begin_inset Formula $-1<\mu_{0}<1$
+\end_inset
+
+ and 
+\begin_inset Formula $N'$
+\end_inset
+
+, solve
+\begin_inset Formula \[
+\mathrm{min}_{a_{l}}||\tilde{K}||_{L^{\infty}\left(-1,\mu_{0}\right)},\]
+
+\end_inset
+
+where the norm is taken only over the interval 
+\begin_inset Formula $(-1,\mu_{0})$
+\end_inset
+
+.
+ This has the effect of ``pushing'' the function 
+\begin_inset Formula $\tilde{K}$
+\end_inset
+
+ into the region 
+\begin_inset Formula $\left(\mu_{0},1\right)$
+\end_inset
+
+, i.e., concentrating it near a quadrature point.
+ I found that by using 
+\begin_inset Formula $N'=2N$
+\end_inset
+
+ the resulting filter behaved nicely, going monotonically to zero.
+ If one oversamples more, then you have to add constraints to the minimization
+ problem to get a ``nice'' filter.
+ I also found that 
+\begin_inset Formula $\mu_{0}\sim0.9-0.98$
+\end_inset
+
+ worked well, depending on the value of 
+\begin_inset Formula $N$
+\end_inset
+
+; the larger 
+\begin_inset Formula $N$
+\end_inset
+
+ is the closer one can get to 
+\begin_inset Formula $\mu_{0}=1$
+\end_inset
+
+.
+ It is some times convenient to write Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:extension"
+
+\end_inset
+
+) as 
+\begin_inset Formula \[
+\tilde{K}\left(\mu\right)=\sum_{l=0}^{N'}\frac{2l+1}{4\pi}a_{l}P_{l}\left(\mu\right),\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $a_{l}\equiv1$
+\end_inset
+
+ for 
+\begin_inset Formula $0\le l\le N$
+\end_inset
+
+ and 
+\begin_inset Formula $0\le a_{l}<1$
+\end_inset
+
+ for 
+\begin_inset Formula $N+1\le l\le N'$
+\end_inset
+
+ are found by some minimization problem.
+ 
+\end_layout
+
+\begin_layout Standard
+With the extended kernel Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:extension"
+
+\end_inset
+
+), we lose the projection property of Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:RK_rep"
+
+\end_inset
+
+).
+ Suppose 
+\begin_inset Formula $f\in L^{2}\left(\mathbb{S}^{2}\right)$
+\end_inset
+
+ with 
+\begin_inset Formula \[
+f\sim\sum_{l=0}^{\infty}\sum_{|m|\le l}f_{l}^{m}Y_{l}^{m},\]
+
+\end_inset
+
+then we have
+\begin_inset Formula \begin{align*}
+\int_{\mathbb{S}^{2}}\tilde{K}\left(\omega\cdot\omega'\right)f\left(\omega'\right)d\omega' & =\int_{\mathbb{S}^{2}}\sum_{l=0}^{N'}\frac{2l+1}{4\pi}a_{l}P_{l}\left(\omega\cdot\omega'\right)f\left(\omega'\right)d\omega'\\
+ & =\int_{\mathbb{S}^{2}}\left(\sum_{l=0}^{N}\frac{2l+1}{4\pi}P_{l}\left(\mu\right)+\sum_{l=N+1}^{N'}\frac{2l+1}{4\pi}a_{l}P_{l}\left(\mu\right)\right)f\left(\omega'\right)d\omega'\\
+ & =\int_{\mathbb{S}^{2}}K\left(\omega\cdot\omega'\right)f\left(\omega'\right)d\omega'+\sum_{l=N+1}^{N'}a_{l}\int_{\mathbb{S}^{2}}\frac{2l+1}{4\pi}P_{l}\left(\mu\right)f\left(\omega'\right)d\omega'\\
+ & =f|_{\mathcal{H}_{N}}+``\mathrm{tail/noise''}.\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Funk-Radon transform
+\end_layout
+
+\begin_layout Standard
+First we'll need the Funk-Hecke theorem (formula): For any continuous function
+ 
+\begin_inset Formula $f\,:\,\left[-1,1\right]\rightarrow\mathbb{R}$
+\end_inset
+
+
+\begin_inset Formula \[
+\int_{\mathbb{S}^{2}}Y_{l}^{m}\left(\omega\right)f\left(\omega\cdot\omega'\right)d\omega=\lambda_{l}Y_{l}^{m}\left(\omega'\right),\]
+
+\end_inset
+
+where
+\begin_inset Formula \[
+\lambda_{l}=2\pi\int_{-1}^{1}P_{l}\left(\mu\right)f\left(\mu\right)d\mu.\]
+
+\end_inset
+
+This says that the eigenfunctions of the integral operator 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\int_{\mathbb{S}^{2}}f\left(\omega\cdot\omega'\right)\;\cdot\; d\omega'$
+\end_inset
+
+ are the spherical harmonics with eigenvalues 
+\begin_inset Formula $\lambda_{l}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The diffusion weighted MRI signal has the form
+\begin_inset Formula \begin{equation}
+s\left(\mathbf{q}\right)=s_{0}\int_{\mathbb{R}^{3}}p\left(\mathbf{r}\right)e^{-2\pi i\mathbf{q}\cdot\mathbf{r}}d^{3}r,\label{eq:true-signal}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $p\left(\mathbf{r}\right)$
+\end_inset
+
+ is the PDF describing the probability of diffusion in a direction 
+\begin_inset Formula $\mathbf{r}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{0}$
+\end_inset
+
+ is the signal without gradients.
+ Defining the projection (the orientation distribution function ODF)
+\begin_inset Formula \begin{equation}
+\psi\left(\mathbf{u}\right)\equiv\int_{0}^{\infty}p\left(\alpha\mathbf{u}\right)d\alpha,\;\;\mathbf{u}\in\mathbb{S}^{2},\label{eq:odf-def}\end{equation}
+
+\end_inset
+
+Tuch showed that
+\begin_inset Formula \begin{equation}
+\psi\left(\mathbf{u}\right)\approx\mathcal{G}[s]\left(\mathbf{u}\right),\label{eq:odf-appx}\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathcal{G}[s]\left(\mathbf{u}\right)$
+\end_inset
+
+ is the Funk-Radon transform of 
+\begin_inset Formula $s$
+\end_inset
+
+ defined by
+\begin_inset Formula \begin{equation}
+\mathcal{G}[s]\left(\mathbf{u}\right)\equiv\int_{\mathbb{S}^{2}}\delta\left(\mathbf{u}\cdot\mathbf{v}\right)s\left(\mathbf{v}\right)d^{3}v,\label{eq:FR-transform-def}\end{equation}
+
+\end_inset
+
+i.e., the integral of 
+\begin_inset Formula $s$
+\end_inset
+
+ over the great circle defined by the equation 
+\begin_inset Formula $\mathbf{u}\cdot\mathbf{v}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We expect the ODF Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:odf-def"
+
+\end_inset
+
+) to have a sparse representation in the form Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:RK_rep"
+
+\end_inset
+
+), i.e.
+ if
+\begin_inset Formula \[
+\psi\left(\omega\right)\approx\sum_{i=1}^{n}\psi_{i}K\left(\omega\cdot\omega_{i}\right),\]
+
+\end_inset
+
+then many of the 
+\begin_inset Formula $\psi_{i}$
+\end_inset
+
+ should be neglagable.
+ To obtain the coefficients, consider Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:odf-appx"
+
+\end_inset
+
+) and, assuming for the moment than 
+\begin_inset Formula $\mathcal{G}^{-1}$
+\end_inset
+
+ exists,
+\begin_inset Formula \[
+s\left(\omega\right)\approx\sum_{i=1}^{n}\psi_{i}\mathcal{G}^{-1}\left[K\left(\cdot\omega_{i}\right)\right]\left(\omega\right),\]
+
+\end_inset
+
+which suggests that we approximate the signal using the above equation.
+ We now need to find how the inverse spherical Radon transform acts on the
+ kernel function 
+\begin_inset Formula $K$
+\end_inset
+
+.
+ To this end, consider how 
+\begin_inset Formula $\mathcal{G}$
+\end_inset
+
+ acts on 
+\begin_inset Formula $K$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{align*}
+\int_{\mathbb{S}^{2}}\delta\left(x\cdot\omega\right)K\left(\omega\cdot\omega_{i}\right)d\omega & =\sum_{l=0}^{N}\sum_{|m|\le n}\overline{Y}_{l}^{m}\left(\omega_{i}\right)\int_{\mathbb{S}^{2}}\delta\left(x\cdot\omega\right)Y_{l}^{m}\left(\omega\right)d\omega\\
+ & =\sum_{l=0}^{N}\sum_{|m|\le n}\overline{Y}_{l}^{m}\left(\omega_{i}\right)2\pi\int_{-1}^{1}P_{l}\left(\mu\right)\delta\left(\mu\right)d\mu Y_{l}^{m}\left(x\right)\\
+ & =\sum_{l=0}^{N}2\pi P_{l}\left(0\right)\sum_{|m|\le n}\overline{Y}_{l}^{m}\left(\omega_{i}\right)Y_{l}^{m}\left(x\right)\\
+ & =\sum_{l=0}^{N}2\pi P_{l}\left(0\right)\frac{2l+1}{4\pi}P_{l}\left(x\cdot\omega_{i}\right)\\
+ & =\sum_{l=0}^{N}\frac{2l+1}{2\pi}P_{l}\left(0\right)P_{l}\left(x\cdot\omega_{i}\right),\end{align*}
+
+\end_inset
+
+with 
+\begin_inset Formula \[
+P_{l}\left(0\right)=\frac{1}{2^{l}}\sum_{k=0}^{l}\left(-1\right)^{k}\binom{l}{k}^{2}.\]
+
+\end_inset
+
+Note that if 
+\begin_inset Formula $l$
+\end_inset
+
+ is odd, then 
+\begin_inset Formula $P_{l}\left(0\right)=0$
+\end_inset
+
+, identically.
+ Thus 
+\begin_inset Formula $\mathcal{G}$
+\end_inset
+
+ filters out only the even harmonics of 
+\begin_inset Formula $K$
+\end_inset
+
+ (and scales them).
+ Thus,
+\begin_inset Formula \[
+\mathcal{G}^{-1}\left[K\left(\cdot\,\omega_{i}\right)\right]\left(\mathbf{u}\right)=\sum_{l=0,even}^{N}\frac{2l+1}{4\pi}\left(\frac{1}{2\pi P_{l}\left(0\right)}\right)P_{l}\left(\mathbf{u}\cdot\omega_{i}\right).\]
+
+\end_inset
+
+We define this function as
+\begin_inset Formula \[
+\tilde{K}\left(\mathbf{u}\cdot\omega_{i}\right)\equiv\mathcal{G}^{-1}\left[K\left(\cdot\,\omega_{i}\right)\right]\left(\mathbf{u}\right)=\sum_{l=0,even}^{N}\frac{2l+1}{4\pi}\left(\frac{1}{2\pi P_{l}\left(0\right)}\right)P_{l}\left(\mathbf{u}\cdot\omega_{i}\right)\]
+
+\end_inset
+
+and expand the signal 
+\begin_inset Formula $s$
+\end_inset
+
+ as
+\begin_inset Formula \[
+s\left(\mathbf{u}\right)\approx\sum_{i=1}^{M}\psi_{i}\tilde{K}\left(\mathbf{u}\cdot\omega_{i}\right).\]
+
+\end_inset
+
+Assuming 
+\begin_inset Formula $J$
+\end_inset
+
+ measurements, we construct the system of equations
+\begin_inset Formula \[
+s\left(\mathbf{u}_{j}\right)\approx\sum_{i=1}^{M}\psi_{i}\tilde{K}\left(\mathbf{u}_{j}\cdot\omega_{i}\right)\qquad j=1,2,...J\]
+
+\end_inset
+
+and solve it in a least-squares sense using an 
+\begin_inset Formula $L_{1}$
+\end_inset
+
+ penalty term to promote sparsity in the solution:
+\begin_inset Formula \[
+\mathrm{min}||s\left(\mathbf{u}_{j}\right)-\sum_{i=1}^{M}\psi_{i}\tilde{K}\left(\mathbf{u}_{j}\cdot\omega_{i}\right)||_{L^{2}}+\lambda||\mathbf{\psi}||_{L^{1},}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is a regularization parameter and is related to the noise level.
+ For 
+\begin_inset Formula $\lambda\rightarrow\infty$
+\end_inset
+
+, the solution converges to zero, and as 
+\begin_inset Formula $\lambda\rightarrow0$
+\end_inset
+
+, the solution converges to the standard least-squares solution.
+ 
+\end_layout
+
+\begin_layout Standard
+Once we have solve the above minimization problem, the ODF can be computed
+ 
+\begin_inset Formula \[
+\psi\left(\omega\right)\approx\sum_{i=1}^{n}\psi_{i}K\left(\omega\cdot\omega_{i}\right).\]
+
+\end_inset
+
+Note that the coefficients tell you the direction of the fiber orientation;
+ there is no need to solve a maximum problem like in a spherical harmonic
+ expansion.
+ A word of caution: currently our quadratures do NOT have anti-podal symmetry
+ and hence the don't respect the construction of having only even harmonics
+ in the expansion.
+ For this formulation of the problem, we'll need to develop quadratures
+ that have symmetry with respect to inversion.
+\end_layout
+
+\end_body
+\end_document
