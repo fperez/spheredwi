@@ -38,7 +38,7 @@ def interp_matrix(qpnts, spnts, npgrid, nsamp, deg_max):
     return A
 
 
-def interp_matrix_new(qpnts, w, spnts, npgrid, nsamp, deg_max):
+def interp_matrix_new(qpnts, spnts, npgrid, nsamp, deg_max):
     """Create matrix associated with inversion based on Aganj et al.
     formalism.
 
@@ -60,7 +60,7 @@ def interp_matrix_new(qpnts, w, spnts, npgrid, nsamp, deg_max):
             cosTheta = np.dot(spnts[i], qpnts[j])
             if(abs(cosTheta)>1):
                 cosTheta = np.sign(cosTheta)
-            A[i,j] = w[j] * inv_funk_radon_even_kernel(cosTheta, deg_max)
+            A[i,j] = inv_funk_radon_even_kernel(cosTheta, deg_max)
     return A
 
 
