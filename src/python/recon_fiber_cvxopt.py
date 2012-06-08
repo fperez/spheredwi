@@ -24,8 +24,8 @@ from sphdif import sphquad as sph
 reload(sph)  # For interactive development
 
 # Load Fortran kernels
-from sphdif import even_pODF_f   as epODF
-from sphdif import sample_pODF_f as spODF
+#from sphdif import even_pODF_f   as epODF
+#from sphdif import sample_pODF_f as spODF
 
 # Make global some frequently used functions
 from numpy import dot
