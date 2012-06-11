@@ -50,8 +50,29 @@ theta, phi = theta72, phi72
 Q = len(theta)
 b = 995 + np.random.normal(scale=4, size=Q) # Make up somewhat realistic b-values
 xyz = np.column_stack(coord.sph2car(theta, phi))
-E = single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
-E += single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
+w = [0.5, 0.5]
+E = w[0] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
+E += w[1] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
+
+def plot_ODF(grid_density=100):
+    theta_grid = np.linspace(0, np.pi, grid_density)
+    phi_grid = np.linspace(0, 2 * np.pi, grid_density)
+
+    phi_vec, theta_vec = np.meshgrid(phi_grid, theta_grid)
+    phi_vec, theta_vec = phi_vec.ravel(), theta_vec.ravel()
+
+    xyz = np.column_stack(coord.sph2car(theta_vec, phi_vec))
+
+    ODF = w[0] * single_tensor_ODF(xyz, rotation=R0)
+    ODF += w[1] * single_tensor_ODF(xyz, rotation=R1)
+
+    ODF = ODF.reshape((grid_density, grid_density))
+
+    plot.surf_grid_3D(ODF, theta_grid, phi_grid, scale_radius=True)
+
+plot_ODF(grid_density=D)
+mlab = plot.get_mlab()
+mlab.show()
 
 # ===========================-=====
 # ODF-domain: Sparse reconstruction
@@ -73,9 +94,30 @@ E += single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
 # See the the low-rank approximation wiki for more detail on these types of
 # problems: http://ugcs.caltech.edu/~srbecker/wiki/Main_Page
 
+def L(E, d1=0.001, d2=0.001):
+    """Apply flexible threshold to measurement data
+    in order to stay away from dangerous zones 0 and 1 as
+    shown in Aganj.
+
+    Then return ln(-ln(E)).
+
+    """
+    m1 = (E >= 0) & (E < d1)
+    m2 = (E > 1 - d2) & (E <= 1)
+
+    E[m1] = d1/2 + E[m1]**2 / (2 * d1)
+    E[m2] = 1 - d2/2 - (1 - E[m2])**2 / (2 * d2)
+
+    E[E < 0] = d1/2
+    E[E > 1] = 1 - d2/2
+
+    return np.log(-np.log(E))
+
+#E = L(E)
+
 theta_odf, phi_odf = theta132, phi132
 kernel = inv_funk_radon_even_kernel
-kernel_N = 16
+kernel_N = 8
 X = kernel_matrix(theta, phi, theta_odf, phi_odf, kernel=kernel, N=kernel_N)
 y = E
 
@@ -100,8 +142,13 @@ L = linear_model.Lasso(alpha=alpha, copy_X=True)
 
 beta = L.fit(X, y).coef_
 
+beta_dense = E * w72
+phi_dense = phi72
+theta_dense = theta72
+
 sph_io.savez('odf_coeffs', theta=theta_odf, phi=phi_odf, beta=beta,
-             separation=gamma)
+                           theta_dense=theta_dense, phi_dense=phi_dense,
+                           beta_dense=beta_dense, separation=gamma)
 
 nnz = np.sum(beta != 0)
 print 'Compression: %.2f%%' % ((len(beta) - nnz) / len(beta) * 100)
@@ -116,7 +163,6 @@ print 'Error (Q-space):', np.linalg.norm(X.dot(beta) - y)
 # ==========================
 
 mask = (beta != 0)
-print theta_odf[mask], phi_odf[mask]
 plot.scatter_3D(theta_odf, phi_odf, color=(0, 0, 1))
 plot.scatter_3D(theta_odf[mask], phi_odf[mask], 1 + beta[mask]/beta.max(),
                   transparent=True, color=(1, 0, 0), scale_mode='scalar',
