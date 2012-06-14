@@ -109,7 +109,7 @@ def single_tensor_ODF(r, evals=None, rotation=None):
     for (i, u) in enumerate(r):
         P[i] = u.T.dot(Di).dot(u)**(3 / 2)
 
-    return  (1 / (4 * np.pi * np.prod(evals)**1/2 * P)).reshape(out_shape)
+    return  (1 / (4 * np.pi * np.prod(evals)**(1/2) * P)).reshape(out_shape)
 
 if __name__ == "__main__":
     import sphere, coord, plot
