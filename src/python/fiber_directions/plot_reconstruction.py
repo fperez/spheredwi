@@ -26,16 +26,13 @@ def plot_reconstruction(beta, phi, theta, kernel, kernel_order,
                              kernel=kernel, N=kernel_order)
 
 #    ODF[ODF < 0] = 0
-
-    plot.surf_grid_3D(ODF, theta_grid, phi_grid, scale_radius=True)
+    plot.surf_grid_3D(-ODF, theta_grid, phi_grid, scale_radius=True)
 
 
 mlab = plot.get_mlab()
 
-plot_reconstruction(beta, phi, theta, even_kernel, 9)
+plot_reconstruction(beta, phi, theta, even_kernel, kernel_N)
 mlab.show()
 
-plot_reconstruction(beta_dense, phi_dense, theta_dense,
-                    even_kernel, 12)
 mlab.show()
 

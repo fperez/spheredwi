@@ -15,11 +15,12 @@ from sphdif.linalg import rotation_around_axis
 from sphdif.signal_sim import single_tensor, single_tensor_ODF
 from sphdif import sph_io
 
+
 # ========================
 # Experiment configuration
 # ========================
 
-gamma = np.deg2rad(45)  # Angle separating fibers
+gamma = np.deg2rad(60)  # Angle separating fibers
 D = 150 # Grid density for plots (higher => more dense)
 
 # ====================================
@@ -48,9 +49,9 @@ R1 = rotation_around_axis([0, 1, 0], angles[1])
 
 theta, phi = theta72, phi72
 Q = len(theta)
-b = 995 + np.random.normal(scale=4, size=Q) # Make up somewhat realistic b-values
+b = 1995 + np.random.normal(scale=4, size=Q) # Make up somewhat realistic b-values
 xyz = np.column_stack(coord.sph2car(theta, phi))
-w = [0.5, 0.5]
+w = [0.3, 0.7]
 E = w[0] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
 E += w[1] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
 
@@ -113,7 +114,8 @@ def L(E, d1=0.001, d2=0.001):
 
     return np.log(-np.log(E))
 
-#E = L(E)
+E = L(E)
+
 
 theta_odf, phi_odf = theta132, phi132
 kernel = inv_funk_radon_even_kernel
@@ -124,16 +126,16 @@ y = E
 
 from sklearn import linear_model
 
-alpha = 0.0001
-L = linear_model.Lasso(alpha=alpha, copy_X=True)
+##alpha = 0.0001
+##L = linear_model.Lasso(alpha=alpha, copy_X=True)
 
 ## #L = linear_model.OrthogonalMatchingPursuit(copy_X=True, n_nonzero_coefs=5)
 
-## #a = 0.1 # L1 weight
-## #b = 0.8 # L2 weight
-## #alpha = a + b
-## #rho = a / (a + b)
-## #L = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=False, copy_X=True)
+a = 0.0001 # L1 weight
+b = 0.00001 # L2 weight
+alpha = a + b
+rho = a / (a + b)
+L = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True, copy_X=True)
 
 ## # # Penalise measurements with low absolute value
 ## # P = np.diag(1 + np.sqrt(np.abs(s / s.max())))
@@ -142,13 +144,8 @@ L = linear_model.Lasso(alpha=alpha, copy_X=True)
 
 beta = L.fit(X, y).coef_
 
-beta_dense = E * w72
-phi_dense = phi72
-theta_dense = theta72
-
 sph_io.savez('odf_coeffs', theta=theta_odf, phi=phi_odf, beta=beta,
-                           theta_dense=theta_dense, phi_dense=phi_dense,
-                           beta_dense=beta_dense, separation=gamma)
+                           kernel_N=kernel_N, separation=gamma)
 
 nnz = np.sum(beta != 0)
 print 'Compression: %.2f%%' % ((len(beta) - nnz) / len(beta) * 100)
