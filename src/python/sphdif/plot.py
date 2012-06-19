@@ -88,11 +88,6 @@ def scatter_3D(theta, phi, scalar=None, **points3d_args):
     points3d_args.setdefault('scale_factor', 0.1)
     points3d_args.setdefault('color', (1, 0, 0))
 
-    try:
-        from enthought.mayavi import mlab
-    except ImportError:
-        from mayavi import mlab
-
     if scalar is None:
         scalar = np.ones_like(theta)
 
