@@ -16,7 +16,8 @@ from sphdif.signal_sim import single_tensor, single_tensor_ODF
 from sphdif import sph_io
 
 
-visualize = False
+visualize_odf = False
+visualize_signal = True
 
 
 def plot_ODF(grid_density=100):
@@ -62,10 +63,19 @@ def L(E, d1=0.001, d2=0.001):
 
 theta72, phi72, w72 = sphere.quadrature_points(N=72)
 theta132, phi132, w132 = sphere.quadrature_points(N=132)
-# theta492, phi492, w492 = sphere.quadrature_points(N=492)
+#theta492, phi492, w492 = sphere.quadrature_points(N=492)
 
 
 theta, phi = theta72, phi72
+
+from dipy.data import get_data
+img, bvals, bvecs = get_data('small_64D')
+
+b = np.load(bvals)
+bvecs = np.load(bvecs)
+bvecs = bvecs[b > 0]
+
+theta, phi, _ = coord.car2sph(*bvecs.T)
 theta_odf, phi_odf = theta132, phi132
 
 kernel = inv_funk_radon_even_kernel
@@ -73,14 +83,20 @@ kernel_N = 8
 X = kernel_matrix(theta, phi, theta_odf, phi_odf, kernel=kernel, N=kernel_N)
 D = 150 # Grid density for plots (higher => more dense)
 
-b = 4000 + np.random.normal(scale=4, size=len(theta)) # Make up somewhat realistic b-values
+b = 2000 + np.random.normal(scale=4, size=len(theta)) # Make up somewhat realistic b-values
 
 xyz = np.column_stack(coord.sph2car(theta, phi))
 
-sph_io.savez('sphere_pts', theta=theta_odf, phi=phi_odf)
+sph_io.savez('sphere_pts', gradient_theta=theta, gradient_phi=phi,
+                           odf_theta=theta_odf, odf_phi=phi_odf, b=b)
 
+# Fiber weights
+w = [0.5, 0.5]
 
-for k, gamma in enumerate(np.deg2rad(np.arange(25, 45, 5))):
+angles = np.deg2rad(np.arange(40, 60, 5))
+angles = np.insert(angles, 0, 0)
+
+for k, gamma in enumerate(angles):
     print "Angle:", np.rad2deg(gamma)
 
     # Gamma is the angle separating fibres
@@ -105,11 +121,18 @@ for k, gamma in enumerate(np.deg2rad(np.arange(25, 45, 5))):
     # here, but wwe could just as well have used other, random points on the
     # sphere.
 
-    w = [0.5, 0.5]
-    E = w[0] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=None)
-    E += w[1] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=None)
+    E = w[0] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=0)
+    E += w[1] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=0)
 
-    if visualize:
+    print "Signal mean:", E.mean()
+
+    ## if visualize_signal:
+    ##     verts = np.column_stack(sph2car(theta, phi))
+    ##     from dipy.core.meshes import faces_from_vertices
+    ##     faces = faces_from_vertices(verts)
+
+
+    if visualize_odf:
         plot_ODF(grid_density=D)
         mlab = plot.get_mlab()
         mlab.show()
@@ -157,7 +180,9 @@ for k, gamma in enumerate(np.deg2rad(np.arange(25, 45, 5))):
     beta = lm.fit(X, y).coef_
 
     sph_io.savez('odf_coeffs_%03d' % k, beta=beta, kernel_N=kernel_N,
-                                        separation=gamma)
+                                        separation=gamma, weights=w,
+                                        mevecs=[R0, R1],
+                                        signal=E)
 
     nnz = np.sum(beta != 0)
     print 'Compression: %.2f%%' % ((len(beta) - nnz) / len(beta) * 100)
@@ -171,7 +196,7 @@ for k, gamma in enumerate(np.deg2rad(np.arange(25, 45, 5))):
     # ODF-domain: Peak detection
     # ==========================
 
-    if visualize:
+    if visualize_odf:
         mask = (beta != 0)
         plot.scatter_3D(theta_odf, phi_odf, color=(0, 0, 1))
         plot.scatter_3D(theta_odf[mask], phi_odf[mask], 1 + beta[mask]/beta.max(),
