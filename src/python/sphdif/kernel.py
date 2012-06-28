@@ -42,7 +42,7 @@ def even_kernel(mu, N):
 
 
 def inv_funk_radon_even_kernel(mu, N):
-    """Reproducing kernel.
+    """Q-space kernel.
 
     Calculate the inverse Funk-Radon transform and inverse
     spherical Laplacian of the reproducing kernel for the
