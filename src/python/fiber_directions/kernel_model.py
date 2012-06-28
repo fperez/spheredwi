@@ -213,6 +213,7 @@ def Linv(E):
 
 class SparseKernelModel:
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
+                       loglog_tf=True,
                        eval_vertices=None):
         """Sparse kernel model.
 
@@ -226,6 +227,11 @@ class SparseKernelModel:
             Highest order of spherical harmonic fit.
         qp : {72, 132, 492}
             Number of kernels used to represent the signal.
+        loglog_tf : bool
+            Whether to perform ``log(-log(.))`` on the signal before fitting.
+            In theory, this gives a better representation of the ODF (but does
+            predict back the original signal).  Also, it seems not to work well
+            for low b-values (<= 1500).
         eval_vertices : (N, 3) ndarray, optional
             Positions on the sphere on which to evaluate the ODF or signal (see
             the fit's odf and predict methods).  By specifying the positions
@@ -237,6 +243,7 @@ class SparseKernelModel:
 
         self.qp = qp
         self.sh_order = sh_order
+        self.loglog_tf = loglog_tf
         self.gradient_theta, self.gradient_phi = \
                              cart2sphere(*gradients[where_dwi].T)[1:]
 
@@ -260,7 +267,10 @@ class SparseKernelModel:
             Signal measured at each b-vector.
 
         """
-        y = -L(signal)
+        if self.loglog_tf:
+            y = -L(signal)
+        else:
+            y = signal
 
         from sklearn import linear_model
 
@@ -302,9 +312,9 @@ class SparseKernelFit:
 
         """
         if vertices is None:
-            eval_theta, eval_phi = self.model._eval_vertices
-        else:
-            eval_theta, eval_phi = cart2sphere(*vertices.T)[1:]
+            return np.dot(self.model.X, self.beta)
+
+        eval_theta, eval_phi = cart2sphere(*vertices.T)[1:]
 
         E = kernel_reconstruct(self.model.kernel_theta,
                                self.model.kernel_phi,
@@ -313,9 +323,7 @@ class SparseKernelFit:
                                kernel=inv_funk_radon_even_kernel,
                                N=self.model.sh_order)
 
-        E = -Linv(E)
-
-        # Clip to zero to reject non-physical values
-        E = np.clip(E, 0, np.inf)
+        if self.model.loglog_tf:
+            E = Linv(E)
 
         return E
