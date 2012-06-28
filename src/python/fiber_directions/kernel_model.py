@@ -249,10 +249,12 @@ class SparseKernelModel:
 
         self.kernel_theta, self.kernel_phi, _ = quadrature_points(N=qp)
 
-        self.X = kernel_matrix(self.gradient_theta, self.gradient_phi,
-                               self.kernel_theta, self.kernel_phi,
-                               kernel=inv_funk_radon_even_kernel,
-                               N=self.sh_order)
+        self.X = np.asfortranarray(
+            kernel_matrix(self.gradient_theta, self.gradient_phi,
+                          self.kernel_theta, self.kernel_phi,
+                          kernel=inv_funk_radon_even_kernel,
+                          N=self.sh_order)
+            )
 
         if eval_vertices is not None:
             self._eval_vertices = cart2sphere(*eval_vertices.T)[1:]
