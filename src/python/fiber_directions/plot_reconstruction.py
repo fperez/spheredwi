@@ -23,8 +23,8 @@ coords = sph_io.load('sphere_pts.npz')
 ## verts, edges, sides = create_unit_sphere(5)
 ## faces = edges[sides, 0]
 
-from dipy.core.triangle_subdivide import create_half_unit_sphere
-verts, edges, sides = create_half_unit_sphere(5)
+from dipy.core.triangle_subdivide import create_unit_sphere
+verts, edges, sides = create_unit_sphere(5)
 faces = edges[sides, 0]
 
 theta, phi, r = car2sph(*verts.T)
@@ -47,8 +47,6 @@ def separation_from_odf(odf):
     print "Peaks:", p
     print "Angular separation:", np.rad2deg(np.arccos(np.abs(np.dot(verts[i[0]], verts[i[1]]))))
 
-
-
 ODFs = []
 #m = SlowAdcOpdfModel(coords['b'], sampling_xyz, sh_order=8, odf_vertices=verts)
 m = MonoExpOpdfModel(coords['b'], sampling_xyz, sh_order=8, odf_vertices=verts)
@@ -56,6 +54,11 @@ m = MonoExpOpdfModel(coords['b'], sampling_xyz, sh_order=8, odf_vertices=verts)
 for k, fn in enumerate(sorted(glob.glob(os.path.join(sph_io.data_path,
                                                      'odf_coeffs_*.npz')))):
     data = sph_io.load(os.path.basename(fn))
+
+    print "Dipy model..."
+    odf = m.evaluate_odf(data['signal'])
+    ODFs.append(odf)
+    separation_from_odf(odf)
 
     print "Quadrature model..."
     odf = kernel_reconstruct(coords['odf_theta'], coords['odf_phi'], data['beta'],
@@ -67,16 +70,15 @@ for k, fn in enumerate(sorted(glob.glob(os.path.join(sph_io.data_path,
     print "Actual angle:", np.rad2deg(data['separation'])
     separation_from_odf(odf)
 
-    ODFs.append(multi_tensor_odf(verts, data['weights'], mevecs=data['mevecs']))
 
-    print "Dipy model..."
-    odf = m.evaluate_odf(data['signal'])
-    ODFs.append(odf)
-    separation_from_odf(odf)
+    ODFs.append(multi_tensor_odf(verts, data['weights'],
+                                 mevals=[[1700e-6, 300e-6, 300e-6]] * len(data['weights']),
+                                 mevecs=data['mevecs']))
+
 
 N = 3
 ODFs = np.array([[ODFs]]).reshape(len(ODFs) // N, 1, N, -1)
 
-from dipy.viz import show_odfs, get_mlab
+from dipy.viz import show_odfs
 
 show_odfs(ODFs, (verts, faces), scale=2, radial_scale=True)
