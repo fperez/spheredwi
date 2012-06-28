@@ -283,15 +283,19 @@ class SparseKernelModel:
         lm = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True,
                                      copy_X=True)
 
-        beta = lm.fit(self.X, y).coef_
+        fit = lm.fit(self.X, y)
+        beta = fit.coef_
+        intercept = fit.intercept_
 
-        return SparseKernelFit(beta=beta, model=self)
+        return SparseKernelFit(beta=beta, intercept=intercept,
+                               model=self)
 
 
 class SparseKernelFit:
-    def __init__(self, beta, model=None):
+    def __init__(self, beta, intercept=0, model=None):
         self.beta = beta
         self.model = model
+        self.intercept = 0
 
     def odf(self, vertices=None):
         """Predict the ODF at the given vertices.
@@ -307,7 +311,8 @@ class SparseKernelFit:
                                   self.beta,
                                   odf_theta, odf_phi,
                                   kernel=even_kernel,
-                                  N=self.model.sh_order)
+                                  N=self.model.sh_order) + \
+               self.intercept
 
     def predict(self, vertices=None):
         """Predict the signal at the given vertices.
@@ -324,6 +329,8 @@ class SparseKernelFit:
                                eval_theta, eval_phi,
                                kernel=inv_funk_radon_even_kernel,
                                N=self.model.sh_order)
+
+        E += self.intercept
 
         if self.model.loglog_tf:
             E = Linv(E)
