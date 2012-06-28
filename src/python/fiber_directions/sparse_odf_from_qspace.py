@@ -74,6 +74,7 @@ img, bvals, bvecs = get_data('small_64D')
 b = np.load(bvals)
 bvecs = np.load(bvecs)
 bvecs = bvecs[b > 0]
+b = b[b > 0]
 
 theta, phi, _ = coord.car2sph(*bvecs.T)
 theta_odf, phi_odf = theta132, phi132
@@ -95,6 +96,8 @@ w = [0.5, 0.5]
 
 angles = np.deg2rad(np.arange(40, 60, 5))
 angles = np.insert(angles, 0, 0)
+
+SNR=30
 
 for k, gamma in enumerate(angles):
     print "Angle:", np.rad2deg(gamma)
@@ -121,15 +124,25 @@ for k, gamma in enumerate(angles):
     # here, but wwe could just as well have used other, random points on the
     # sphere.
 
-    E = w[0] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=0)
-    E += w[1] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=0)
+    E = w[0] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R0, SNR=SNR)
+    E += w[1] * single_tensor(gradients=xyz, bvals=b, S0=1, rotation=R1, SNR=SNR)
 
     print "Signal mean:", E.mean()
 
-    ## if visualize_signal:
-    ##     verts = np.column_stack(sph2car(theta, phi))
-    ##     from dipy.core.meshes import faces_from_vertices
-    ##     faces = faces_from_vertices(verts)
+    if visualize_signal:
+        from dipy.core.triangle_subdivide import create_unit_sphere
+        verts, edges, sides = create_unit_sphere(5)
+        faces = edges[sides, 0]
+        bb = np.ones(len(verts)) * 3000
+
+        R_ = rotation_around_axis([0, 1, 0], np.deg2rad(gamma))
+
+        E_ = w[0] * single_tensor(gradients=verts, bvals=bb, S0=1, rotation=R0, SNR=SNR)
+        E_ += w[1] * single_tensor(gradients=verts, bvals=bb, S0=1, rotation=R_, SNR=SNR)
+
+        from dipy.viz import show_odfs
+        show_odfs([[[E_, -L(E_)]]], (verts, faces))
+        
 
 
     if visualize_odf:
