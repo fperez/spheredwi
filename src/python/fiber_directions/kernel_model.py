@@ -313,9 +313,9 @@ class SparseKernelFit:
                                kernel=inv_funk_radon_even_kernel,
                                N=self.model.sh_order)
 
-        E = Linv(E)
+        E = -Linv(E)
 
         # Clip to zero to reject non-physical values
-        E = np.clip(E, 0, None)
+        E = np.clip(E, 0, np.inf)
 
         return E
