@@ -45,7 +45,7 @@ from dipy.core.triangle_subdivide import create_half_unit_sphere
 verts, edges, sides = create_half_unit_sphere(6)
 faces = edges[sides, 0]
 
-sk = SparseKernelModel(bvals, bvecs, sh_order=8, odf_vertices=verts)
+sk = SparseKernelModel(bvals, bvecs, sh_order=8, eval_vertices=verts)
 
 angles = [25, 30, 35, 40, 45, 50, 55, 60]
 recovered_angle = []
