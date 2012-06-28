@@ -295,7 +295,7 @@ class SparseKernelFit:
     def __init__(self, beta, intercept=0, model=None):
         self.beta = beta
         self.model = model
-        self.intercept = 0
+        self.intercept = intercept
 
     def odf(self, vertices=None):
         """Predict the ODF at the given vertices.
