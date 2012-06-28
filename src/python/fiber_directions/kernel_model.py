@@ -203,6 +203,14 @@ def L(E, d1=0.001, d2=0.001):
     return np.log(-np.log(E))
 
 
+def Linv(E):
+    """
+    Inverse of log(-log(.)) transform.
+
+    """
+    return np.exp(-np.exp(E))
+
+
 class SparseKernelModel:
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
                        eval_vertices=None):
@@ -304,6 +312,8 @@ class SparseKernelFit:
                                eval_theta, eval_phi,
                                kernel=inv_funk_radon_even_kernel,
                                N=self.model.sh_order)
+
+        E = Linv(E)
 
         # Clip to zero to reject non-physical values
         E = np.clip(E, 0, None)
