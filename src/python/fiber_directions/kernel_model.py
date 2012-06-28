@@ -294,13 +294,18 @@ class SparseKernelFit:
 
         """
         if vertices is None:
-            odf_theta, odf_phi = self.model._eval_vertices
+            eval_theta, eval_phi = self.model._eval_vertices
         else:
-            odf_theta, odf_phi = cart2sphere(*vertices.T)[1:]
+            eval_theta, eval_phi = cart2sphere(*vertices.T)[1:]
 
-        return kernel_reconstruct(self.model.kernel_theta,
-                                  self.model.kernel_phi,
-                                  self.beta,
-                                  odf_theta, odf_phi,
-                                  kernel=inv_funk_radon_even_kernel,
-                                  N=self.model.sh_order)
+        E = kernel_reconstruct(self.model.kernel_theta,
+                               self.model.kernel_phi,
+                               self.beta,
+                               eval_theta, eval_phi,
+                               kernel=inv_funk_radon_even_kernel,
+                               N=self.model.sh_order)
+
+        # Clip to zero to reject non-physical values
+        E = np.clip(E, 0, None)
+
+        return E
