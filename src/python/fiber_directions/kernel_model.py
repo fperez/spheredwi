@@ -333,6 +333,6 @@ class SparseKernelFit:
         E += self.intercept
 
         if self.model.loglog_tf:
-            E = Linv(E)
+            E = -Linv(E)
 
         return E
