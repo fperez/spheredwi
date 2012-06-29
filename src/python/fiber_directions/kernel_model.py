@@ -319,20 +319,20 @@ class SparseKernelFit:
 
         """
         if vertices is None:
-            return np.dot(self.model.X, self.beta)
+            E = np.dot(self.model.X, self.beta)
+        else:
+            eval_theta, eval_phi = cart2sphere(*vertices.T)[1:]
 
-        eval_theta, eval_phi = cart2sphere(*vertices.T)[1:]
-
-        E = kernel_reconstruct(self.model.kernel_theta,
-                               self.model.kernel_phi,
-                               self.beta,
-                               eval_theta, eval_phi,
-                               kernel=inv_funk_radon_even_kernel,
-                               N=self.model.sh_order)
+            E = kernel_reconstruct(self.model.kernel_theta,
+                                   self.model.kernel_phi,
+                                   self.beta,
+                                   eval_theta, eval_phi,
+                                   kernel=inv_funk_radon_even_kernel,
+                                   N=self.model.sh_order)
 
         E += self.intercept
 
         if self.model.loglog_tf:
-            E = -Linv(E)
+            E = Linv(-E)
 
         return E
