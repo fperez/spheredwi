@@ -84,7 +84,7 @@ kernel_N = 8
 X = kernel_matrix(theta, phi, theta_odf, phi_odf, kernel=kernel, N=kernel_N)
 D = 150 # Grid density for plots (higher => more dense)
 
-b = 2000 + np.random.normal(scale=4, size=len(theta)) # Make up somewhat realistic b-values
+b = 3000 + np.random.normal(scale=4, size=len(theta)) # Make up somewhat realistic b-values
 
 xyz = np.column_stack(coord.sph2car(theta, phi))
 
@@ -97,7 +97,7 @@ w = [0.5, 0.5]
 angles = np.deg2rad(np.arange(40, 60, 5))
 angles = np.insert(angles, 0, 0)
 
-SNR=30
+SNR = 30
 
 for k, gamma in enumerate(angles):
     print "Angle:", np.rad2deg(gamma)
@@ -131,11 +131,11 @@ for k, gamma in enumerate(angles):
 
     if visualize_signal:
         from dipy.core.triangle_subdivide import create_unit_sphere
-        verts, edges, sides = create_unit_sphere(5)
+        verts, edges, sides = create_unit_sphere(6)
         faces = edges[sides, 0]
-        bb = np.ones(len(verts)) * 3000
+        bb = np.ones(len(verts)) * b.mean()
 
-        R_ = rotation_around_axis([0, 1, 0], np.deg2rad(gamma))
+        R_ = rotation_around_axis([0, 1, 0], gamma)
 
         E_ = w[0] * single_tensor(gradients=verts, bvals=bb, S0=1, rotation=R0, SNR=SNR)
         E_ += w[1] * single_tensor(gradients=verts, bvals=bb, S0=1, rotation=R_, SNR=SNR)

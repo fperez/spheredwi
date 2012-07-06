@@ -42,20 +42,31 @@ bvecs = bvecs[where_dwi]
 bvals = bvals[where_dwi] * 3
 
 from dipy.core.triangle_subdivide import create_half_unit_sphere
-verts, edges, sides = create_half_unit_sphere(6)
+verts, edges, sides = create_half_unit_sphere(5)
 faces = edges[sides, 0]
 
-sk = SparseKernelModel(bvals, bvecs, sh_order=8, eval_vertices=verts)
+sk = SparseKernelModel(bvals, bvecs, sh_order=8)
 
 angles = [25, 30, 35, 40, 45, 50, 55, 60]
 recovered_angle = []
 
+SNR = None
+bvals = np.ones_like(bvals) * 3000
+
+cache = None
+odf_verts = verts
+
 for angle in angles:
     print "Analyzing angle", angle
 
-    E = two_fiber_signal(bvals, bvecs, angle, SNR=None)
-    odf = sk.fit(E).odf()
+    E = two_fiber_signal(bvals, bvecs, angle, SNR=SNR)
+    fit = sk.fit(E)
+    odf = fit.odf(vertices=odf_verts, cache=cache)
     odf = np.clip(odf, 0, None)
+
+    # Use cache from now on
+    cache = fit
+    odf_verts = None
 
 #    from dipy.viz import show_odfs
 #    show_odfs([[[odf]]], (verts, faces))
