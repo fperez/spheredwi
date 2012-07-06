@@ -79,6 +79,8 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
         Sampling points (inclination and azimuthal angles).
     q_theta, q_phi : (Q,) ndarray
         Evaluation points (inclination and azimuthal angles).
+    kernel : callable
+        Kernel function used in the reconstruction.
     N : int
         Maximum degree of spherical harmonic subspace.
 
@@ -213,8 +215,7 @@ def Linv(E):
 
 class SparseKernelModel:
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
-                       loglog_tf=True,
-                       eval_vertices=None):
+                 loglog_tf=True):
         """Sparse kernel model.
 
         Parameters
@@ -232,11 +233,6 @@ class SparseKernelModel:
             In theory, this gives a better representation of the ODF (but does
             predict back the original signal).  Also, it seems not to work well
             for low b-values (<= 1500).
-        eval_vertices : (N, 3) ndarray, optional
-            Positions on the sphere on which to evaluate the ODF or signal (see
-            the fit's odf and predict methods).  By specifying the positions
-            here, some optimizations are enabled, but they can also be given as
-            a parameter to `odf` and `predict`.
 
         """
         where_dwi = bvals > 0
@@ -255,9 +251,6 @@ class SparseKernelModel:
                           kernel=inv_funk_radon_even_kernel,
                           N=self.sh_order)
             )
-
-        if eval_vertices is not None:
-            self._eval_vertices = cart2sphere(*eval_vertices.T)[1:]
 
 
     def fit(self, signal):
@@ -297,40 +290,43 @@ class SparseKernelFit:
         self.model = model
         self.intercept = intercept
 
-    def odf(self, vertices=None):
+
+    def odf(self, vertices=None, cache=None):
         """Predict the ODF at the given vertices.
 
         """
         if vertices is None:
-            odf_theta, odf_phi = self.model._eval_vertices
+            self._odf_kernel_matrix = cache._odf_kernel_matrix
         else:
             odf_theta, odf_phi = cart2sphere(*vertices.T)[1:]
+            X = kernel_matrix(odf_theta, odf_phi,
+                              self.model.kernel_theta,
+                              self.model.kernel_phi,
+                              kernel=even_kernel,
+                              N=self.model.sh_order)
+            self._odf_kernel_matrix = X
 
-        return kernel_reconstruct(self.model.kernel_theta,
-                                  self.model.kernel_phi,
-                                  self.beta,
-                                  odf_theta, odf_phi,
-                                  kernel=even_kernel,
-                                  N=self.model.sh_order) + \
+        return np.dot(self._odf_kernel_matrix, self.beta) + \
                self.intercept
 
-    def predict(self, vertices=None):
+
+    def predict(self, vertices=None, cache=None):
         """Predict the signal at the given vertices.
 
         """
         if vertices is None:
-            E = np.dot(self.model.X, self.beta)
+            self._pred_kernel_matrix = cache._pred_kernel_matrix
         else:
-            eval_theta, eval_phi = cart2sphere(*vertices.T)[1:]
+            pred_theta, pred_phi = cart2sphere(*vertices.T)[1:]
+            X = kernel_matrix(pred_theta, pred_phi,
+                              self.model.kernel_theta,
+                              self.model.kernel_phi,
+                              kernel=inv_funk_radon_even_kernel,
+                              N=self.model.sh_order)
+            self._pred_kernel_matrix = X
 
-            E = kernel_reconstruct(self.model.kernel_theta,
-                                   self.model.kernel_phi,
-                                   self.beta,
-                                   eval_theta, eval_phi,
-                                   kernel=inv_funk_radon_even_kernel,
-                                   N=self.model.sh_order)
-
-        E += self.intercept
+        E = np.dot(self._pred_kernel_matrix, self.beta) + \
+            self.intercept
 
         if self.model.loglog_tf:
             E = Linv(-E)
