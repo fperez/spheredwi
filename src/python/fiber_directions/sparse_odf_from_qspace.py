@@ -97,7 +97,7 @@ w = [0.5, 0.5]
 angles = np.deg2rad(np.arange(40, 60, 5))
 angles = np.insert(angles, 0, 0)
 
-SNR = 30
+SNR = None
 
 for k, gamma in enumerate(angles):
     print "Angle:", np.rad2deg(gamma)
@@ -131,18 +131,17 @@ for k, gamma in enumerate(angles):
 
     if visualize_signal:
         from dipy.core.triangle_subdivide import create_unit_sphere
-        verts, edges, sides = create_unit_sphere(6)
-        faces = edges[sides, 0]
-        bb = np.ones(len(verts)) * b.mean()
+        sphere = create_unit_sphere(6)
+        bb = np.ones(len(sphere.vertices)) * b.mean()
 
-        R_ = rotation_around_axis([0, 1, 0], gamma)
+        E_ = w[0] * single_tensor(gradients=sphere.vertices, bvals=bb, S0=1, rotation=R0, SNR=SNR)
+        E_ += w[1] * single_tensor(gradients=sphere.vertices, bvals=bb, S0=1, rotation=R1, SNR=SNR)
 
-        E_ = w[0] * single_tensor(gradients=verts, bvals=bb, S0=1, rotation=R0, SNR=SNR)
-        E_ += w[1] * single_tensor(gradients=verts, bvals=bb, S0=1, rotation=R_, SNR=SNR)
+        ODF = w[0] * single_tensor_ODF(sphere.vertices, rotation=R0)
+        ODF += w[1] * single_tensor_ODF(sphere.vertices, rotation=R1)
 
         from dipy.viz import show_odfs
-        show_odfs([[[E_, -L(E_)]]], (verts, faces))
-        
+        show_odfs([[[E_, ODF]]], (sphere.vertices, sphere.faces))
 
 
     if visualize_odf:
