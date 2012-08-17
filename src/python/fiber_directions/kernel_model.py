@@ -215,7 +215,7 @@ def Linv(E):
 
 class SparseKernelModel:
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
-                 loglog_tf=True, alpha=1, rho=0.5):
+                 loglog_tf=True, alpha=None, rho=None):
         """Sparse kernel model.
 
         Parameters
@@ -235,10 +235,10 @@ class SparseKernelModel:
             for low b-values (<= 1500).
 
         alpha: float (optional)
-            Parameter controlling the sparseness of ElasticNet. 
+            Parameter controlling the sparseness of ElasticNet. Defaults to 1
 
         rho: float (optional)
-            Parameter controlling the sparseness of ElasticNet.
+            Parameter controlling the sparseness of ElasticNet. Defaults to 0.5
 
         For a and b controlling the L1 and L2 norms of the weights:
 
@@ -279,14 +279,14 @@ class SparseKernelModel:
                           N=self.sh_order)
             )
 
-        aa = 0.0001  # L1 weight
-        bb = 0.00001 # L2 weight
+        if alpha is None:
+            alpha = 1.0
 
-        if alpha is None
-            self.alpha = aa + bb
         if rho is None: 
-            rho = aa / (aa + bb)
+            rho = 0.5
 
+        self.alpha = alpha
+        self.rho = rho
 
     def fit(self, signal):
         """Fit the model to the given signal.
@@ -303,7 +303,8 @@ class SparseKernelModel:
             y = signal
 
         from sklearn import linear_model
-        lm = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True,
+        lm = linear_model.ElasticNet(alpha=self.alpha, rho=self.rho,
+                                     fit_intercept=True,
                                      copy_X=True)
 
         fit = lm.fit(self.X, y)
