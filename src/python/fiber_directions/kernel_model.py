@@ -215,7 +215,7 @@ def Linv(E):
 
 class SparseKernelModel:
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
-                 loglog_tf=True):
+                 loglog_tf=True, alpha=None, rho=None):
         """Sparse kernel model.
 
         Parameters
@@ -234,6 +234,33 @@ class SparseKernelModel:
             predict back the original signal).  Also, it seems not to work well
             for low b-values (<= 1500).
 
+        alpha: float (optional)
+            Parameter controlling the sparseness of ElasticNet. Defaults to 1
+
+        rho: float (optional)
+            Parameter controlling the sparseness of ElasticNet. Defaults to 0.5
+
+        For a and b controlling the L1 and L2 norms of the weights:
+
+        .. math :: 
+
+           a * L1 + b * L2
+
+        set the input parameters `alpha` and `rho` to be:
+
+        .. math ::
+
+            alpha = a + b
+
+            and
+
+            rho = \frac{a}{a+b}
+           
+
+        See also
+        --------
+        sklearn.linear_model.ElasticNet 
+        
         """
         where_dwi = bvals > 0
 
@@ -252,6 +279,14 @@ class SparseKernelModel:
                           N=self.sh_order)
             )
 
+        if alpha is None:
+            alpha = 1.0
+
+        if rho is None: 
+            rho = 0.5
+
+        self.alpha = alpha
+        self.rho = rho
 
     def fit(self, signal):
         """Fit the model to the given signal.
@@ -268,12 +303,8 @@ class SparseKernelModel:
             y = signal
 
         from sklearn import linear_model
-
-        aa = 0.0001 # L1 weight
-        bb = 0.00001 # L2 weight
-        alpha = aa + bb
-        rho = aa / (aa + bb)
-        lm = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True,
+        lm = linear_model.ElasticNet(alpha=self.alpha, rho=self.rho,
+                                     fit_intercept=True,
                                      copy_X=True)
 
         fit = lm.fit(self.X, y)
