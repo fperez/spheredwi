@@ -697,7 +697,7 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
     s_phi = s_phi[:, None]
 
     cos_theta = cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
-
+   
     return kernel(cos_theta, N)
 
 
@@ -857,7 +857,6 @@ class SparseKernelModel:
                           N=self.sh_order)
             )
 
-
     def fit(self, signal):
         """Fit the model to the given signal.
 
@@ -878,6 +877,7 @@ class SparseKernelModel:
         bb = 0.00001 # L2 weight
         alpha = aa + bb
         rho = aa / (aa + bb)
+	
         #lm = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True,
                                     # copy_X=True)
 	lm = ElasticNet(alpha=alpha, rho=rho, fit_intercept=True, copy_X=True)

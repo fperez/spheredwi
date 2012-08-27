@@ -144,8 +144,8 @@ hsphere = create_unit_hemisphere(5)
 
 sk = SparseKernelModel(new_bvals, new_bvecs, sh_order=8)
 
-#angles = [25, 30, 35, 40, 45, 50, 55, 60]
-angles = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
+angles = [50]
+#angles = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
 recovered_angle = []
 
 SNR = None
@@ -169,11 +169,7 @@ for angle in angles:
     noise = noise*(tau/norm(noise)) #normalize to get desired snr
     E = E+noise #add noise to signal
     E = abs(E) #phase is not used in MRI
-    
-    #subtract the mean from the noisy signal
-    #mean = np.mean(E)
-    #E = E - mean
-    
+  
     fit = sk.fit(E)
     odf = fit.odf(vertices=odf_verts, cache=cache)
     #odf = np.clip(odf, 0, None)
