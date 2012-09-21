@@ -477,10 +477,11 @@ class ElasticNet(LinearModel, RegressorMixin):
         return self
 
     def _dense_fit(self, X, y, Xy=None, coef_init=None):
-
-        # X and y must be of type float64
+	
+	# X and y must be of type float64
 	X = np.asanyarray(X, dtype=np.float64)
         y = np.asarray(y, dtype=np.float64)
+	
 
         n_samples, n_features = X.shape
 
@@ -534,8 +535,7 @@ class ElasticNet(LinearModel, RegressorMixin):
         self._set_intercept(X_mean, y_mean, X_std)
 
         if self.dual_gap_ > self.eps_:
-            warnings.warn('Objective did not converge, you might want'
-                          ' to increase the number of iterations')
+            warnings.warn('Objective did not converge, you might want to increase the number of iterations')
 
         # return self for chaining fit and predict calls
         return self
@@ -617,7 +617,7 @@ def quadrature_points(N=72):
 
     Parameters
     ----------
-    N : int, {72, 132, 492}
+    N : int, {72, 132, 289, 492}
         A quadrature set with N points is loaded.
 
     Returns
@@ -629,16 +629,20 @@ def quadrature_points(N=72):
 
     """
     import os
-    basedir = os.path.abspath(os.path.dirname(__file__))
+    if N==289:
+    	basedir = '/home/jnealy/projects/spheredwi/src/python/data'
+    else:	
+    	basedir = os.path.abspath(os.path.dirname(__file__))
 
     quad_file = {72: 'qsph1-14-72DP.dat',
                  132: 'qsph1-16-132DP.dat',
+		 289: 'md016.00289.txt',
                  492: 'qsph1-37-492DP.dat'}
 
     q_pts = np.loadtxt(os.path.join(basedir, quad_file[N]))
     q_theta, q_phi = cart2sphere(*q_pts[:, :3].T)[1:]
     q_w = q_pts[:, 3]
-
+    
     return q_theta, q_phi, q_w
 
 
@@ -753,11 +757,12 @@ def even_kernel(mu, N):
 
     """
     A = np.zeros_like(mu)
+  
 
     for k in range(2, N + 1, 2):
         Pk = sp.special.legendre(k)
         A += (2 * k + 1) / (4 * np.pi) * Pk(mu)
-
+    
     return A
 
 
@@ -819,6 +824,7 @@ def Linv(E):
 
 
 class SparseKernelModel:
+#changed qp from 132 to 289
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
                  loglog_tf=True):
         """Sparse kernel model.
@@ -855,6 +861,7 @@ class SparseKernelModel:
                           self.kernel_theta, self.kernel_phi,
                           kernel=inv_funk_radon_even_kernel,
                           N=self.sh_order)
+	  
             )
 
     def fit(self, signal):
@@ -872,7 +879,6 @@ class SparseKernelModel:
             y = signal
 
         #from sklearn import linear_model
-
         aa = 0.0001 # L1 weight
         bb = 0.00001 # L2 weight
         alpha = aa + bb
@@ -881,8 +887,14 @@ class SparseKernelModel:
         #lm = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True,
                                     # copy_X=True)
 	lm = ElasticNet(alpha=alpha, rho=rho, fit_intercept=True, copy_X=True)
-
-        fit = lm.fit(self.X, y)
+	
+	#attempt to append iso col and spherical harmonic cols to X:
+	#from sph_harm import spherical_harmonics as sh
+	#append = sh(self.gradient_theta, self.gradient_phi, np.size(self.gradient_theta))
+	
+	#self.X = np.hstack((self.X, append))
+	
+	fit = lm.fit(self.X, y)
         beta = fit.coef_
         intercept = fit.intercept_
 
@@ -896,7 +908,7 @@ class SparseKernelFit:
         self.model = model
         self.intercept = intercept
 
-
+#modify so that instead of vertices all at once have vertex and loop through so get one output
     def odf(self, vertices=None, cache=None):
         """Predict the ODF at the given vertices.
 
