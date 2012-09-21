@@ -3,10 +3,15 @@ import sys
 sys.path.insert(0, '..')
 
 from kernel_model_jn import SparseKernelModel
+from kernel_model_jn import quadrature_points
 from sphdif.linalg import rotation_around_axis
 
-#from dipy.reconst.recspeed import local_maxima
 from dipy.sims.voxel import single_tensor
+from numpy.linalg import norm as norm
+
+from kernel_model_jn import even_kernel
+import os
+import Pycluster as pyc
 
 #------My code changing local_maxima code format from cython to python------
 def local_maxima(codf,cedges):
@@ -50,8 +55,6 @@ def local_maxima(codf,cedges):
     np.ones(len(codf))
     lenedges = len(cedges)
     cpeak = np.ones(len(codf),'uint8')
-    #print(codf)
-    #print(cedges)
    
     for i in range(lenedges):
 
@@ -107,86 +110,118 @@ where_dwi = bvals > 0
 bvecs = bvecs[where_dwi]
 bvals = bvals[where_dwi] * 3
 
+error = np.zeros((13,1))
+mean_means = np.zeros((13,1))
+mean_stds = np.zeros((13,1))
+
+tot_its = 1 #number of time 3 random measurements are discarded
+nRealizations = 1 #number of MC simulations
+sig_noise = 20 #SNR value
+
+for ii in range(0,tot_its):
+
+	angles_mean = []
+	angles_std = []
+
 #-------------Code to randomly throw out one measurement-----------------------
 
-num_disc = 3 #Change this variable to adjust the number of measurements discarded
-random_pnt = np.random.random_integers(1,62,num_disc)
-new_bvecs = np.zeros((64-num_disc)*3).reshape(64-num_disc,3)
-new_bvals = np.zeros(64-num_disc)
-print "Measurement numbers thrown out:"
-
-for i in range(0,num_disc+1):
-	if i==0:
-		new_bvecs[0:random_pnt[i]-1,:] = bvecs[0:random_pnt[i]-1,:]
-		new_bvals[0:random_pnt[i]-1] = bvals[0:random_pnt[i]-1]
-		print random_pnt[i]
-	elif i==num_disc:
-		new_bvecs[random_pnt[i-1]-1:64-num_disc,:] = bvecs[random_pnt[i-1]+(i-1):64]
-		new_bvals[random_pnt[i-1]-1:64-num_disc] = bvals[random_pnt[i-1]+(i-1):64]
+	num_disc = 3 #Change this variable to adjust the number of measurements discarded
+	
+	if num_disc == 0:
+		new_bvecs = bvecs
+		new_bvals = bvals
+	
 	else:
-		new_bvecs[random_pnt[i-1]-1:random_pnt[i]-1,:] = bvecs[random_pnt[i-1]+(i-1):random_pnt[i]+(i-1),:]
-		new_bvals[random_pnt[i-1]-1:random_pnt[i]-1] = bvals[random_pnt[i-1]+(i-1):random_pnt[i]+(i-1)]
-		print random_pnt[i]
+		random_pnt = np.random.random_integers(1,62,num_disc)
+		new_bvecs = np.zeros((64-num_disc)*3).reshape(64-num_disc,3)
+		new_bvals = np.zeros(64-num_disc)
+		print
+		print "Measurement numbers thrown out:"
 
-print
+		for i in range(0,num_disc+1):
+			if i==0:
+				new_bvecs[0:random_pnt[i]-1,:] = bvecs[0:random_pnt[i]-1,:]
+				new_bvals[0:random_pnt[i]-1] = bvals[0:random_pnt[i]-1]
+				print random_pnt[i]
+			elif i==num_disc:
+				new_bvecs[random_pnt[i-1]-1:64-num_disc,:] = bvecs[random_pnt[i-1]+(i-1):64]
+				new_bvals[random_pnt[i-1]-1:64-num_disc] = bvals[random_pnt[i-1]+(i-1):64]
+			else:
+				new_bvecs[random_pnt[i-1]-1:random_pnt[i]-1,:] = bvecs[random_pnt[i-1]+(i-1):random_pnt[i]+(i-1),:]
+				new_bvals[random_pnt[i-1]-1:random_pnt[i]-1] = bvals[random_pnt[i-1]+(i-1):random_pnt[i]+(i-1)]
+				print random_pnt[i]
 
-#In code below all references to bvecs and bvals must be changed to new_bvecs
-#and new bvals
+		print
 
 #------------------------------------------------------------------------------
 
-#from dipy.core.triangle_subdivide import create_half_unit_sphere
-#verts, edges, sides = create_half_unit_sphere(5)
-#faces = edges[sides, 0]
+	from dipy.core.subdivide_octahedron import create_unit_hemisphere
+	hsphere = create_unit_hemisphere(5)
 
-from dipy.core.subdivide_octahedron import create_unit_hemisphere
-hsphere = create_unit_hemisphere(5)
+	sk = SparseKernelModel(new_bvals, new_bvecs, sh_order=8)
 
-sk = SparseKernelModel(new_bvals, new_bvecs, sh_order=8)
+	#angles = [50]
+	angles = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
+	recovered_angle = []
 
-angles = [50]
-#angles = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]
-recovered_angle = []
+	SNR = None
+	new_bvals = np.ones_like(new_bvals) * 3000
 
-SNR = None
-bvals = np.ones_like(new_bvals) * 3000
+	cache = None
+	odf_verts = hsphere.vertices
 
-cache = None
-#odf_verts = verts
-odf_verts = hsphere.vertices
-
-for angle in angles:
-    print "Analyzing angle", angle
-
-    E = two_fiber_signal(new_bvals, new_bvecs, angle, SNR=SNR)
+	for angle in angles:	
+		
+		print "Analyzing angle", angle
+		#try moving recovered_angle here in order to hold all MC results
+		recovered_angle = []
+		
+		#start MC simulation here:
+		for kk in range(0,nRealizations):
+			
+			E = two_fiber_signal(new_bvals, new_bvecs, angle, SNR=SNR)
     
-    #create and add in Rician noise
-    from numpy.linalg import norm as norm
-    noiseR = np.random.randn(*E.shape)
-    noiseI = np.random.randn(*E.shape)
-    noise = noiseR + 1j*noiseI
-    tau = (10.0**(-20.0/10.0)*norm(E,2)) #here we are using an snr of 20.0
-    noise = noise*(tau/norm(noise)) #normalize to get desired snr
-    E = E+noise #add noise to signal
-    E = abs(E) #phase is not used in MRI
-  
-    fit = sk.fit(E)
-    odf = fit.odf(vertices=odf_verts, cache=cache)
-    #odf = np.clip(odf, 0, None)
-    odf = np.abs(odf)
+    			#create and add in Rician noise
+    			noiseR = np.random.randn(*E.shape)
+    			noiseI = np.random.randn(*E.shape)
+    			noise = noiseR + 1j*noiseI
+    			tau = (10.0**(-sig_noise/10.0)*norm(E,2)) #here we are using an snr of 15.0
+    			noise = noise*(tau/norm(noise)) #normalize to get desired snr
+    			E = E+noise #add noise to signal
+    			E = abs(E) #phase is not used in MRI
+    
+    			fit = sk.fit(E)
+    			odf= fit.odf(vertices=odf_verts, cache=cache)
+    			#odf = np.clip(odf, 0, None)
+    			odf = np.abs(odf)
 
-    # Use cache from now on
-    cache = fit
-    odf_verts = None
+    			# Use cache from now on
+    			cache = fit
+    			odf_verts = None
 
-#    from dipy.viz import show_odfs
-#    show_odfs([[[odf]]], (verts, faces))
+			#from dipy.viz import show_odfs
+			#show_odfs([[[odf]]], (verts, faces))
+			
+    			recovered_angle.append(angle_from_odf(odf,hsphere.vertices, hsphere.edges))
+			
+			#end MC simulation
+		
+		recovered_angle.sort()
+		angles_mean.append(np.array(recovered_angle).mean())
+		angles_std.append(np.array(recovered_angle).std())
+		
+	error += (np.abs(angles - np.array(angles_mean))).reshape((13,1))
+	mean_means += (np.array(angles_mean)).reshape((13,1))
+	mean_stds += (np.array(angles_std)).reshape((13,1))
+		
 
-    #recovered_angle.append(angle_from_odf(odf, verts, edges))
-    recovered_angle.append(angle_from_odf(odf,hsphere.vertices, hsphere.edges))
 
-result = np.column_stack((angles, recovered_angle))
+angles_mean = mean_means/tot_its
+angles_std = mean_stds/tot_its
+error = error/tot_its
+result = np.column_stack((angles, angles_mean, angles_std, error))
+np.savetxt('result.out', result)
 
 print
-print "Angle in", "Angle out"
+print "     Angle in", "      Angle out (mean)", "    STD", "             Error"
 print result
