@@ -473,7 +473,8 @@ class ElasticNet(LinearModel, RegressorMixin):
         """
 
         fit = self._sparse_fit if sp.sparse.isspmatrix(X) else self._dense_fit
-        fit(X, y, Xy, coef_init)
+	fit(X, y, Xy, coef_init)
+	
         return self
 
     def _dense_fit(self, X, y, Xy=None, coef_init=None):
@@ -541,8 +542,8 @@ class ElasticNet(LinearModel, RegressorMixin):
         return self
       
     def _sparse_fit(self, X, y, Xy=None, coef_init=None):
-
-        if not sp.sparse.isspmatrix_csc(X) or not np.issubdtype(np.float64, X):
+	
+	if not sp.sparse.isspmatrix_csc(X) or not np.issubdtype(np.float64, X):
             X = sp.sparse.csc_matrix(X, dtype=np.float64)
         y = np.asarray(y, dtype=np.float64)
 
@@ -922,6 +923,11 @@ class SparseKernelFit:
                               self.model.kernel_phi,
                               kernel=even_kernel,
                               N=self.model.sh_order)
+			      		      
+			      
+	    #ERROR: need to append spherical harmonics here but size of X is different
+	    #need to find out why size of X is different!!!
+	    		      
             self._odf_kernel_matrix = X
 
         return np.dot(self._odf_kernel_matrix, self.beta) + \
