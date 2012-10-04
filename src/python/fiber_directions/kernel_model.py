@@ -5,6 +5,8 @@ import numpy as np
 import scipy as sp
 import scipy.special
 from dipy.core.geometry import cart2sphere
+from dipy.reconst.odf import OdfModel, OdfFit
+from dipy.reconst.cache import Cache
 
 
 def quadrature_points(N=72):
@@ -213,7 +215,7 @@ def Linv(E):
     return np.exp(-np.exp(E))
 
 
-class SparseKernelModel:
+class SparseKernelModel(OdfModel, Cache):
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
                  loglog_tf=True, alpha=None, rho=None):
         """Sparse kernel model.
@@ -242,7 +244,7 @@ class SparseKernelModel:
 
         For a and b controlling the L1 and L2 norms of the weights:
 
-        .. math :: 
+        .. math ::
 
            a * L1 + b * L2
 
@@ -255,12 +257,12 @@ class SparseKernelModel:
             and
 
             rho = \frac{a}{a+b}
-           
+
 
         See also
         --------
-        sklearn.linear_model.ElasticNet 
-        
+        sklearn.linear_model.ElasticNet
+
         """
         where_dwi = bvals > 0
 
@@ -282,7 +284,7 @@ class SparseKernelModel:
         if alpha is None:
             alpha = 1.0
 
-        if rho is None: 
+        if rho is None:
             rho = 0.5
 
         self.alpha = alpha
@@ -315,49 +317,42 @@ class SparseKernelModel:
                                model=self)
 
 
-class SparseKernelFit:
+class SparseKernelFit(OdfFit):
     def __init__(self, beta, intercept=0, model=None):
         self.beta = beta
         self.model = model
         self.intercept = intercept
 
-
-    def odf(self, vertices=None, cache=None):
+    def odf(self, sphere):
         """Predict the ODF at the given vertices.
 
         """
-        if vertices is None:
-            self._odf_kernel_matrix = cache._odf_kernel_matrix
-        else:
-            odf_theta, odf_phi = cart2sphere(*vertices.T)[1:]
-            X = kernel_matrix(odf_theta, odf_phi,
+        X = self.model.cache_get('odf_kernel_matrix',
+                                 key=sphere)
+        if X is None:
+            X = kernel_matrix(sphere.theta, sphere.phi,
                               self.model.kernel_theta,
                               self.model.kernel_phi,
                               kernel=even_kernel,
                               N=self.model.sh_order)
-            self._odf_kernel_matrix = X
+            self.model.cache_set('odf_kernel_matrix', key=sphere, value=X)
 
-        return np.dot(self._odf_kernel_matrix, self.beta) + \
-               self.intercept
+        return np.dot(X, self.beta) + self.intercept
 
-
-    def predict(self, vertices=None, cache=None):
+    def predict(self, sphere):
         """Predict the signal at the given vertices.
 
         """
-        if vertices is None:
-            self._pred_kernel_matrix = cache._pred_kernel_matrix
-        else:
-            pred_theta, pred_phi = cart2sphere(*vertices.T)[1:]
-            X = kernel_matrix(pred_theta, pred_phi,
+        X = self.model.cache_get('predict_kernel_matrix')
+        if X is None:
+            X = kernel_matrix(sphere.theta, sphere.phi,
                               self.model.kernel_theta,
                               self.model.kernel_phi,
                               kernel=inv_funk_radon_even_kernel,
                               N=self.model.sh_order)
-            self._pred_kernel_matrix = X
+            self.model.cache_set('predict_kernel_matrix', key=sphere, value=X)
 
-        E = np.dot(self._pred_kernel_matrix, self.beta) + \
-            self.intercept
+        E = np.dot(X, self.beta) + self.intercept
 
         if self.model.loglog_tf:
             E = Linv(-E)

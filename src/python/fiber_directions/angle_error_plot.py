@@ -18,7 +18,7 @@ def two_fiber_signal(bvals, bvecs, angle, w=[0.5, 0.5], SNR=0):
     return E
 
 
-def angle_from_odf(odf, verts, edges):
+def angle_from_odf(odf):
     # Find angles
     p, i = local_maxima(odf, edges)
 
@@ -41,11 +41,11 @@ where_dwi = bvals > 0
 bvecs = bvecs[where_dwi]
 bvals = bvals[where_dwi] * 3
 
-from dipy.core.triangle_subdivide import create_half_unit_sphere
-verts, edges, sides = create_half_unit_sphere(5)
-faces = edges[sides, 0]
+from dipy.core.sphere import unit_icosahedron
+sphere = unit_icosahedron.subdivide(5)
 
-sk = SparseKernelModel(bvals, bvecs, sh_order=8)
+sk = SparseKernelModel(bvals, bvecs, alpha=0.00011, rho=0.9, sh_order=8)
+sk.direction_finder.config(sphere=sphere)
 
 angles = [25, 30, 35, 40, 45, 50, 55, 60]
 recovered_angle = []
@@ -53,25 +53,17 @@ recovered_angle = []
 SNR = None
 bvals = np.ones_like(bvals) * 3000
 
-cache = None
-odf_verts = verts
-
 for angle in angles:
     print "Analyzing angle", angle
 
     E = two_fiber_signal(bvals, bvecs, angle, SNR=SNR)
     fit = sk.fit(E)
-    odf = fit.odf(vertices=odf_verts, cache=cache)
-    odf = np.clip(odf, 0, None)
-
-    # Use cache from now on
-    cache = fit
-    odf_verts = None
+    xyz = fit.directions
+    w = np.dot(xyz[0], xyz[1])
+    recovered_angle.append(np.rad2deg(np.arccos(np.abs(w))))
 
 #    from dipy.viz import show_odfs
 #    show_odfs([[[odf]]], (verts, faces))
-
-    recovered_angle.append(angle_from_odf(odf, verts, edges))
 
 result = np.column_stack((angles, recovered_angle))
 
