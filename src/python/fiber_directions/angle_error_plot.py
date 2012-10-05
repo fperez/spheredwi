@@ -45,7 +45,7 @@ from dipy.core.sphere import unit_icosahedron
 sphere = unit_icosahedron.subdivide(5)
 
 sk = SparseKernelModel(bvals, bvecs, alpha=0.00011, rho=0.9, sh_order=8)
-sk.direction_finder.config(sphere=sphere)
+sk.direction_finder.config(sphere=sphere, min_separation_angle=10)
 
 angles = [25, 30, 35, 40, 45, 50, 55, 60]
 recovered_angle = []
@@ -57,9 +57,14 @@ for angle in angles:
     print "Analyzing angle", angle
 
     E = two_fiber_signal(bvals, bvecs, angle, SNR=SNR)
+
     fit = sk.fit(E)
     xyz = fit.directions
-    w = np.dot(xyz[0], xyz[1])
+
+    if len(xyz) > 1:
+        w = np.dot(xyz[0], xyz[1])
+    else:
+        w = 1
     recovered_angle.append(np.rad2deg(np.arccos(np.abs(w))))
 
 #    from dipy.viz import show_odfs
