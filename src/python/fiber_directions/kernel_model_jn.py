@@ -1,4 +1,4 @@
-__all__ = ['SparseKernelModel', 'SparseKernelFit']
+__all__ = ['SparseKernelModel', 'SparseKernelFit'] 
 
 
 import numpy as np
