@@ -5,6 +5,7 @@ import numpy as np
 import scipy as sp
 import scipy.special
 from dipy.core.geometry import cart2sphere
+from sph_harm import spherical_harmonics as sh
 
 #add code to use RegressorMixin class
 #------------------------------------------------------------------------------
@@ -185,15 +186,17 @@ class LinearModel(BaseEstimator, RegressorMixin):
                 X_std = np.ones(X.shape[1])
             else:
                 X_mean = X.mean(axis=0)
-                X -= X_mean
+                #X -= X_mean
+		X = X
                 if normalize:
                     X_std = np.sqrt(np.sum(X ** 2, axis=0))
                     X_std[X_std==0] = 1
-                    X /= X_std
+                    #X /= X_std
                 else:
                     X_std = np.ones(X.shape[1])
             y_mean = y.mean()
-            y = y - y_mean
+            #y = y - y_mean
+	    y = y
         else:
             X_mean = np.zeros(X.shape[1])
             X_std = np.ones(X.shape[1])
@@ -787,6 +790,7 @@ def inv_funk_radon_even_kernel(mu, N):
 
     """
     A = np.zeros_like(mu)
+    #changed starting range from 2 to 4
 
     for k in range(2, N + 1, 2):
         Pk = sp.special.legendre(k)
@@ -860,9 +864,16 @@ class SparseKernelModel:
             kernel_matrix(self.gradient_theta, self.gradient_phi,
                           self.kernel_theta, self.kernel_phi,
                           kernel=inv_funk_radon_even_kernel,
-                          N=self.sh_order)
-	  
-            )
+                          N=self.sh_order))
+			  
+	#attempt to append iso col and spherical harmonic cols to X:
+	P2 = sp.special.legendre(2)		  
+	append = sh(self.gradient_theta, self.gradient_phi, np.size(self.gradient_theta))
+	append[:,1:] = append[:,1:]/(-12*np.pi*P2(0))
+	
+	#print append, "append"
+	
+	self.X = np.hstack((self.X, append))
 
     def fit(self, signal):
         """Fit the model to the given signal.
@@ -886,13 +897,19 @@ class SparseKernelModel:
 	
         #lm = linear_model.ElasticNet(alpha=alpha, rho=rho, fit_intercept=True,
                                     # copy_X=True)
-	lm = ElasticNet(alpha=alpha, rho=rho, fit_intercept=True, copy_X=True)
+	lm = ElasticNet(alpha=alpha, rho=rho, fit_intercept=False, copy_X=True)
 	
 	fit = lm.fit(self.X, y)
         beta = fit.coef_
-        intercept = fit.intercept_
+	#print self.X[:,-6:]
+	x,res,rank,S = np.linalg.lstsq(self.X[:,-6:],y)
+	print x 
+	print beta
+	
+	print np.mean(y)
+        #intercept = fit.intercept_
 
-        return SparseKernelFit(beta=beta, intercept=intercept,
+        return SparseKernelFit(beta=beta, intercept=False,
                                model=self)
 
 
@@ -902,6 +919,7 @@ class SparseKernelFit:
         self.model = model
         self.intercept = intercept
 
+#modify so that instead of vertices all at once have vertex and loop through so get one output
     def odf(self, vertices=None, cache=None):
         """Predict the ODF at the given vertices.
 
@@ -915,15 +933,23 @@ class SparseKernelFit:
                               self.model.kernel_phi,
                               kernel=even_kernel,
                               N=self.model.sh_order)
+			      		      
+			      
+	    #attempt to append iso col and spherical harmonic cols to X:
+	    append = sh(odf_theta, odf_phi, np.size(odf_theta))
+	
+	    X = np.hstack((X, append))
 	    		      
             self._odf_kernel_matrix = X
 	    
 
-        return np.dot(self._odf_kernel_matrix, self.beta) + \
-               self.intercept
+        #return np.dot(self._odf_kernel_matrix, self.beta) + \
+         #      self.intercept
+	 
+	return self._odf_kernel_matrix, self.beta, self.intercept
 	       
 
-    def predict(self, vertices=None,cache=None):
+    def predict(self, vertices=None, cache=None):
         """Predict the signal at the given vertices.
 
         """

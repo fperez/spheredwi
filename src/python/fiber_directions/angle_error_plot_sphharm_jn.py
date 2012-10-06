@@ -2,14 +2,14 @@ import numpy as np
 import sys
 sys.path.insert(0, '..')
 
-from kernel_model_jn import SparseKernelModel
-from kernel_model_jn import quadrature_points
+from kernel_model_sphharm_jn import SparseKernelModel
+from kernel_model_sphharm_jn import quadrature_points
 from sphdif.linalg import rotation_around_axis
 
 from dipy.sims.voxel import single_tensor
 from numpy.linalg import norm as norm
 
-from kernel_model_jn import even_kernel
+from kernel_model_sphharm_jn import even_kernel
 import os
 import Pycluster as pyc
 
@@ -87,7 +87,7 @@ def two_fiber_signal(bvals, bvecs, angle, w=[0.5, 0.5], SNR=0):
     return E
 
 
-def angle_from_odf(odf, verts,edges):
+def angle_from_odf(odf, verts, edges):
     # Find angles
     p, i = local_maxima(odf, edges)
 
@@ -161,7 +161,7 @@ for ii in range(0,tot_its):
 	hsphere = create_unit_hemisphere(5)
 
 	sk = SparseKernelModel(new_bvals, new_bvecs, sh_order=8)
-	
+
 	if arr_len == 1:
 		angles = [50]
 	else:
@@ -177,7 +177,7 @@ for ii in range(0,tot_its):
 
 	for angle in angles:	
 		
-		print "Analyzing angle", angle
+		#print "Analyzing angle", angle
 		recovered_angle = []
 		
 		#start MC simulation here:
@@ -195,14 +195,31 @@ for ii in range(0,tot_its):
     			E = abs(E) #phase is not used in MRI
     
     			fit = sk.fit(E)
-    			odf= fit.odf(vertices=odf_verts, cache=cache)
+			
+			#Pass out odf matrix, beta, and intercept matrices before computation of 
+			#odf in order to compute FA and only consider portion of matrix 
+			#if necessary
+			 
+			
+    			odf_mat, beta, intercept= fit.odf(vertices=odf_verts, cache=cache)
+			
+			
+			FA = (np.linalg.norm(beta[0:132])**2)/((np.linalg.norm(beta[132:138])**2)+(np.linalg.norm(beta[0:132])**2))
+			#print "Fractional Anisotropy:", FA 
+			
+			#if FA >= 1:
+				#odf = np.dot(odf_mat[:,0:132],beta[0:132])+intercept
+			#elif FA < 1:
+				#odf = np.dot(odf_mat[:,132:138],beta[132:138])+intercept
+			
+			odf = np.dot(odf_mat,beta) #+ intercept
 			#odf = np.clip(odf, 0, None)
     			#odf = np.abs(odf)
 
     			# Use cache from now on
     			cache = fit
     			odf_verts = None
-			
+
 			#from dipy.viz import show_odfs
 			#show_odfs([[[odf]]], (verts, faces))
 			
@@ -229,3 +246,5 @@ np.savetxt('result.out', result)
 print
 print "     Angle in", "      Angle out (mean)", "    STD", "             Error"
 print result
+
+#print beta
