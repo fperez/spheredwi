@@ -1,0 +1,49 @@
+Paper format
+
+Templates: https://embs.papercept.net/images/isbi/ISBI_templates.zip
+Submission: http://embs.papercept.net/conferences/scripts/start.pl 
+
+Papers are limited to 4 pages with an additional fee for up to four extra
+pages; however, the essential reviewed content must be limited to only four
+pages. The additional pages can only be used for supplementary figures
+(overflow figures are not allowed), pseudo code, screen shots, blue prints of
+instrumentation, and appendices. While reviewers will be asked to comment on
+the adequacy of the additional material, decisions to accept or reject papers
+will be based on the content of the main text. In short, authors are
+responsible to have a clear concise and self-contained manuscript within the
+allowed 4 pages for evaluation. Each paper should include an (i) abstract,
+(ii) introduction, (iii) a brief review of the previous research, (iv)
+approach, and (v) results and discussion. The abstract should have a clear
+concise summary of items (ii) and (v) for the demanding review process and
+general readers. The authors must clearly express specific biological or
+medical questions in their introduction and express their novel contributions
+either in section (ii) or (iii).
+
+Important Dates
+
+- Deadline for submission of 4-page paper or abstracts: November 1, 2012
+- Deadline for Abstract : December 7, 2012
+- Notification of acceptance/rejection: January 4, 2013
+- Submission of final accepted 4-page papers/abstracts: January 28, 2013
+- Deadline for author registration: January 31, 2013
+- Deadline for early registration: March 7, 2013
+
+Registration requirements:
+
+Accepted papers MUST be presented by one of the authors in person, at the
+conference site, and according to the final schedule. Any paper accepted into
+the technical program but not presented on-site will be withdrawn from the
+official proceedings archived on IEEE Xplore. The presenter MUST register for
+the conference by the author registration deadline. Failure to register before
+this deadline will result in automatic withdrawal of the paper from the
+conference proceedings and program.
+
+An individual can be first author of at most two paper submissions. There is
+no limit on individuals being co-authors of paper submissions.
+
+At least one author on each paper MUST register at a non-student rate (i.e., a
+student presenter MUST register at a non-student rate IF no co-author of the
+presented paper is registered at a non-student rate). See frequently asked
+questions below for more information about linking papers with a registration.
+
+See: http://www.biomedicalimaging.org/2013/authors/call-for-papers-2/

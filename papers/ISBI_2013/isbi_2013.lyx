@@ -1,0 +1,730 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\renewcommand{\author}{\name}
+\usepackage{spconf}
+\renewcommand{\author}{\twoauthors}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Sparse Spherical Harmonic Kernels for Modeling Fiber Crossings in Diffusion
+ Weighted Imaging
+\end_layout
+
+\begin_layout Author
+Cory D.
+ Ahrens
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+Applied Mathematics and Statistics
+\begin_inset Newline newline
+\end_inset
+
+Colorado School of Mines
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+Fernando Pérez, Stéfan van der Walt
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}{
+\end_layout
+
+\end_inset
+
+Helen-Wills Neuroscience Institute
+\begin_inset Newline newline
+\end_inset
+
+University of California, Berkeley
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+address{Colorado School of Mines
+\end_layout
+
+\begin_layout Plain Layout
+
+Department of Applied Mathematics and StatisticsGolden, Colorado 80401-1887
+ }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+Purpose:
+\end_layout
+
+\begin_layout Abstract
+Theory and Methods:
+\end_layout
+
+\begin_layout Abstract
+Results:
+\end_layout
+
+\begin_layout Abstract
+Conclusions:
+\end_layout
+
+\begin_layout Section*
+Introduction
+\end_layout
+
+\begin_layout Standard
+Introduction about dMRI, HARDI, Q-Ball, etc.
+ Putting everything into perspective
+\end_layout
+
+\begin_layout Section*
+Theory and Methods
+\end_layout
+
+\begin_layout Standard
+Background on sampling and reconstruction for dMRI
+\end_layout
+
+\begin_layout Subsection*
+Diffusion function, ODF and pODF
+\end_layout
+
+\begin_layout Standard
+The diffusion function 
+\begin_inset Formula $P\left(\mathbf{r}\right)$
+\end_inset
+
+ gives an ensemble average probability that a spin will diffuse a distance
+ 
+\begin_inset Formula $\mathbf{r}=\mathbf{x}-\mathbf{x}_{0},$
+\end_inset
+
+ relative to the position 
+\begin_inset Formula $\mathbf{x}_{0}$
+\end_inset
+
+, during a diffusion time 
+\begin_inset Formula $\tau$
+\end_inset
+
+.
+ The diffusion function is related to the dMRI signal through a Fourier
+ transform via
+\begin_inset Formula 
+\[
+E\left(\mathbf{q}\right)=E_{0}\int_{\mathbb{R}^{3}}P\left(\mathbf{r}\right)e^{-2\pi i\mathbf{q}\cdot\mathbf{r}}d^{3}r.
+\]
+
+\end_inset
+
+The diffusion-free signal, 
+\begin_inset Formula $E_{0}$
+\end_inset
+
+, is taken with no field gradient.
+ To reconstruct 
+\begin_inset Formula $P\left(\mathbf{r}\right)$
+\end_inset
+
+, ....
+ 
+\end_layout
+
+\begin_layout Subsection*
+Preliminaries
+\end_layout
+
+\begin_layout Standard
+Since the ODF is defined on the unit sphere 
+\begin_inset Formula $\mathbb{S}^{2}$
+\end_inset
+
+, a natural starting point are the spherical harmonics, which are an orthonormal
+ basis for the space of square integrable functions on the sphere, 
+\begin_inset Formula $L^{2}\left(\mathbb{S}^{2}\right)$
+\end_inset
+
+.
+ Here we simply collect relevant properties of spherical harmonics, which
+ can be found, for example, in Atkin's book.
+ A spherical harmonic of degree 
+\begin_inset Formula $l$
+\end_inset
+
+ and order 
+\begin_inset Formula $m$
+\end_inset
+
+ is defined by
+\begin_inset Formula 
+\begin{equation}
+Y_{l}^{m}\left(\theta,\phi\right)=\left(-1\right)^{m}\sqrt{\frac{\left(2l+1\right)\left(l-m\right)!}{4\pi\left(l+m\right)!}}P_{l}^{m}\left(\mathrm{cos}\theta\right)e^{im\phi},\:-l\le m\le l,\label{eq:ylm}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $P_{l}^{m}$
+\end_inset
+
+ is the Associated Legendre function.
+ Here 
+\begin_inset Formula $0\le\theta<\pi$
+\end_inset
+
+ is the polar angle and 
+\begin_inset Formula $0\le\phi<2\pi$
+\end_inset
+
+ is the azimuthal angle.
+ The spherical harmonics satisfy the Addition Theorem, which states
+\begin_inset Formula 
+\begin{equation}
+\frac{2l+1}{4\pi}P_{l}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)=\sum_{|m|\le l}\bar{Y}_{l}^{m}\left(\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\:\boldsymbol{\Omega},\boldsymbol{\Omega}'\in\mathbb{S}^{2},\label{eq:add-theorem}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $P_{l}\left(\mu\right)$
+\end_inset
+
+ the 
+\begin_inset Formula $l^{\mathrm{th}}$
+\end_inset
+
+ degree Legendre polynomial and they are eigenfunctions of the Laplace-Beltrami
+ operator on the sphere
+\begin_inset Formula 
+\begin{equation}
+\Delta_{b}Y_{l}^{m}\left(\theta,\phi\right)=\frac{1}{\sin\theta}\frac{\partial}{\partial\theta}\left(\sin\theta\frac{\partial Y_{l}^{m}}{\partial\theta}\right)+\frac{1}{\sin^{2}\theta}\frac{\partial^{2}Y_{l}^{m}}{\partial\phi^{2}}=-l\left(l+1\right)Y_{l}^{m}.\label{eq:laplace-beltrami}
+\end{equation}
+
+\end_inset
+
+ We will also need the so-called Funke-Hecke Theorem, which states that
+ for any function 
+\begin_inset Formula $f\left(\mu\right)$
+\end_inset
+
+ continuous on 
+\begin_inset Formula $\left[-1,1\right]$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\int_{\mathbb{S}^{2}}f\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'=\lambda_{l}Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\label{funke-hecke}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\lambda_{l}=2\pi\int_{-1}^{1}f\left(\mu\right)P_{l}\left(\mu\right)d\mu$
+\end_inset
+
+, that is 
+\begin_inset Formula $Y_{l}^{m}$
+\end_inset
+
+ is also an eigenfunction of the integral operator 
+\begin_inset Formula $\int_{\mathbb{S}^{2}}f\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)\cdot d\boldsymbol{\Omega}'$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Function approximation on 
+\begin_inset Formula $\mathbb{S}^{2}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+We start with the subspace of spherical harmonics of maximum degree 
+\begin_inset Formula $L$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\mathcal{H}_{L}=\mathrm{span}\left\{ Y_{l}^{m}\left(\boldsymbol{\Omega}\right)\,:\,\left|m\right|\le l,\,0\le l\le L\right\} ,\label{eq:H_n}
+\end{equation}
+
+\end_inset
+
+where L is a given natural number and 
+\begin_inset Formula $Y_{l}^{m}$
+\end_inset
+
+ is a spherical harmonic of degree 
+\begin_inset Formula $l$
+\end_inset
+
+ and order 
+\begin_inset Formula $m$
+\end_inset
+
+.
+ If 
+\begin_inset Formula $f\in\mathcal{H}_{L}$
+\end_inset
+
+, then 
+\begin_inset Formula $f$
+\end_inset
+
+ can be written as 
+\begin_inset Formula 
+\begin{equation}
+f\left(\boldsymbol{\Omega}\right)=\sum_{l=0}^{L}\sum_{|m|\le l}f_{l}^{m}Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\label{eq:f-sh-expansion}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $f_{l}^{m}=\int_{\mathbb{S}^{2}}\bar{Y}_{l}^{m}\left(\boldsymbol{\Omega}\right)f\left(\boldsymbol{\Omega}\right)d\Omega$
+\end_inset
+
+ is the spherical harmonic coefficient of 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ Substituting the definition of 
+\begin_inset Formula $f_{l}^{m}$
+\end_inset
+
+ into the sum Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:f-sh-expansion"
+
+\end_inset
+
+), interchanging summation and integration and using the Addition Theory,
+ we arrive at the so-called reproducing identity 
+\begin_inset Formula 
+\begin{equation}
+f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\quad\mathrm{for\, all\,}f\in\mathcal{H}_{N},\label{eq:rkhs}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula 
+\begin{equation}
+K\left(\mu\right)=\sum_{l=0}^{L}\frac{2l+1}{4\pi}P_{l}\left(\mu\right)\label{eq:rk}
+\end{equation}
+
+\end_inset
+
+the reproducing kernel for 
+\begin_inset Formula $\mathcal{H}_{L}$
+\end_inset
+
+.
+ Thus, the integral operator 
+\begin_inset Formula $\int_{\mathbb{S}^{2}}K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)\left(\cdot\right)d\boldsymbol{\Omega}'$
+\end_inset
+
+ projects 
+\begin_inset Formula $L^{2}\left(\mathbb{S}^{2}\right)$
+\end_inset
+
+ onto 
+\begin_inset Formula $\mathcal{H}_{N}$
+\end_inset
+
+.
+ Because of the inherent symmetry in dMRI problems, we want to be able to
+ project onto the even harmonics in 
+\begin_inset Formula $\mathcal{H}_{L}$
+\end_inset
+
+.
+ To this end, let the even part of 
+\begin_inset Formula $f$
+\end_inset
+
+ be defined as 
+\begin_inset Formula $f_{e}\left(\boldsymbol{\Omega}\right)=\frac{1}{2}\left[f\left(\boldsymbol{\Omega}\right)+f\left(-\boldsymbol{\Omega}\right)\right]$
+\end_inset
+
+ and the odd part as 
+\begin_inset Formula $f_{o}\left(\boldsymbol{\Omega}\right)=\frac{1}{2}\left[f\left(\boldsymbol{\Omega}\right)-f\left(-\boldsymbol{\Omega}\right)\right].$
+\end_inset
+
+ Then 
+\begin_inset Formula $f\left(\boldsymbol{\Omega}\right)=f_{e}\left(\boldsymbol{\Omega}\right)+f_{o}\left(\boldsymbol{\Omega}\right).$
+\end_inset
+
+ Using Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rkhs"
+
+\end_inset
+
+), we can define the even and odd projectors via even and odd reproducing
+ kernels
+\begin_inset Formula 
+\begin{align}
+f\left(\boldsymbol{\Omega}\right) & =\int_{\mathbb{S}^{2}}K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'\nonumber \\
+ & =\int_{\mathbb{S}^{2}}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'+\int_{\mathbb{S}^{2}}K_{o}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'\nonumber \\
+ & =f_{e}\left(\boldsymbol{\Omega}\right)+f_{o}\left(\boldsymbol{\Omega}\right),\label{eq:even-odd-decom}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{equation}
+K_{e}\left(\mu\right)\equiv\sum_{n=0}^{\left\lfloor N/2\right\rfloor }\frac{2\left(2n\right)+1}{4\pi}P_{2n}\left(\mu\right)\label{eq:even-k}
+\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{equation}
+K_{o}\left(\mu\right)\equiv\sum_{n=0}^{\left\lfloor N/2\right\rfloor }\frac{2\left(2n+1\right)+1}{4\pi}P_{2n+1}\left(\mu\right).\label{eq:odd-k}
+\end{equation}
+
+\end_inset
+
+Here 
+\begin_inset Formula $\left\lfloor n\right\rfloor $
+\end_inset
+
+ is the greatest integer less than 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ To reconstruct dMRI signals we will use the representation
+\begin_inset Formula 
+\begin{equation}
+f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\label{eq:even-f}
+\end{equation}
+
+\end_inset
+
+since the odd part of 
+\begin_inset Formula $f$
+\end_inset
+
+ is assumed to be identically zero.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Quadratures
+\end_layout
+
+\begin_layout Standard
+We now turn to developing a numerical algorithm for representing functions
+ in the form of Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:even-f"
+
+\end_inset
+
+).
+ Many sampling schemes for signal processing are based on quadratures.
+ We recall the notion of one-dimensional Gaussian quadratures on the interval
+ 
+\begin_inset Formula $\left(-1,1\right)$
+\end_inset
+
+.
+ In this case, the quadrature nodes are related to the zeros of certain
+ Legendre polynomials.
+ Using 
+\begin_inset Formula $n$
+\end_inset
+
+ integration point with corresponding weights, these so-called Gauss-Legendre
+ quadrature rules exactly integrates polynomials up to and including degree
+ 
+\begin_inset Formula $2n-1$
+\end_inset
+
+.
+ Here there are 
+\begin_inset Formula $2n$
+\end_inset
+
+ degrees of freedom in the quadrature and the space of polynomials (1D)
+ of maximum degree 
+\begin_inset Formula $2n-1$
+\end_inset
+
+ is 
+\begin_inset Formula $2n.$
+\end_inset
+
+ Thus, the quadrature is perfectly efficient: the number of degrees of freedom
+ in the quadrature exactly matches the number of degrees of freedom in the
+ subspace of functions integrated by the quadrature.
+ While this is a classical result, it was only recently proven that, in
+ contrast, Gaussian quadratures for the sphere do not exist.
+\end_layout
+
+\begin_layout Standard
+To develop an efficient sampling scheme for reconstructing dMRI signals,
+ we rely on new, Gaussian-like quadratures developed by one of the authors.
+ These new quadratures are invariant under icosahedral rotations and hence
+ do not cluster like other quadratures.
+ More importantly, they are very efficient, with typical efficiencies of
+ approximately 
+\begin_inset Formula $99\%$
+\end_inset
+
+ and they exactly integrate subspaces of spherical harmonics.
+ See XXX for a discussion of the construction of these quadratures.
+ 
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\left\{ \boldsymbol{\Omega}_{i},w_{i}\right\} _{i=1}^{M}$
+\end_inset
+
+ denote a quadrature set that exactly integrates functions of degree at
+ least 
+\begin_inset Formula $2L$
+\end_inset
+
+.
+ Here 
+\begin_inset Formula $\boldsymbol{\Omega}_{i}$
+\end_inset
+
+ is a quadrature point with associated weight 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+.
+ We then discretize Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:even-f"
+
+\end_inset
+
+), to get 
+\begin_inset Formula 
+\begin{equation}
+f\left(\boldsymbol{\Omega}\right)=\sum_{i=1}^{M}f\left(\boldsymbol{\Omega}_{i}\right)w_{i}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right).\label{eq:d_f_even}
+\end{equation}
+
+\end_inset
+
+Note that representation Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:d_f_even"
+
+\end_inset
+
+) is, assuming the quadrature exactly integrating spherical harmonics of
+ degree at least 
+\begin_inset Formula $2L$
+\end_inset
+
+, an exact representation for even functions in 
+\begin_inset Formula $\mathcal{H}_{L}$
+\end_inset
+
+.
+ Representation Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:d_f_even"
+
+\end_inset
+
+) is analogous to Lagrange interpolation in that 
+\begin_inset Formula $f$
+\end_inset
+
+ is a linear combination of function values and a single function 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+.
+ Figure XXX shows a plot of 
+\begin_inset Formula $K_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
+\end_inset
+
+ for degree 
+\begin_inset Formula $L=8$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+the unit vector pointing in the positive 
+\begin_inset Formula $z$
+\end_inset
+
+ direction.
+ We see that 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+ is centered on the point 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+ and decays quickly as one moves away from 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Signal representation
+\end_layout
+
+\begin_layout Standard
+Use results from previous section, Funk-Hecke, ....
+ to get representation in 
+\begin_inset Quotes eld
+\end_inset
+
+signal
+\begin_inset Quotes erd
+\end_inset
+
+ space which is sparse.
+ Then use L1-penalized least squares....
+\end_layout
+
+\begin_layout Section*
+Results
+\end_layout
+
+\begin_layout Standard
+Results on 
+\end_layout
+
+\begin_layout Itemize
+single fiber construction: noiseless and noisy reconstruction.
+\end_layout
+
+\begin_layout Itemize
+two crossing-fiber reconstruction: crossing angle resolution, noiseless
+ and noisy.
+\end_layout
+
+\begin_layout Section*
+Discussion
+\end_layout
+
+\begin_layout Standard
+What we've done and what we need to do.
+\end_layout
+
+\end_body
+\end_document
