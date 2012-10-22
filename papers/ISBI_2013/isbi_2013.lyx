@@ -162,8 +162,17 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Introduction about dMRI, HARDI, Q-Ball, etc.
- Putting everything into perspective
+Based on the classical work of Stejskal and Tanner 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "STEJ-TANN-1965"
+
+\end_inset
+
+, diffusion magnetic resonance imaging (dMRI) has become a key tool in understan
+ding the complex structural aspects of white matter in the brain.
+ Put everything into perspective: dMRI, HARDI, Q-Ball, etc.
+ 
 \end_layout
 
 \begin_layout Section*
@@ -171,24 +180,40 @@ Theory and Methods
 \end_layout
 
 \begin_layout Standard
-Background on sampling and reconstruction for dMRI
+Below we outline basic mathematical tools theory and our method to reconstruct
+ dMRIs.
+ While the method we outline is general, we apply it to the framework of
+ Aganj, Lenglet, 
+\shape italic
+et al
+\shape default
+.
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "A-L-G-E-K-2010"
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Subsection*
-Diffusion function, ODF and pODF
+Ensemble average propagator, ODF and pODF
 \end_layout
 
 \begin_layout Standard
-The diffusion function 
-\begin_inset Formula $P\left(\mathbf{r}\right)$
+Assuming an infinitely narrow (in time) pulse, the signal attenuation 
+\begin_inset Formula $S\left(\mathbf{q};\tau\right)$
 \end_inset
 
- gives an ensemble average probability that a spin will diffuse a distance
- 
+ is related to the ensemble average probability that ``a spin'' will diffuse
+ a distance 
 \begin_inset Formula $\mathbf{r}=\mathbf{x}-\mathbf{x}_{0},$
 \end_inset
 
- relative to the position 
+ relative to position 
 \begin_inset Formula $\mathbf{x}_{0}$
 \end_inset
 
@@ -196,27 +221,92 @@ The diffusion function
 \begin_inset Formula $\tau$
 \end_inset
 
-.
- The diffusion function is related to the dMRI signal through a Fourier
- transform via
+ by the Fourier relationship 
 \begin_inset Formula 
-\[
-E\left(\mathbf{q}\right)=E_{0}\int_{\mathbb{R}^{3}}P\left(\mathbf{r}\right)e^{-2\pi i\mathbf{q}\cdot\mathbf{r}}d^{3}r.
-\]
+\begin{equation}
+\frac{S\left(\mathbf{q};\tau\right)}{S_{0}}=\int_{\mathbb{R}^{3}}P\left(\mathbf{r};\tau\right)e^{-2\pi i\mathbf{q}\cdot\mathbf{r}}d^{3}r,\label{eq:fourier-trans}
+\end{equation}
 
 \end_inset
 
-The diffusion-free signal, 
-\begin_inset Formula $E_{0}$
+where 
+\begin_inset Formula $\mathbf{q}=\gamma\delta\mathbf{G}/2\pi$
 \end_inset
 
-, is taken with no field gradient.
- To reconstruct 
-\begin_inset Formula $P\left(\mathbf{r}\right)$
+, 
+\begin_inset Formula $\gamma$
 \end_inset
 
-, ....
+ is the nuclear gyromagnetic ratio for protons in water, 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the pulse duration and 
+\begin_inset Formula $\mathbf{G}$
+\end_inset
+
+ is the applied diffusion gradient vector.
+ The gradient free signal is denoted as 
+\begin_inset Formula $S_{0}$
+\end_inset
+
+.
+ Using the assumption that the diffusion process is Gaussian, one can show
+ that
+\begin_inset Formula 
+\begin{equation}
+\frac{S\left(\mathbf{q};\tau\right)}{S_{0}}=e^{-\tau\left\Vert \mathbf{q}\right\Vert ^{2}\mathbf{g}^{T}\mathbf{Dg}}=e^{-b\,\mathbf{g}^{T}\mathbf{Dg}},\label{eq:gaussian-diff}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathbf{g}=\mathbf{q}/\left\Vert \mathbf{q}\right\Vert $
+\end_inset
+
+ is the unit vector in the direction of 
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{D}$
+\end_inset
+
+ is the diffusion tensor and 
+\begin_inset Formula $b=\tau\left\Vert \mathbf{q}\right\Vert ^{2}$
+\end_inset
+
+.
+ We remark that for fixed 
+\begin_inset Formula $\left\Vert \mathbf{q}\right\Vert $
+\end_inset
+
+, Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gaussian-diff"
+
+\end_inset
+
+) is a function defined on the unit sphere in 
+\begin_inset Formula $\mathbb{R}^{3}.$
+\end_inset
+
  
+\end_layout
+
+\begin_layout Standard
+Because of the inherent limitations of the Gaussian assumption to resolve
+ complex structures, a new class of methods, known as high angular resolution
+ imaging (HARDI), has been developed.
+ We refer to, for example, 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "L-C-D-H-2009"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection*
@@ -724,6 +814,17 @@ Discussion
 
 \begin_layout Standard
 What we've done and what we need to do.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "biblio"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body
