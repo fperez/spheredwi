@@ -29,7 +29,7 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
-\paperfontsize 12
+\paperfontsize 10
 \spacing single
 \use_hyperref false
 \papersize default
@@ -157,7 +157,7 @@ Results:
 Conclusions:
 \end_layout
 
-\begin_layout Section*
+\begin_layout Section
 Introduction
 \end_layout
 
@@ -175,8 +175,8 @@ ding the complex structural aspects of white matter in the brain.
  
 \end_layout
 
-\begin_layout Section*
-Theory and Methods
+\begin_layout Section
+Theory and methods
 \end_layout
 
 \begin_layout Standard
@@ -198,7 +198,7 @@ key "A-L-G-E-K-2010"
  
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Ensemble average propagator and ODF 
 \end_layout
 
@@ -394,7 +394,7 @@ key "MICH-RATH-2010,VEGA-WEST-2011"
  
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsection
 Preliminaries
 \end_layout
 
@@ -522,7 +522,7 @@ when
  is a spherical harmonic.
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsubsection
 Function approximation on 
 \begin_inset Formula $\mathbb{S}^{2}$
 \end_inset
@@ -669,7 +669,7 @@ reference "eq:even-kernel"
 .
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsubsection
 Quadratures
 \end_layout
 
@@ -823,7 +823,7 @@ the unit vector pointing in the positive
  
 \end_layout
 
-\begin_layout Subsection*
+\begin_layout Subsubsection
 Signal representation
 \end_layout
 
@@ -974,7 +974,7 @@ penalized least-squares problem
 
 \end_layout
 
-\begin_layout Section*
+\begin_layout Section
 Results
 \end_layout
 
@@ -991,7 +991,7 @@ two crossing-fiber reconstruction: crossing angle resolution, noiseless
  and noisy.
 \end_layout
 
-\begin_layout Section*
+\begin_layout Section
 Discussion
 \end_layout
 
