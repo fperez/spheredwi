@@ -91,6 +91,13 @@ Applied Mathematics and Statistics
 \end_inset
 
 Colorado School of Mines
+
+\begin_inset Newline newline
+\end_inset
+
+Golden, CO 80401
+\lang english
+
 \begin_inset ERT
 status open
 
@@ -117,44 +124,14 @@ Helen-Wills Neuroscience Institute
 \end_inset
 
 University of California, Berkeley
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-address{Colorado School of Mines
-\end_layout
-
-\begin_layout Plain Layout
-
-Department of Applied Mathematics and StatisticsGolden, Colorado 80401-1887
- }
-\end_layout
-
+\begin_inset Newline newline
 \end_inset
 
-
+Berkeley, CA 94720
 \end_layout
 
 \begin_layout Abstract
 Purpose:
-\end_layout
-
-\begin_layout Abstract
-Theory and Methods:
-\end_layout
-
-\begin_layout Abstract
-Results:
-\end_layout
-
-\begin_layout Abstract
-Conclusions:
 \end_layout
 
 \begin_layout Section
@@ -171,7 +148,6 @@ key "STEJ-TANN-1965"
 
 , diffusion magnetic resonance imaging (dMRI) has become a key tool in understan
 ding the complex structural aspects of white matter in the brain.
- Put everything into perspective: dMRI, HARDI, Q-Ball, etc.
  
 \end_layout
 
@@ -375,7 +351,8 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
- because it was shown to be....
+ because it includes the correct spherical weighting in the radial integral
+ and is a good compromise between resolution and noise sensitivity.
  We remark that the method we develop to recover 
 \begin_inset Formula $\Phi$
 \end_inset
@@ -458,8 +435,8 @@ where
 \end_inset
 
  is the azimuthal angle.
- The spherical harmonics satisfy the Addition Theorem, which states that
- for 
+ Spherical harmonics satisfy the Addition Theorem, which states that for
+ 
 \begin_inset Formula $\boldsymbol{\Omega},\boldsymbol{\Omega}'\in\mathbb{S}^{2}$
 \end_inset
 
@@ -668,8 +645,7 @@ f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K_{e}\left(\boldsymbol
 
 \end_inset
 
-For reasons explained below, in the sequel we start the sum in Eq.
- (
+For reasons explained below, in the sequel we start the sum in Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-kernel"
@@ -701,15 +677,23 @@ Quadratures
 \end_layout
 
 \begin_layout Standard
-To develop a numerical algorithm for reconstructing the ODE based on the
- representation Eq.(
+Equation (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-f"
 
 \end_inset
 
-), we must discretize the integral using a quadrature.
+) represents the starting point from which we develop a computational algorithm
+ for reconstructing the ODF.
+ To accomplish this, we must we must discretize the integral in Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:even-f"
+
+\end_inset
+
+) using a quadrature.
  While quadratures for Cartesian domains are relatively well developed,
  developing quadratures for the sphere remains an active area of research
  
@@ -795,8 +779,7 @@ Let
 \end_inset
 
 .
- From Eq.
- (
+ From Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-f"
@@ -811,8 +794,7 @@ f\left(\boldsymbol{\Omega}\right)=\sum_{i=1}^{M}f\left(\boldsymbol{\Omega}_{i}\r
 
 \end_inset
 
-Note that representation Eq.
- (
+Note that representation Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:d_f_even"
@@ -900,7 +882,7 @@ Figure 1 shows a plot of
 \begin_inset Formula $\hat{e}_{z}$
 \end_inset
 
-the unit vector pointing in the positive 
+ the unit vector pointing in the positive 
 \begin_inset Formula $z$
 \end_inset
 
@@ -918,7 +900,15 @@ the unit vector pointing in the positive
 \end_inset
 
 .
- 
+ Note that 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+ is also an even function of 
+\begin_inset Formula $\boldsymbol{\Omega}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1234,7 +1224,8 @@ where
 \end_inset
 
  is a penalization parameter.
- We use CVXOPT to solve Eq.(
+ We use the Python based software package CVXOPT (http://abel.ee.ucla.edu/cvxopt/)
+ to solve Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:l1-penalized-l2"
@@ -1301,7 +1292,7 @@ The above reconstruction algorithm was applied to a synthetic diffusion
  Specifically, a synthetic signal was generated using 
 \begin_inset Formula 
 \begin{equation}
-S\left(\mathbf{g}\right)=\frac{1}{2}e^{-b\,\mathbf{g}^{T}\mathbf{D}_{1}\mathbf{g}}+\frac{1}{2}e^{-b\,\mathbf{g}^{T}\mathbf{D}_{2}\mathbf{g}},\label{eq:synthetic}
+S\left(\mathbf{g}\right)=\frac{1}{2}\left(e^{-b\,\mathbf{g}^{T}\mathbf{D}_{1}\mathbf{g}}+e^{-b\,\mathbf{g}^{T}\mathbf{D}_{2}\mathbf{g}}\right),\label{eq:synthetic}
 \end{equation}
 
 \end_inset
@@ -1349,7 +1340,7 @@ where
 
  locations and then using a quadrature from 
 \begin_inset CommandInset citation
-LatexCommand citet
+LatexCommand citep
 key "AHR-BEY-2009"
 
 \end_inset
@@ -1391,8 +1382,7 @@ reference "fig:Reconstruction-of-two"
 
 \end_inset
 
- shows the reconstructed ODF.
- The estimated crossing angle was found to be 
+ shows the reconstructed ODF, with an estimated crossing angle of 
 \begin_inset Formula $46.5$
 \end_inset
 
@@ -1489,6 +1479,15 @@ As a further test of the reconstruction algorithm, we considered three noise
 \end_inset
 
  degrees.
+ We also decreased the 
+\begin_inset Formula $b$
+\end_inset
+
+ value to 
+\begin_inset Formula $b=3000\:\mathrm{s/mm^{2}}$
+\end_inset
+
+.
  For each SNR level and each crossing angle, we ran 
 \begin_inset Formula $50$
 \end_inset
@@ -1548,7 +1547,7 @@ name "fig:Angle.."
 
 Estimated crossing angle for a synthetic two-fiber signal at SNR of 10,
  15 and 20.
- The error-bars are at one standard deviation.
+ Error bars are at one standard deviation.
  
 \end_layout
 
