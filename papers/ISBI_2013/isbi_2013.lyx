@@ -91,13 +91,10 @@ Applied Mathematics and Statistics
 \end_inset
 
 Colorado School of Mines
-
 \begin_inset Newline newline
 \end_inset
 
 Golden, CO 80401
-\lang english
-
 \begin_inset ERT
 status open
 
@@ -224,7 +221,7 @@ where
  is the applied diffusion gradient vector 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "STEJ-TANN-1965"
+key "CALLAHAN-1991"
 
 \end_inset
 
@@ -260,15 +257,11 @@ key "A-T-B-S-2011"
 
 \begin_layout Standard
 Using the assumption that the diffusion process is Gaussian, one can show
- that
-\begin_inset Formula 
-\begin{equation}
-\frac{S\left(\mathbf{q};\tau\right)}{S_{0}}=e^{-b\,\mathbf{g}^{T}\mathbf{Dg}},\label{eq:gaussian-diff}
-\end{equation}
-
+ that 
+\begin_inset Formula $S\left(\mathbf{q};\tau\right)=S_{0}e^{-b\,\mathbf{g}^{T}\mathbf{Dg}}$
 \end_inset
 
-where 
+, where 
 \begin_inset Formula $\mathbf{g}=\mathbf{q}/\left\Vert \mathbf{q}\right\Vert $
 \end_inset
 
@@ -1338,7 +1331,8 @@ where
 \begin_inset Formula $N=64$
 \end_inset
 
- locations and then using a quadrature from 
+ locations, corresponding to a standard set of directions for Siemens' scanners,
+ and then using a quadrature from 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "AHR-BEY-2009"
@@ -1478,12 +1472,7 @@ As a further test of the reconstruction algorithm, we considered three noise
 \begin_inset Formula $30$
 \end_inset
 
- degrees.
- We also decreased the 
-\begin_inset Formula $b$
-\end_inset
-
- value to 
+ degrees with a value of 
 \begin_inset Formula $b=3000\:\mathrm{s/mm^{2}}$
 \end_inset
 
@@ -1527,7 +1516,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename data/crossing-angles.pdf
+	filename data/crossing-angle-error.pdf
 	scale 50
 
 \end_inset
@@ -1545,9 +1534,30 @@ name "fig:Angle.."
 
 \end_inset
 
-Estimated crossing angle for a synthetic two-fiber signal at SNR of 10,
- 15 and 20.
+Average error in estimated crossing angle for a synthetic two-fiber signal
+ at SNR of 10, 15 and 20.
  Error bars are at one standard deviation.
+ We initially used 
+\begin_inset Formula $64$
+\end_inset
+
+ measurements and then at random removed 
+\begin_inset Formula $3$
+\end_inset
+
+ measurements.
+ The number of functions in Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ODF-kernels"
+
+\end_inset
+
+) was 
+\begin_inset Formula $M=132$
+\end_inset
+
+.
  
 \end_layout
 
@@ -1556,13 +1566,41 @@ Estimated crossing angle for a synthetic two-fiber signal at SNR of 10,
 
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
 
-\end_layout
+The average error in the recovered crossing angle is plotted in Fig.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Angle.."
 
 \end_inset
 
-...blaaa
+), along with error bars at one standard deviation.
+ We see that at an SNR of 
+\begin_inset Formula $20,$
+\end_inset
+
+ the algorithm performs well and can resolve two fibers crossing at an angle
+ as low as 
+\begin_inset Formula $30$
+\end_inset
+
+ degrees with only 
+\begin_inset Formula $61$
+\end_inset
+
+ measurements.
+ As the SNR worsens, the errors in resolving a 
+\begin_inset Formula $30$
+\end_inset
+
+ degree crossing significantly increase.
+ However, even at an SNR of 10, the algorithm can still resolve 
+\begin_inset Formula $45$
+\end_inset
+
+ degree crossings.
+ 
 \end_layout
 
 \begin_layout Section
