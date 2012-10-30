@@ -75,7 +75,7 @@ Sparse Reproducing Kernels for Modeling Fiber Crossings in Diffusion Weighted
 
 \begin_layout Author
 Cory D.
- Ahrens
+ Ahrens, Jennifer Nealy
 \begin_inset ERT
 status open
 
@@ -209,7 +209,7 @@ Signal attenuation
 \end_inset
 
  can be related to the ensemble average probability that ``a spin'' will
- diffuse a distance 
+ diffuse a displacement 
 \begin_inset Formula $\mathbf{r}=\mathbf{x}-\mathbf{x}_{0},$
 \end_inset
 
@@ -245,8 +245,15 @@ where
 \begin_inset Formula $\mathbf{G}$
 \end_inset
 
- is the applied diffusion gradient vector.
- The gradient free signal is denoted as 
+ is the applied diffusion gradient vector 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "STEJ-TANN-1965"
+
+\end_inset
+
+.
+ The gradient free signal is denoted by 
 \begin_inset Formula $S_{0}$
 \end_inset
 
@@ -280,7 +287,7 @@ Using the assumption that the diffusion process is Gaussian, one can show
  that
 \begin_inset Formula 
 \begin{equation}
-\frac{S\left(\mathbf{q};\tau\right)}{S_{0}}=e^{-\tau\left\Vert \mathbf{q}\right\Vert ^{2}\mathbf{g}^{T}\mathbf{Dg}}=e^{-b\,\mathbf{g}^{T}\mathbf{Dg}},\label{eq:gaussian-diff}
+\frac{S\left(\mathbf{q};\tau\right)}{S_{0}}=e^{-b\,\mathbf{g}^{T}\mathbf{Dg}},\label{eq:gaussian-diff}
 \end{equation}
 
 \end_inset
@@ -336,9 +343,17 @@ reference "eq:gaussian-diff"
 Because of the inherent limitations of the Gaussian assumption to resolve
  complex structures, a new class of methods, known as high angular resolution
  imaging (HARDI), has been developed.
- Many of these techniques aim to recover only angular information about
- the ensemble average propagator.
- The angular information is contained in the so-called Orientation Distribution
+ See for example 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "A-T-B-S-2011"
+
+\end_inset
+
+ and references therein.
+ Many of these techniques are designed to recover only angular information
+ about the ensemble average propagator.
+ This angular information is contained in the so-called Orientation Distribution
  Funtion (ODF) and denoted as 
 \begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)$
 \end_inset
@@ -369,7 +384,7 @@ key "A-L-G-E-K-2010"
 \begin_inset Formula $S$
 \end_inset
 
- has similarities to those methods developed by 
+ has similarities to those methods developed by the authors of 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "MICH-RATH-2010,VEGA-WEST-2011"
@@ -464,7 +479,7 @@ where
 \begin_inset Formula $l^{\mathrm{th}}$
 \end_inset
 
- degree Legendre polynomial.
+ degree Legendre polynomial and the over-bar denotes complex conjugation.
  In addition, spherical harmonics are eigenfunctions of the Laplace-Beltrami
  operator on the sphere: 
 \begin_inset Formula 
@@ -487,7 +502,7 @@ Moreover, the so-called Funke-Hecke Theorem states that spherical harmonics
 , that is,
 \begin_inset Formula 
 \begin{equation}
-\int_{\mathbb{S}^{2}}f\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'=\lambda_{l}Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\label{eq:funke-hecke}
+\int_{\mathbb{S}^{2}}\! f\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'=\lambda_{l}Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\label{eq:funke-hecke}
 \end{equation}
 
 \end_inset
@@ -500,7 +515,7 @@ where
  This can then be used to find the action of the so-called Funk-Radon transform
 \begin_inset Formula 
 \begin{equation}
-\mathcal{G}f\left(\mathbf{u}\right)=\int_{\mathbb{S}^{2}}\delta\left(\mathbf{u}\cdot\mathbf{v}\right)f\left(\mathbf{v}\right)d\mathbf{v}\label{eq:funk-radon}
+\mathcal{G}f\left(\mathbf{u}\right)=\int_{\mathbb{S}^{2}}\!\delta\left(\mathbf{u}\cdot\mathbf{v}\right)f\left(\mathbf{v}\right)d\mathbf{v}\label{eq:funk-radon}
 \end{equation}
 
 \end_inset
@@ -569,9 +584,16 @@ reference "eq:f-sh-expansion"
 
 ), interchanging summation and integration and using the Addition Theorem,
  we arrive at the so-called reproducing identity 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "ARON-1950"
+
+\end_inset
+
+ 
 \begin_inset Formula 
 \begin{equation}
-f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\,\,\mathrm{for\, all\,}f\in\mathcal{H}_{L},\label{eq:rkhs}
+f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\,\,\mathrm{for\, all\,}f\in\mathcal{H}_{L},\label{eq:rkhs}
 \end{equation}
 
 \end_inset
@@ -589,16 +611,23 @@ the reproducing kernel for
 \end_inset
 
 .
- Thus, the integral operator 
+ It can be shown that the integral operator 
 \begin_inset Formula $\int_{\mathbb{S}^{2}}K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)\left(\cdot\right)d\boldsymbol{\Omega}'$
 \end_inset
 
- projects 
+ is a projector from 
 \begin_inset Formula $L^{2}\left(\mathbb{S}^{2}\right)$
 \end_inset
 
  onto 
 \begin_inset Formula $\mathcal{H}_{L}$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "ATKI-HAN-2012"
+
 \end_inset
 
 .
@@ -607,7 +636,7 @@ the reproducing kernel for
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
-by using
+ by using
 \begin_inset Formula 
 \begin{equation}
 K_{e}\left(\mu\right)\equiv\sum_{l=0}^{\left\lfloor L/2\right\rfloor }\frac{4l+1}{4\pi}P_{2l}\left(\mu\right),\label{eq:even-kernel}
@@ -631,16 +660,15 @@ reference "eq:rkhs"
 \end_inset
 
 ).
- Thus, to reconstruct dMRI signals we use the representation
+ Thus, for reconstructing dMRI signals we use the representation
 \begin_inset Formula 
 \begin{equation}
-f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\label{eq:even-f}
+f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\label{eq:even-f}
 \end{equation}
 
 \end_inset
 
-which we now discretize.
- In the sequel, we start the sum in Eq.
+For reasons explained below, in the sequel we start the sum in Eq.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -657,6 +685,15 @@ reference "eq:even-kernel"
 \end_inset
 
 .
+ To develop a computational algorithm based on Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:even-f"
+
+\end_inset
+
+), we must first discretize the integral using a quadrature on the sphere.
+ 
 \end_layout
 
 \begin_layout Subsubsection
@@ -672,12 +709,34 @@ reference "eq:even-f"
 
 \end_inset
 
-), we must discretize using a quadrature.
- While perhaps not explicitly stated, many reconstruction or sampling schemes
- for signal processing are based on quadratures; this includes many existing
- reconstruction algorithms for ODFs.
- This is a classical result, it was only recently proven that, in contrast,
- Gaussian quadratures for the sphere do not exist.
+), we must discretize the integral using a quadrature.
+ While quadratures for Cartesian domains are relatively well developed,
+ developing quadratures for the sphere remains an active area of research
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "ATKI-HAN-2012"
+
+\end_inset
+
+.
+ The difficulty in developing quadratures for the sphere, and hence sampling
+ algorithms for functions defined on the sphere, arises because of the topology
+ of the sphere.
+ This is reflected in the fact that at most only 20 points can be uniformly
+ distributed on the sphere.
+ Said differently, a set of 21 or more points on the sphere must necessarily
+ be unevenly distributed.
+ Moreover, while Gaussian quadratures for Cartesian domains exist and are
+ well known, it was only recently proven that, in contrast, Gaussian quadratures
+ for the sphere in fact do not exist 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "BAN-DAM-1979"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -688,7 +747,8 @@ reference "eq:even-f"
 
 \end_inset
 
-), we rely on newly developed, Gaussian-like quadratures developed in 
+), we rely on recently developed, Gaussian-like quadratures developed in
+ 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "AHR-BEY-2009"
@@ -727,7 +787,7 @@ Let
 
 .
  Here 
-\begin_inset Formula $\boldsymbol{\Omega}_{i}$
+\begin_inset Formula $\boldsymbol{\Omega}_{i}\in\mathbb{S}^{2}$
 \end_inset
 
  is a quadrature point with associated weight 
@@ -787,6 +847,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename single-kernel.pdf
 	scale 30
@@ -822,10 +883,6 @@ reference "eq:even-kernel"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -869,9 +926,9 @@ Signal representation
 \end_layout
 
 \begin_layout Standard
-Aganj 
+Aganj, Christophe,
 \shape italic
-et al.
+ et al.
 
 \shape default
  
@@ -881,11 +938,11 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
- showed that with 
+ showed that the ODE 
 \begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)=\int_{0}^{\infty}\! P\left(r\boldsymbol{\Omega};\tau\right)r^{2}dr$
 \end_inset
 
-
+ can be approximated by
 \begin_inset Formula 
 \[
 \Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\left[f\left(S\left(\mathbf{q}\right)\right)\right]\right\} \left(\boldsymbol{\Omega}\right)
@@ -948,7 +1005,7 @@ where
 \begin_inset Formula $\boldsymbol{\Omega}$
 \end_inset
 
- and does not contain an constant terms.
+ and does not contain any constant terms.
 \end_layout
 
 \begin_layout Standard
@@ -1153,8 +1210,14 @@ reference "eq:sys-eqs"
 \end_inset
 
 ) is an under-determined system.
- Inspired by compressive sensing techniques, we regularize the system by
- solving an 
+ Guided by compressive sensing techniques 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "ELDA-KUTY-2012"
+
+\end_inset
+
+, we regularize the system by solving an 
 \begin_inset Formula $l_{1}-$
 \end_inset
 
@@ -1183,7 +1246,14 @@ reference "eq:l1-penalized-l2"
 \end_inset
 
  that are significantly larger than the mean of all the coefficients.
- We then use these coefficients in Eq.() to represent the ODF 
+ Only these coefficients are then used in Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ODF-kernels"
+
+\end_inset
+
+) to represent the ODF 
 \begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)$
 \end_inset
 
@@ -1202,14 +1272,18 @@ As noted earlier, the significant coefficients
 
  where the ODF is peaked.
  We can use this result to simplify identifying peaks in the ODF.
- This is done by using a simplex algorithm to maximize Eq.(
+ Peak finding is accomplished by using a simplex algorithm to maximize Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
 
 \end_inset
 
-) with the starting points given by the significant 
+) with the starting points given by directions 
+\begin_inset Formula $\boldsymbol{\Omega}_{i}$
+\end_inset
+
+ corresponding to the significant coefficients 
 \begin_inset Formula $\Phi_{i}$
 \end_inset
 
@@ -1222,22 +1296,116 @@ Results
 \end_layout
 
 \begin_layout Standard
-Results on 
-\end_layout
+The above reconstruction algorithm was applied to a synthetic diffusion
+ signal generated by two Gaussian signals, each with equal volume fraction.
+ Specifically, a synthetic signal was generated using 
+\begin_inset Formula 
+\begin{equation}
+S\left(\mathbf{g}\right)=\frac{1}{2}e^{-b\,\mathbf{g}^{T}\mathbf{D}_{1}\mathbf{g}}+\frac{1}{2}e^{-b\,\mathbf{g}^{T}\mathbf{D}_{2}\mathbf{g}},\label{eq:synthetic}
+\end{equation}
 
-\begin_layout Itemize
-single fiber construction: noiseless and noisy reconstruction.
-\end_layout
+\end_inset
 
-\begin_layout Itemize
-two crossing-fiber reconstruction: crossing angle resolution, noiseless
- and noisy.
+where 
+\begin_inset Formula $\mathbf{D}_{1}=\mathrm{diag}\left(\lambda_{1},\lambda_{2},\lambda_{3}\right)$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda_{1}=1700\times10^{-6}\,\mathrm{mm/s^{2}}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda_{2}=\lambda_{3}=300\times10^{-6}\,\mathrm{mm/s^{2}}$
+\end_inset
+
+ is the diffusion tensor and 
+\begin_inset Formula $\mathbf{D}_{2}$
+\end_inset
+
+ is a rotated version of 
+\begin_inset Formula $\mathbf{D}_{1}$
+\end_inset
+
+.
+ With a 
+\begin_inset Formula $b$
+\end_inset
+
+ value of 
+\begin_inset Formula $4000\:\mathrm{s/mm^{2}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{D}_{2}$
+\end_inset
+
+ rotated so that the fibers cross at an angle of 
+\begin_inset Formula $45$
+\end_inset
+
+ degrees, the signal was sampled at 
+\begin_inset Formula $N=64$
+\end_inset
+
+ locations and then using a quadrature from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "AHR-BEY-2009"
+
+\end_inset
+
+ with 
+\begin_inset Formula $M=132$
+\end_inset
+
+, which exactly integrates spherical harmonics of maximum degree 
+\begin_inset Formula $19$
+\end_inset
+
+, we solved Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:l1-penalized-l2"
+
+\end_inset
+
+) with 
+\begin_inset Formula $L=8$
+\end_inset
+
+ for the coefficients 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+.
+ We note that a small amount (
+\begin_inset Formula $SNR=100)$
+\end_inset
+
+ of Riccian noise was added to the signal.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Reconstruction-of-two"
+
+\end_inset
+
+ shows the reconstructed ODF.
+ The estimated crossing angle was found to be 
+\begin_inset Formula $46.5$
+\end_inset
+
+ degrees.
+ 
 \begin_inset Float figure
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
+\noindent
+\align center
 \begin_inset Graphics
 	filename two-fibers.pdf
 	scale 50
@@ -1253,6 +1421,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Reconstruction-of-two"
+
+\end_inset
+
 Reconstruction of two crossing fibers, with a crossing angle of 
 \begin_inset Formula $45$
 \end_inset
@@ -1287,13 +1461,109 @@ Reconstruction of two crossing fibers, with a crossing angle of
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a further test of the reconstruction algorithm, we considered three noise
+ levels, 
+\begin_inset Formula $SNR=20$
+\end_inset
+
+, 
+\begin_inset Formula $SNR=15$
+\end_inset
+
+ and 
+\begin_inset Formula $SNR=10$
+\end_inset
+
+ and two fibers crossing at angles ranging from 
+\begin_inset Formula $90$
+\end_inset
+
+ degrees to 
+\begin_inset Formula $30$
+\end_inset
+
+ degrees.
+ For each SNR level and each crossing angle, we ran 
+\begin_inset Formula $50$
+\end_inset
+
+ simulated reconstructions.
+ For each simulated reconstruction, the crossing angle was estimated and
+ the mean crossing angle over the 
+\begin_inset Formula $50$
+\end_inset
+
+ simulations recorded.
+ To further test the robustness of the algorithm, for each simulation 
+\begin_inset Formula $3$
+\end_inset
+
+ measurements were chosen at random and removed.
+ Thus, the reconstruction was done with only 
+\begin_inset Formula $61$
+\end_inset
+
+ measurements.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Angle.."
+
+\end_inset
+
+ shows the results of these simulations.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename data/crossing-angles.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Angle.."
+
+\end_inset
+
+Estimated crossing angle for a synthetic two-fiber signal at SNR of 10,
+ 15 and 20.
+ The error-bars are at one standard deviation.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Plain Layout
 
 \end_layout
 
 \end_inset
 
-
+...blaaa
 \end_layout
 
 \begin_layout Section
