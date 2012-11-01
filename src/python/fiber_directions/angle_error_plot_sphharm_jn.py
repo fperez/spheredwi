@@ -11,7 +11,6 @@ from numpy.linalg import norm as norm
 
 from kernel_model_sphharm_jn import even_kernel
 import os
-import Pycluster as pyc
 
 #------My code changing local_maxima code format from cython to python------
 def local_maxima(codf,cedges):
