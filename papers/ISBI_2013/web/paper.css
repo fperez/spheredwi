@@ -1,0 +1,105 @@
+body {
+    background: #665;
+    font-family: 'trebuchet MS', 'Lucida sans', Arial;
+}
+
+#content {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+#meta {
+    background-color: #ccd;
+
+    /* background-image: -webkit-gradient(linear, left top, left bottom, from(#bbb), to(#eee)); */
+    /* background-image: -webkit-linear-gradient(top, #bbb, #eee); */
+    /* background-image:    -moz-linear-gradient(top, #bbb, #eee); */
+    /* background-image:     -ms-linear-gradient(top, #bbb, #eee); */
+    /* background-image:      -o-linear-gradient(top, #bbb, #eee); */
+    /* background-image:         linear-gradient(top, #bbb, #eee); */
+
+    float: left;
+    width: 100%;
+
+    -moz-border-radius-top-left: 6px;
+    border-top-left-radius: 6px;
+    -moz-border-radius-top-right: 6px;
+    border-top-right-radius: 6px;
+
+    border: 2px solid #444;
+    border-bottom: none;
+
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+#meta h1 {
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    margin-left: 10px;
+}
+
+#meta h2{
+    font-size: 115%;
+    margin-left: 10px;
+}
+
+
+#meta p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#description {
+    font-family: Georgia, Palatino, serif;
+
+    float: left;
+    width: 100%;
+
+    background: #EEE;
+
+    padding: 0em;
+    margin: 0em;
+
+    padding-top: 5px;
+
+    border: 2px solid #444;
+    border-top-style: none;
+    border-bottom-style: none;
+}
+
+#description a:link {
+    color: #555;
+    text-decoration: none;
+}
+
+#description p {
+    margin-top: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#description ul {
+    list-style: inside;
+    list-style-type: square;
+}
+
+#footer {
+    float: left;
+    width: 100%;
+
+    -moz-border-radius-bottom-left: 6px;
+    border-bottom-left-radius: 6px;
+    -moz-border-radius-bottom-right: 6px;
+    border-bottom-right-radius: 6px;
+
+    border: 2px solid #444;
+    border-top-style: none;
+
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+
+    background: #eee;
+}
