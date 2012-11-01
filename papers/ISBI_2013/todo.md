@@ -3,8 +3,11 @@
 ## Writing
 
 - Change from CVXOPT to scikit-learn, add link
-- Describe direction finding
-- Squeeze middle text, expand discussion
+- Describe direction finding (using new version in dipy?)
+- Squeeze middle text, expand discussion and introduction
+- Work on references...formating, etc. 
+- Write killer abstract!
+- Have Fernando proof read
 
 ## Reproducibility & coding
 
