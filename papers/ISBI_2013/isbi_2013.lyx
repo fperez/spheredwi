@@ -74,8 +74,7 @@ Sparse Reproducing Kernels for Modeling Fiber Crossings in Diffusion Weighted
 \end_layout
 
 \begin_layout Author
-Cory D.
- Ahrens, Jennifer Nealy
+Cory Ahrens, Jennifer Nealy
 \begin_inset ERT
 status open
 
@@ -195,14 +194,18 @@ Signal attenuation
 \end_inset
 
  by the Fourier relationship 
-\begin_inset Formula 
-\begin{equation}
-\frac{S\left(\mathbf{q};\tau\right)}{S_{0}}=\int_{\mathbb{R}^{3}}\! P\left(\mathbf{r};\tau\right)e^{-2\pi i\mathbf{q}\cdot\mathbf{r}}d^{3}r,\label{eq:fourier-trans}
-\end{equation}
-
+\begin_inset Formula $S\left(\mathbf{q};\tau\right)=S_{0}\mathcal{F}\left[P\left(\mathbf{r};\tau\right)\right]\left(\mathbf{q}\right)$
 \end_inset
 
-where 
+, where 
+\begin_inset Formula $\mathcal{F}$
+\end_inset
+
+ is the 
+\begin_inset Formula $3D$
+\end_inset
+
+ Fourier transform, 
 \begin_inset Formula $\mathbf{q}=\gamma\delta\mathbf{G}/2\pi$
 \end_inset
 
@@ -282,25 +285,16 @@ Using the assumption that the diffusion process is Gaussian, one can show
 \begin_inset Formula $\left\Vert \mathbf{q}\right\Vert $
 \end_inset
 
-, Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:gaussian-diff"
-
+, 
+\begin_inset Formula $S_{0}e^{-b\,\mathbf{g}^{T}\mathbf{Dg}}$
 \end_inset
 
-) is a function defined on the unit sphere in 
+ is a function defined on the unit sphere in 
 \begin_inset Formula $\mathbb{R}^{3}$
 \end_inset
 
- and hence so-called diffusion tensor imaging (based on Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:gaussian-diff"
-
-\end_inset
-
-)) aims to recover a particular function defined on the unit sphere 
+ and hence so-called diffusion tensor imaging (based on the Gaussian assumption)
+ aims to recover a particular function defined on the unit sphere 
 \begin_inset Formula $\mathbb{S}^{2}$
 \end_inset
 
@@ -346,6 +340,15 @@ key "A-L-G-E-K-2010"
 
  because it includes the correct spherical weighting in the radial integral
  and is a good compromise between resolution and noise sensitivity.
+ Moreover, using the correct spherical weighting to define the ODF allows
+ one to interpret the ODF as a marginal probability distribution 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "A-L-G-E-K-2010"
+
+\end_inset
+
+.
  We remark that the method we develop to recover 
 \begin_inset Formula $\Phi$
 \end_inset
@@ -494,7 +497,7 @@ when
 \begin_inset Formula $f$
 \end_inset
 
- is a spherical harmonic.
+ is a linear combination of spherical harmonics.
 \end_layout
 
 \begin_layout Subsubsection
@@ -679,16 +682,8 @@ reference "eq:even-f"
 
 ) represents the starting point from which we develop a computational algorithm
  for reconstructing the ODF.
- To accomplish this, we must we must discretize the integral in Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:even-f"
-
-\end_inset
-
-) using a quadrature.
  While quadratures for Cartesian domains are relatively well developed,
- developing quadratures for the sphere remains an active area of research
+ research in quadratures for the sphere remains an active area of research
  
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -697,9 +692,8 @@ key "ATKI-HAN-2012"
 \end_inset
 
 .
- The difficulty in developing quadratures for the sphere, and hence sampling
- algorithms for functions defined on the sphere, arises because of the topology
- of the sphere.
+ The difficulty in developing quadratures for the sphere, and hence associated
+ sampling algorithms, arises because of the topology of the sphere.
  This is reflected in the fact that at most only 20 points can be uniformly
  distributed on the sphere.
  Said differently, a set of 21 or more points on the sphere must necessarily
@@ -724,8 +718,7 @@ reference "eq:even-f"
 
 \end_inset
 
-), we rely on recently developed, Gaussian-like quadratures developed in
- 
+), we rely on recently developed, Gaussian-like quadratures from 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "AHR-BEY-2009"
@@ -735,12 +728,8 @@ key "AHR-BEY-2009"
 .
  These new quadratures are invariant under icosahedral rotations and hence
  do not cluster like other quadratures.
- More importantly, they are very efficient, with typical efficiencies of
- approximately 
-\begin_inset Formula $99\%$
-\end_inset
-
- and they exactly integrate subspaces of spherical harmonics.
+ More importantly, they are very efficient (nearly Gaussian) and they exactly
+ integrate subspaces of spherical harmonics.
  See 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -748,7 +737,7 @@ key "AHR-BEY-2009"
 
 \end_inset
 
- for a discussion of the construction of these quadratures.
+ for further details.
  
 \end_layout
 
@@ -787,7 +776,7 @@ f\left(\boldsymbol{\Omega}\right)=\sum_{i=1}^{M}f\left(\boldsymbol{\Omega}_{i}\r
 
 \end_inset
 
-Note that representation Eq.(
+Note that Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:d_f_even"
@@ -798,8 +787,7 @@ reference "eq:d_f_even"
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
-.
- Representation Eq.(
+ and that Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:d_f_even"
@@ -816,92 +804,6 @@ reference "eq:d_f_even"
 
 .
  
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename single-kernel.pdf
-	scale 30
-	BoundingBox 100bp 0bp 500bp 370bp
-	clip
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Even reproducing kernel Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:even-kernel"
-
-\end_inset
-
-) for 
-\begin_inset Formula $L=8$
-\end_inset
-
- and starting at 
-\begin_inset Formula $l=2$
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-Figure 1 shows a plot of 
-\begin_inset Formula $K_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
-\end_inset
-
- for degree 
-\begin_inset Formula $L=8$
-\end_inset
-
- and 
-\begin_inset Formula $\hat{e}_{z}$
-\end_inset
-
- the unit vector pointing in the positive 
-\begin_inset Formula $z$
-\end_inset
-
- direction.
- We see that 
-\begin_inset Formula $K_{e}$
-\end_inset
-
- is centered on the point 
-\begin_inset Formula $\hat{e}_{z}$
-\end_inset
-
- and decays quickly as one moves away from 
-\begin_inset Formula $\hat{e}_{z}$
-\end_inset
-
-.
- Note that 
-\begin_inset Formula $K_{e}$
-\end_inset
-
- is also an even function of 
-\begin_inset Formula $\boldsymbol{\Omega}$
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Subsubsection
@@ -927,49 +829,18 @@ key "A-L-G-E-K-2010"
 
  can be approximated by
 \begin_inset Formula 
-\[
-\Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\left[f\left(S\left(\mathbf{q}\right)\right)\right]\right\} \left(\boldsymbol{\Omega}\right)
-\]
+\begin{equation}
+\Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\ln\left(-\ln\, S\left(\mathbf{q}\right)\right)\right\} \left(\boldsymbol{\Omega}\right)\label{eq:ODF}
+\end{equation}
 
 \end_inset
 
-where 
-\begin_inset Formula $f$
+where a mono-exponential model was assumed for the radial dependence of
+ 
+\begin_inset Formula $P$
 \end_inset
 
- is a particular function of the diffusion signal 
-\begin_inset Formula $S$
-\end_inset
-
- and depends on how the radial behavior of 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $P\left(\mathbf{r};\tau\right)$
-\end_inset
-
-
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- is modeled.
+.
  The constant term, 
 \begin_inset Formula $1/4\pi$
 \end_inset
@@ -983,8 +854,8 @@ where
 \end_inset
 
 .
- We remark that because of the Funk-Radon transform and the Laplace-Beltrami
- operators, the second term is an even function of 
+ Because of the Funk-Radon and the Laplace-Beltrami operators, the second
+ term is an even function of 
 \begin_inset Formula $\boldsymbol{\Omega}$
 \end_inset
 
@@ -1001,12 +872,11 @@ The shape of the reproducing kernel
 \begin_inset Formula $K_{e}$
 \end_inset
 
- and hence we model the ODF as
+ and hence we set
 \begin_inset Formula 
-\begin{align}
-\Phi\left(\boldsymbol{\Omega}\right) & =\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\ln\left(-\ln\, S\left(\mathbf{q}\right)\right)\right\} \left(\boldsymbol{\Omega}\right)\nonumber \\
- & \approx\frac{1}{4\pi}+\sum_{i=1}^{M}\Phi_{i}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right),\label{eq:ODF-kernels}
-\end{align}
+\begin{equation}
+\Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\sum_{i=1}^{M}\Phi_{i}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\label{eq:ODF-kernels}
+\end{equation}
 
 \end_inset
 
@@ -1022,19 +892,7 @@ where the coefficients
 \begin_inset Formula $\left\{ \mathbf{q}_{i}\right\} _{i=1}^{N}$
 \end_inset
 
- gradient directions and we use the mono-exponential model for 
-\begin_inset Formula $f$
-\end_inset
-
- (see 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "A-L-G-E-K-2010"
-
-\end_inset
-
- for details).
- An important property of the representation Eq.(
+ gradient directions.An important property of the representation Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1045,7 +903,7 @@ reference "eq:ODF-kernels"
 \begin_inset Formula $\Phi$
 \end_inset
 
- can be identified by considering dominant coefficients 
+ can be easily identified by considering dominant coefficients 
 \begin_inset Formula $\Phi_{i}$
 \end_inset
 
@@ -1085,7 +943,7 @@ reference "eq:ODF-kernels"
 where we define
 \begin_inset Formula 
 \begin{equation}
-H_{e}\left(\mu\right)\equiv-\frac{1}{16\pi^{2}}\sum_{l=2}^{\left\lfloor L/2\right\rfloor }\frac{4l+1}{l\left(2l+1\right)P_{2l}\left(0\right)}P_{2l}\left(\mu\right).\label{eq:kernels-in-q-space}
+H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\equiv-\frac{1}{16\pi^{2}}\sum_{l=2}^{\left\lfloor L/2\right\rfloor }\frac{4l+1}{l\left(2l+1\right)P_{2l}\left(0\right)}P_{2l}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right).\label{eq:kernels-in-q-space}
 \end{equation}
 
 \end_inset
@@ -1149,21 +1007,21 @@ reference "eq:add-theorem"
 
 \end_inset
 
-), (
+,
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ylm_eigen"
 
 \end_inset
 
-), (
+,
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:funke-hecke"
 
 \end_inset
 
-), (
+,
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:funk-radon"
@@ -1178,6 +1036,113 @@ reference "eq:even-kernel"
 \end_inset
 
 ).
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename single-kernel.pdf
+	scale 30
+	BoundingBox 100bp 0bp 500bp 370bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Kernels Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:even-kernel"
+
+\end_inset
+
+) (left) and Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ODF-kernels"
+
+\end_inset
+
+) (right) for 
+\begin_inset Formula $L=8$
+\end_inset
+
+ and starting at 
+\begin_inset Formula $l=2$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 1 shows a plot of 
+\begin_inset Formula $K_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
+\end_inset
+
+ for degree 
+\begin_inset Formula $L=8$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+ the unit vector pointing in the positive 
+\begin_inset Formula $z$
+\end_inset
+
+ direction and the corresponding function 
+\begin_inset Formula $H_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
+\end_inset
+
+.
+ We see that 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+ is centered on the point 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+ and decays quickly as one moves away from 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+.
+ Note that 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+ is also an even function of 
+\begin_inset Formula $\boldsymbol{\Omega}$
+\end_inset
+
+.
+ The function 
+\begin_inset Formula $H_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
+\end_inset
+
+ is peaked along the great circle whose normal is perpendicular to 
+\begin_inset Formula $\hat{e}_{z}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1217,7 +1182,7 @@ where
 \end_inset
 
  is a penalization parameter.
- We use the Python based software package CVXOPT (http://abel.ee.ucla.edu/cvxopt/)
+ We use ....
  to solve Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1230,7 +1195,18 @@ reference "eq:l1-penalized-l2"
 \end_inset
 
  that are significantly larger than the mean of all the coefficients.
- Only these coefficients are then used in Eq.(
+ (
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Stefan, do you threshold after solving the elastic net or just use what
+ it gives?
+\end_layout
+
+\end_inset
+
+) Only these coefficients are then used in Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1310,29 +1286,26 @@ where
 \begin_inset Formula $\mathbf{D}_{1}$
 \end_inset
 
-.
- With a 
-\begin_inset Formula $b$
-\end_inset
-
- value of 
-\begin_inset Formula $4000\:\mathrm{s/mm^{2}}$
+ and 
+\begin_inset Formula $b=3000\:\mathrm{s/mm^{2}}$
 \end_inset
 
  and 
 \begin_inset Formula $\mathbf{D}_{2}$
 \end_inset
 
- rotated so that the fibers cross at an angle of 
-\begin_inset Formula $45$
-\end_inset
-
- degrees, the signal was sampled at 
+.
+ The signal was sampled at 
 \begin_inset Formula $N=64$
 \end_inset
 
- locations, corresponding to a standard set of directions for Siemens' scanners,
- and then using a quadrature from 
+ locations, corresponding to an electrostatic repulsion set of directions
+ found in Siemens' scanners.
+ With 
+\begin_inset Formula $L=8$
+\end_inset
+
+, a quadrature from 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "AHR-BEY-2009"
@@ -1347,7 +1320,19 @@ key "AHR-BEY-2009"
 \begin_inset Formula $19$
 \end_inset
 
-, we solved Eq.
+, was used to create the 
+\begin_inset Formula $132$
+\end_inset
+
+ functions Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kernels-in-q-space"
+
+\end_inset
+
+).
+ The minimization problem Eq.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1355,16 +1340,22 @@ reference "eq:l1-penalized-l2"
 
 \end_inset
 
-) with 
-\begin_inset Formula $L=8$
-\end_inset
-
- for the coefficients 
+) was then solved for the coefficients 
 \begin_inset Formula $\Phi_{i}$
 \end_inset
 
 .
- We note that a small amount (
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Do we want to keep the two-fibers crossing simulation results?
+\end_layout
+
+\end_inset
+
+A small amount (
 \begin_inset Formula $SNR=100)$
 \end_inset
 
