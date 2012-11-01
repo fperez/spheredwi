@@ -6,6 +6,7 @@ from kernel_model import SparseKernelModel
 from sphdif.linalg import rotation_around_axis
 
 from dipy.reconst.recspeed import local_maxima
+from dipy.reconst.odf import NonLinearDirectionFinder, DiscreteDirectionFinder
 from dipy.sims.voxel import single_tensor
 
 def two_fiber_signal(bvals, bvecs, angle, w=[0.5, 0.5], SNR=0):
@@ -45,6 +46,8 @@ from dipy.core.sphere import unit_icosahedron
 sphere = unit_icosahedron.subdivide(5)
 
 sk = SparseKernelModel(bvals, bvecs, alpha=0.00011, rho=0.9, sh_order=8)
+sk.direction_finder = NonLinearDirectionFinder()
+#sk.direction_finder = DiscreteDirectionFinder()
 sk.direction_finder.config(sphere=sphere, min_separation_angle=10)
 
 angles = [25, 30, 35, 40, 45, 50, 55, 60]
@@ -75,3 +78,4 @@ result = np.column_stack((angles, recovered_angle))
 print
 print "Angle in", "Angle out"
 print result
+print "Total error:", np.linalg.norm(result[:, 0] - result[:, 1])
