@@ -928,7 +928,11 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-), we set for 
+), we set, once the mean of the signal 
+\begin_inset Formula $S$
+\end_inset
+
+ has been removed,  for 
 \begin_inset Formula $\: i=1,2,...N$
 \end_inset
 
@@ -1045,10 +1049,9 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename single-kernel.pdf
-	scale 30
-	BoundingBox 100bp 0bp 500bp 370bp
-	clip
+	filename figs/kernels.pdf
+	scale 50
+	BoundingBox 0bp 50bp 400bp 320bp
 
 \end_inset
 
@@ -1066,14 +1069,14 @@ reference "eq:even-kernel"
 
 \end_inset
 
-) (left) and Eq.(
+) (bottom) and Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:ODF-kernels"
+reference "eq:kernels-in-q-space"
 
 \end_inset
 
-) (right) for 
+) (top) for 
 \begin_inset Formula $L=8$
 \end_inset
 
@@ -1116,24 +1119,15 @@ Figure 1 shows a plot of
 \begin_inset Formula $K_{e}$
 \end_inset
 
- is centered on the point 
+ is peaked in the directions 
 \begin_inset Formula $\hat{e}_{z}$
 \end_inset
 
- and decays quickly as one moves away from 
-\begin_inset Formula $\hat{e}_{z}$
+ and 
+\begin_inset Formula $-\hat{e}_{z}$
 \end_inset
 
-.
- Note that 
-\begin_inset Formula $K_{e}$
-\end_inset
-
- is also an even function of 
-\begin_inset Formula $\boldsymbol{\Omega}$
-\end_inset
-
-.
+ and decays quickly as one moves away from these directions.
  The function 
 \begin_inset Formula $H_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
 \end_inset
@@ -1290,18 +1284,45 @@ where
 \begin_inset Formula $b=3000\:\mathrm{s/mm^{2}}$
 \end_inset
 
+.
+ To the signal we added Riccian noise at three different levels, 
+\begin_inset Formula $\mathrm{SNR}=20$
+\end_inset
+
+, 
+\begin_inset Formula $\mathrm{SNR}=15$
+\end_inset
+
  and 
-\begin_inset Formula $\mathbf{D}_{2}$
+\begin_inset Formula $\mathrm{SNR}=10$
 \end_inset
 
 .
- The signal was sampled at 
+ To test the crossing angle resolution of the method, we then rotated one
+ fiber so that the crossing angle ranged from 
+\begin_inset Formula $30$
+\end_inset
+
+ to 
+\begin_inset Formula $90$
+\end_inset
+
+ degrees.
+ For each configuration (
+\begin_inset Formula $\mathrm{SNR}$
+\end_inset
+
+ and crossing angle), the signal was sampled at 
 \begin_inset Formula $N=64$
 \end_inset
 
  locations, corresponding to an electrostatic repulsion set of directions
  found in Siemens' scanners.
- With 
+ 
+\end_layout
+
+\begin_layout Standard
+With 
 \begin_inset Formula $L=8$
 \end_inset
 
@@ -1324,7 +1345,7 @@ key "AHR-BEY-2009"
 \begin_inset Formula $132$
 \end_inset
 
- functions Eq.(
+ functions using Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:kernels-in-q-space"
@@ -1346,129 +1367,10 @@ reference "eq:l1-penalized-l2"
 
 .
  
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Do we want to keep the two-fibers crossing simulation results?
-\end_layout
-
-\end_inset
-
-A small amount (
-\begin_inset Formula $SNR=100)$
-\end_inset
-
- of Riccian noise was added to the signal.
- Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Reconstruction-of-two"
-
-\end_inset
-
- shows the reconstructed ODF, with an estimated crossing angle of 
-\begin_inset Formula $46.5$
-\end_inset
-
- degrees.
- 
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename two-fibers.pdf
-	scale 50
-	BoundingBox 100bp 50bp 500bp 325bp
-	clip
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Reconstruction-of-two"
-
-\end_inset
-
-Reconstruction of two crossing fibers, with a crossing angle of 
-\begin_inset Formula $45$
-\end_inset
-
- degrees.
- Here 
-\begin_inset Formula $SNR=100$
-\end_inset
-
-, 
-\begin_inset Formula $b=4000\:\mathrm{s/mm^{2}}$
-\end_inset
-
-, 
-\begin_inset Formula $N=64$
-\end_inset
-
-, 
-\begin_inset Formula $M=132$
-\end_inset
-
-.
- The estimated crossing angle is 
-\begin_inset Formula $46.5$
-\end_inset
-
- degrees.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
-As a further test of the reconstruction algorithm, we considered three noise
- levels, 
-\begin_inset Formula $SNR=20$
-\end_inset
-
-, 
-\begin_inset Formula $SNR=15$
-\end_inset
-
- and 
-\begin_inset Formula $SNR=10$
-\end_inset
-
- and two fibers crossing at angles ranging from 
-\begin_inset Formula $90$
-\end_inset
-
- degrees to 
-\begin_inset Formula $30$
-\end_inset
-
- degrees with a value of 
-\begin_inset Formula $b=3000\:\mathrm{s/mm^{2}}$
-\end_inset
-
-.
- For each SNR level and each crossing angle, we ran 
+For each SNR level and each crossing angle, we ran 
 \begin_inset Formula $50$
 \end_inset
 
