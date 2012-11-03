@@ -1,5 +1,8 @@
 # ISBI 2013 paper
 
+x - Done
+p - Postpone
+
 ## Writing
 
 - Change from CVXOPT to scikit-learn, add link
@@ -11,15 +14,24 @@
 
 ## Reproducibility & coding
 
+- Create bootstrap.ipynb
+- Fix %%bash to output immediately like !cmd
 - Create notebook
 - x Create script to generate paper webpage
-- Implement source code display in JS
+- p Implement source code display in JS
 - Convert to new direction-finding API in DiPy
 
 ## Graphics
 
+- Try and run Mayavi in the cloud, headless
 - Comparison plot, Tristan-Vega, Tuch, Aganj, ours
 - Kernel: ODF vs Q-space
 - Add axes to kernel and q-space kernel plots
   That way people see that it's lined up with the corresponding point on the
   sphere
+
+## ISMRM
+
+- <http://www.ismrm.org/>
+- Cory -- abstract
+
