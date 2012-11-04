@@ -26,7 +26,7 @@ def quadrature_points(N=72):
 
     """
     import os
-    basedir = os.path.abspath(os.path.dirname(__file__))
+    basedir = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data')
 
     quad_file = {72: 'qsph1-14-72DP.dat',
                  132: 'qsph1-16-132DP.dat',
