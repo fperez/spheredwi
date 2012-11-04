@@ -14,16 +14,17 @@ p - Postpone
 
 ## Reproducibility & coding
 
-- Create bootstrap.ipynb
+- x Create bootstrap.ipynb
 - Fix %%bash to output immediately like !cmd
 - Create notebook
 - x Create script to generate paper webpage
 - p Implement source code display in JS
 - Convert to new direction-finding API in DiPy
+- x Fix broken Image object in IPython (ignores width)
 
 ## Graphics
 
-- Try and run Mayavi in the cloud, headless
+- x Try and run Mayavi in the cloud, headless
 - Comparison plot, Tristan-Vega, Tuch, Aganj, ours
 - Kernel: ODF vs Q-space
 - Add axes to kernel and q-space kernel plots
