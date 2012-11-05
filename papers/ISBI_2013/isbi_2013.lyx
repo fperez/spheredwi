@@ -152,10 +152,10 @@ Theory and methods
 \end_layout
 
 \begin_layout Standard
-Below we outline basic mathematical tools and a new method for reconstructing
+Below we outline basic mathematical tools and a new framework for reconstructing
  dMRIs.
- While the method we outline is general, we apply it to the framework developed
- by Aganj, Christophe, 
+ While the method we outline is generally applicable, we apply it to the
+ angular estimator developed by Aganj, Christophe, 
 \shape italic
 et al
 \shape default
@@ -172,7 +172,7 @@ key "A-L-G-E-K-2010"
 \end_layout
 
 \begin_layout Subsection
-Ensemble average propagator and ODF 
+Ensemble average propagator and PODF 
 \end_layout
 
 \begin_layout Standard
@@ -221,7 +221,11 @@ Signal attenuation
 \begin_inset Formula $\mathbf{G}$
 \end_inset
 
- is the applied diffusion gradient vector 
+ is the applied diffusion gradient vector and 
+\begin_inset Formula $P\left(\mathbf{r};\tau\right)$
+\end_inset
+
+ is the so-called ensemble average propagator (EAP) 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "CALLAHAN-1991"
@@ -234,19 +238,13 @@ key "CALLAHAN-1991"
 \end_inset
 
 .
- To invert Eq.(1) all of three-dimensional 
+ To invert the Fourier transform all of three-dimensional 
 \begin_inset Formula $q$
 \end_inset
 
 -space must be sampled.
- This is typically too costly and hence various approximation to Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:fourier-trans"
-
-\end_inset
-
-) have been developed.
+ This is typically too costly for clinical applications and hence various
+ approximation have been developed.
  For a discussion of many of the approximate techniques, see, for example,
  
 \begin_inset CommandInset citation
@@ -259,8 +257,7 @@ key "A-T-B-S-2011"
 \end_layout
 
 \begin_layout Standard
-Using the assumption that the diffusion process is Gaussian, one can show
- that 
+Assuming that the diffusion process is Gaussian, one can show that 
 \begin_inset Formula $S\left(\mathbf{q};\tau\right)=S_{0}e^{-b\,\mathbf{g}^{T}\mathbf{Dg}}$
 \end_inset
 
@@ -304,8 +301,8 @@ Using the assumption that the diffusion process is Gaussian, one can show
 
 \begin_layout Standard
 Because of the inherent limitations of the Gaussian assumption to resolve
- complex structures, a new class of methods, known as high angular resolution
- imaging (HARDI), has been developed.
+ complex structures, a new class of methods known as High Angular Resolution
+ Diffusion Imaging (HARDI) has been developed.
  See for example 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -314,50 +311,42 @@ key "A-T-B-S-2011"
 \end_inset
 
  and references therein.
- Many of these techniques are designed to recover only angular information
- about the ensemble average propagator.
- This angular information is contained in the so-called Orientation Distribution
- Funtion (ODF) and denoted as 
-\begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)$
-\end_inset
-
-, which is related to a radial integral of 
-\begin_inset Formula $P\left(\mathbf{r};\tau\right)$
-\end_inset
-
-.
- While the method we develop below can be used with any ODF model, we choose
- to use the model developed by Aganj, Christophe, 
-\shape italic
-et al
-\shape default
-., 
+ HARDI techniques usually aim to recover only angular information about
+ the EAP.
+ This angular information is contained in a radial projection of the EAP.
+ While different definitions for the projection exist, we choose to follow
+ the approach of 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "A-L-G-E-K-2010"
 
 \end_inset
 
- because it includes the correct spherical weighting in the radial integral
- and is a good compromise between resolution and noise sensitivity.
- Moreover, using the correct spherical weighting to define the ODF allows
- one to interpret the ODF as a marginal probability distribution 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "A-L-G-E-K-2010"
-
+, since their method correctly accounts for the spherical 
+\begin_inset Formula $r^{2}$
 \end_inset
 
-.
- We remark that the method we develop to recover 
-\begin_inset Formula $\Phi$
-\end_inset
+ weighting in the radial projection.
+ Using this weighting, one arrives at the so-called Orientation Probability
+ Distribution Function (PODF), which can be interpreted as a marginal probabilit
+y distribution.
+\end_layout
 
- from measurements of 
+\begin_layout Standard
+A common feature of HARDI techniques is the need to recover from a set of
+ noisy measurements a function defined on the unit sphere that exhibits
+ localized behavior.
+ This localized behavior arises because of the restricted directions in
+ which water molecules can diffuse.
+ Traditionally, spherical harmonics have been used to represent functions
+ on the sphere.
+ However, because of the global nature of spherical harmonics they are not
+ inefficient at representing functions with localized features.
+ The framework we develop to recover the PODF from measurements of 
 \begin_inset Formula $S$
 \end_inset
 
- has similarities to those methods developed by the authors of 
+ has similarities to the work of 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "MICH-RATH-2010,VEGA-WEST-2011"
@@ -952,7 +941,7 @@ H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\equiv-\frac{1}
 
 \end_inset
 
-By construction we then have 
+By construction we  have 
 \family roman
 \series medium
 \shape up
