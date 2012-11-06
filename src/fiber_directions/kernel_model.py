@@ -216,16 +216,14 @@ def Linv(E):
 
 
 class SparseKernelModel(OdfModel, Cache):
-    def __init__(self, bvals, gradients, sh_order=8, qp=132,
+    def __init__(self, gtab, sh_order=8, qp=132,
                  loglog_tf=True, l1_ratio=None, alpha=None):
         """Sparse kernel model.
 
         Parameters
         ----------
-        bvals : 1-D ndarray
-            B-values.
-        gradients : (N, 3) ndarray
-            Gradient directions, xyz.
+        gtab : GradientTable
+            B-values and gradient directions.
         sh_order : int
             Highest order of spherical harmonic fit.
         qp : {72, 132, 492}
@@ -247,13 +245,14 @@ class SparseKernelModel(OdfModel, Cache):
         sklearn.linear_model.ElasticNet
 
         """
-        where_dwi = bvals > 0
+        mask = gtab.bvals > 0
+        bvecs = gtab.bvecs[mask]
 
         self.qp = qp
         self.sh_order = sh_order
         self.loglog_tf = loglog_tf
         self.gradient_theta, self.gradient_phi = \
-                             cart2sphere(*gradients[where_dwi].T)[1:]
+                             cart2sphere(*bvecs.T)[1:]
 
         self.kernel_theta, self.kernel_phi, _ = quadrature_points(N=qp)
 

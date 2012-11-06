@@ -6,6 +6,7 @@ from kernel_model import SparseKernelModel
 from kernel_model import quadrature_points
 from sphdif.linalg import rotation_around_axis
 
+from dipy.core.gradients import GradientTable
 from dipy.sims.voxel import single_tensor
 from numpy.linalg import norm as norm
 
@@ -44,8 +45,8 @@ bvecs = np.load(bvecs)
 where_dwi = bvals > 0
 bvecs = bvecs[where_dwi]
 bvals = bvals[where_dwi]
-
 bvals = np.ones_like(bvals) * B
+gtab = GradientTable(bvals[:, None] * bvecs)
 
 error = np.zeros_like(angles)
 mean_means = np.zeros_like(angles)
@@ -67,7 +68,7 @@ recovered_angle = []
 
 SNR = None
 
-sk = SparseKernelModel(bvals, bvecs, sh_order=8, l1_ratio=0.5, alpha=0.0001)
+sk = SparseKernelModel(gtab, sh_order=8, l1_ratio=0.5, alpha=0.0001)
 sk.direction_finder.config(sphere=sphere, min_separation_angle=10)
 
 recovered_angle = np.zeros((len(angles), realizations))
