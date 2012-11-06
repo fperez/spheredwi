@@ -143,7 +143,7 @@ key "STEJ-TANN-1965"
 \end_inset
 
 , diffusion magnetic resonance imaging (dMRI) has become a key tool in understan
-ding the complex structural aspects of white matter in the brain.
+ding complex structural aspects of white matter in the brain.
  
 \end_layout
 
@@ -153,7 +153,7 @@ Theory and methods
 
 \begin_layout Standard
 Below we outline basic mathematical tools and a new framework for reconstructing
- dMRIs.
+ angular information from diffusion MR measurements.
  While the method we outline is generally applicable, we apply it to the
  angular estimator developed by Aganj, Christophe, 
 \shape italic
@@ -336,12 +336,12 @@ y distribution.
 A common feature of HARDI techniques is the need to recover from a set of
  noisy measurements a function defined on the unit sphere that exhibits
  localized behavior.
- This localized behavior arises because of the restricted directions in
- which water molecules can diffuse.
+ This localized behavior arises because of the restricted diffusion of the
+ water molecules.
  Traditionally, spherical harmonics have been used to represent functions
  on the sphere.
  However, because of the global nature of spherical harmonics they are not
- inefficient at representing functions with localized features.
+ efficient at representing functions with localized features.
  The framework we develop to recover the PODF from measurements of 
 \begin_inset Formula $S$
 \end_inset
@@ -362,7 +362,7 @@ Preliminaries
 \end_layout
 
 \begin_layout Standard
-Since the ODF is defined on the unit sphere 
+Since the PODF is defined on the unit sphere 
 \begin_inset Formula $\mathbb{S}^{2}$
 \end_inset
 
@@ -390,15 +390,11 @@ key "ATKI-HAN-2012"
 \begin_inset Formula $m$
 \end_inset
 
- is defined by
-\begin_inset Formula 
-\begin{equation}
-Y_{l}^{m}\left(\theta,\phi\right)=\left(-1\right)^{m}c_{l}^{m}P_{l}^{m}\left(\mathrm{cos}\theta\right)e^{im\phi},\label{eq:ylm}
-\end{equation}
-
+ is defined by 
+\begin_inset Formula $Y_{l}^{m}\left(\theta,\phi\right)=\left(-1\right)^{m}c_{l}^{m}P_{l}^{m}\left(\mathrm{cos}\theta\right)e^{im\phi}$
 \end_inset
 
-where 
+, where 
 \begin_inset Formula $P_{l}^{m}\left(\mu\right)$
 \end_inset
 
@@ -425,15 +421,11 @@ where
 \begin_inset Formula $\boldsymbol{\Omega},\boldsymbol{\Omega}'\in\mathbb{S}^{2}$
 \end_inset
 
-
-\begin_inset Formula 
-\begin{equation}
-\frac{2l+1}{4\pi}P_{l}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)=\sum_{|m|\le l}\bar{Y}_{l}^{m}\left(\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\label{eq:add-theorem}
-\end{equation}
-
+, 
+\begin_inset Formula $\frac{2l+1}{4\pi}P_{l}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)=\sum_{|m|\le l}\bar{Y}_{l}^{m}\left(\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}\right)$
 \end_inset
 
-where 
+, where 
 \begin_inset Formula $P_{l}\left(\mu\right)$
 \end_inset
 
@@ -444,14 +436,11 @@ where
  degree Legendre polynomial and the over-bar denotes complex conjugation.
  In addition, spherical harmonics are eigenfunctions of the Laplace-Beltrami
  operator on the sphere: 
-\begin_inset Formula 
-\begin{equation}
-\Delta_{b}Y_{l}^{m}\left(\theta,\phi\right)=-l\left(l+1\right)Y_{l}^{m}\left(\theta,\phi\right).\label{eq:ylm_eigen}
-\end{equation}
-
+\begin_inset Formula $\Delta_{b}Y_{l}^{m}\left(\theta,\phi\right)=-l\left(l+1\right)Y_{l}^{m}\left(\theta,\phi\right)$
 \end_inset
 
-Moreover, the so-called Funke-Hecke Theorem states that spherical harmonics
+.
+ Moreover, the so-called Funk-Hecke Theorem states that spherical harmonics
  are eigenfunctions for a particular integral operator on the sphere with
  kernel 
 \begin_inset Formula $f\left(\mu\right)$
@@ -461,28 +450,21 @@ Moreover, the so-called Funke-Hecke Theorem states that spherical harmonics
 \begin_inset Formula $\left[-1,1\right]$
 \end_inset
 
-, that is,
-\begin_inset Formula 
-\begin{equation}
-\int_{\mathbb{S}^{2}}\! f\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'=\lambda_{l}Y_{l}^{m}\left(\boldsymbol{\Omega}\right),\label{eq:funke-hecke}
-\end{equation}
-
+, that is, 
+\begin_inset Formula $\int_{\mathbb{S}^{2}}\! f\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)Y_{l}^{m}\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'=\lambda_{l}Y_{l}^{m}\left(\boldsymbol{\Omega}\right),$
 \end_inset
 
-where 
+ where 
 \begin_inset Formula $\lambda_{l}=2\pi\int_{-1}^{1}f\left(\mu\right)P_{l}\left(\mu\right)d\mu$
 \end_inset
 
  is the eigenvalue.
  This can then be used to find the action of the so-called Funk-Radon transform
-\begin_inset Formula 
-\begin{equation}
-\mathcal{G}f\left(\mathbf{u}\right)=\int_{\mathbb{S}^{2}}\!\delta\left(\mathbf{u}\cdot\mathbf{v}\right)f\left(\mathbf{v}\right)d\mathbf{v}\label{eq:funk-radon}
-\end{equation}
-
+ 
+\begin_inset Formula $\mathcal{G}f\left(\mathbf{u}\right)=\int_{\mathbb{S}^{2}}\!\delta\left(\mathbf{u}\cdot\mathbf{v}\right)f\left(\mathbf{v}\right)d\mathbf{v}$
 \end_inset
 
-when 
+, when 
 \begin_inset Formula $f$
 \end_inset
 
@@ -490,7 +472,7 @@ when
 \end_layout
 
 \begin_layout Subsubsection
-Function approximation on 
+Approximation on 
 \begin_inset Formula $\mathbb{S}^{2}$
 \end_inset
 
@@ -498,7 +480,7 @@ Function approximation on
 \end_layout
 
 \begin_layout Standard
-To develop a framework in which to approximate the ODF, we start with a
+To develop a framework in which to approximate the PODF, we start with a
  subspace of spherical harmonics of maximum degree 
 \begin_inset Formula $L$
 \end_inset
@@ -622,10 +604,10 @@ reference "eq:rkhs"
 \end_inset
 
 ).
- Thus, for reconstructing dMRI signals we use the representation
+ Thus, for reconstructing a PODF we use the representation
 \begin_inset Formula 
 \begin{equation}
-f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}',\label{eq:even-f}
+f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'.\label{eq:even-f}
 \end{equation}
 
 \end_inset
@@ -653,7 +635,8 @@ reference "eq:even-f"
 
 \end_inset
 
-), we must first discretize the integral using a quadrature on the sphere.
+), we now discretize the integral using newly developed quadratures for
+ the sphere.
  
 \end_layout
 
@@ -757,33 +740,16 @@ reference "eq:even-f"
 
 \end_inset
 
-) we get 
-\begin_inset Formula 
-\begin{equation}
-f\left(\boldsymbol{\Omega}\right)=\sum_{i=1}^{M}f\left(\boldsymbol{\Omega}_{i}\right)w_{i}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right).\label{eq:d_f_even}
-\end{equation}
-
+) we have the representation 
+\begin_inset Formula $f\left(\boldsymbol{\Omega}\right)=\sum_{i=1}^{M}f\left(\boldsymbol{\Omega}_{i}\right)w_{i}K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)$
 \end_inset
 
-Note that Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:d_f_even"
-
-\end_inset
-
-) is an exact representation for even functions in 
+.
+ Note that this is an exact representation for even functions in 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
- and that Eq.(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:d_f_even"
-
-\end_inset
-
-) is analogous to Lagrange interpolation in that 
+ and is analogous to Lagrange interpolation in that 
 \begin_inset Formula $f$
 \end_inset
 
@@ -881,7 +847,8 @@ where the coefficients
 \begin_inset Formula $\left\{ \mathbf{q}_{i}\right\} _{i=1}^{N}$
 \end_inset
 
- gradient directions.An important property of the representation Eq.(
+ gradient directions.
+ An important property of the representation Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -921,7 +888,7 @@ reference "eq:ODF-kernels"
 \begin_inset Formula $S$
 \end_inset
 
- has been removed,  for 
+ has been removed, for 
 \begin_inset Formula $\: i=1,2,...N$
 \end_inset
 
@@ -992,43 +959,9 @@ reference "eq:ODF-kernels"
 \begin_inset Formula $\mathcal{G}\left\{ \Delta_{b}H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\right\} =K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)$
 \end_inset
 
- can be verified using Eqs.
- (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:add-theorem"
-
-\end_inset
-
-,
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:ylm_eigen"
-
-\end_inset
-
-,
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:funke-hecke"
-
-\end_inset
-
-,
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:funk-radon"
-
-\end_inset
-
-) and (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:even-kernel"
-
-\end_inset
-
-).
+ can be verified using the Addition Theorem, the Funk-Hecke formula, the
+ Funk-Radon transform and that the spherical harmonics are eigenfunctions
+ of the Laplace-Beltrami operator.
  
 \begin_inset Float figure
 wide false
@@ -1165,38 +1098,23 @@ where
 \end_inset
 
  is a penalization parameter.
- We use ....
- to solve Eq.(
+ We use the elastic net solver in the Python software package Scikit-learn
+ (http://scikit-learn.org/stable/) to solve Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:l1-penalized-l2"
 
 \end_inset
 
-) and then identify those coefficients 
-\begin_inset Formula $\Phi_{i}$
-\end_inset
-
- that are significantly larger than the mean of all the coefficients.
- (
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Stefan, do you threshold after solving the elastic net or just use what
- it gives?
-\end_layout
-
-\end_inset
-
-) Only these coefficients are then used in Eq.(
+).
+ These coefficients are then used in Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
 
 \end_inset
 
-) to represent the ODF 
+) to represent the PODF 
 \begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)$
 \end_inset
 
@@ -1274,16 +1192,8 @@ where
 \end_inset
 
 .
- To the signal we added Riccian noise at three different levels, 
-\begin_inset Formula $\mathrm{SNR}=20$
-\end_inset
-
-, 
-\begin_inset Formula $\mathrm{SNR}=15$
-\end_inset
-
- and 
-\begin_inset Formula $\mathrm{SNR}=10$
+ To the signal we added Riccian noise at a level of 
+\begin_inset Formula $\mathrm{SNR}=10\:\mathrm{dB}$
 \end_inset
 
 .
@@ -1297,11 +1207,7 @@ where
 \end_inset
 
  degrees.
- For each configuration (
-\begin_inset Formula $\mathrm{SNR}$
-\end_inset
-
- and crossing angle), the signal was sampled at 
+ At each crossing angle, the signal was sampled at 
 \begin_inset Formula $N=64$
 \end_inset
 
@@ -1355,11 +1261,78 @@ reference "eq:l1-penalized-l2"
 \end_inset
 
 .
+ Once these coefficients were determined, peaks in Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ODF-kernels"
+
+\end_inset
+
+) were found using a simplex method in Scikit-learn.
+ The estimated fiber crossing angle was then taken to be the angle between
+ peaks in Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ODF-kernels"
+
+\end_inset
+
+).
  
 \end_layout
 
 \begin_layout Standard
-For each SNR level and each crossing angle, we ran 
+To compare our method, we also performed reconstructions based on the algorithms
+ in 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "D-A-F-D-2007"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "TRI-WES-2010"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "A-L-G-E-K-2010"
+
+\end_inset
+
+.
+ In Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Angle.."
+
+\end_inset
+
+), we denote these methods by, respectively, QB, TV-SH and AG-SH.
+ Note that the method presented in this paper is essentially that of 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "A-L-G-E-K-2010"
+
+\end_inset
+
+, but instead of using spherical harmonics we use the functions from Eq.(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:kernels-in-q-space"
+
+\end_inset
+
+) centered at appropriately chosen locations (quadrature points).
+\end_layout
+
+\begin_layout Standard
+Figure shows the results of 
 \begin_inset Formula $50$
 \end_inset
 
@@ -1370,8 +1343,11 @@ For each SNR level and each crossing angle, we ran
 \end_inset
 
  simulations recorded.
- To further test the robustness of the algorithm, for each simulation 
-\begin_inset Formula $3$
+ The average absolute value of the error in estimated crossing angle is
+ plotted, along with error bars at one standard deviation.
+ To further test the robustness of the new algorithm, for each simulation
+ 
+\begin_inset Formula $5$
 \end_inset
 
  measurements were chosen at random and removed.
@@ -1380,14 +1356,7 @@ For each SNR level and each crossing angle, we ran
 \end_inset
 
  measurements.
- Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Angle.."
-
-\end_inset
-
- shows the results of these simulations.
+ This is denoted SK-5 in the figure.
  
 \begin_inset Float figure
 wide false
@@ -1398,8 +1367,10 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename data/crossing-angle-error.pdf
-	scale 50
+	filename figs/results.pdf
+	width 3.75in
+	height 3in
+	BoundingBox 100bp 0bp 1165bp 613bp
 
 \end_inset
 
@@ -1417,17 +1388,13 @@ name "fig:Angle.."
 \end_inset
 
 Average error in estimated crossing angle for a synthetic two-fiber signal
- at SNR of 10, 15 and 20.
+ with 
+\begin_inset Formula $SNR=10\:\mathrm{dB}$
+\end_inset
+
+.
  Error bars are at one standard deviation.
- We initially used 
-\begin_inset Formula $64$
-\end_inset
-
- measurements and then at random removed 
-\begin_inset Formula $3$
-\end_inset
-
- measurements.
+ At random 5 measurements out of the 64 were not used.
  The number of functions in Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1450,39 +1417,21 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-The average error in the recovered crossing angle is plotted in Fig.(
+For crossing angles of less than 
+\begin_inset Formula $50$
+\end_inset
+
+ degrees, Q-balls based on spherical harmonics could not resolve the crossing
+ angle.
+ From Fig.
+ (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Angle.."
 
 \end_inset
 
-), along with error bars at one standard deviation.
- We see that at an SNR of 
-\begin_inset Formula $20,$
-\end_inset
-
- the algorithm performs well and can resolve two fibers crossing at an angle
- as low as 
-\begin_inset Formula $30$
-\end_inset
-
- degrees with only 
-\begin_inset Formula $61$
-\end_inset
-
- measurements.
- As the SNR worsens, the errors in resolving a 
-\begin_inset Formula $30$
-\end_inset
-
- degree crossing significantly increase.
- However, even at an SNR of 10, the algorithm can still resolve 
-\begin_inset Formula $45$
-\end_inset
-
- degree crossings.
- 
+) we see that....
 \end_layout
 
 \begin_layout Section
