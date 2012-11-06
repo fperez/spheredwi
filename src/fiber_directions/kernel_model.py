@@ -217,7 +217,7 @@ def Linv(E):
 
 class SparseKernelModel(OdfModel, Cache):
     def __init__(self, bvals, gradients, sh_order=8, qp=132,
-                 loglog_tf=True, alpha=None, rho=None):
+                 loglog_tf=True, l1_ratio=None, alpha=None):
         """Sparse kernel model.
 
         Parameters
@@ -235,29 +235,12 @@ class SparseKernelModel(OdfModel, Cache):
             In theory, this gives a better representation of the ODF (but does
             predict back the original signal).  Also, it seems not to work well
             for low b-values (<= 1500).
-
-        alpha: float (optional)
-            Parameter controlling the sparseness of ElasticNet. Defaults to 1
-
-        rho: float (optional)
-            Parameter controlling the sparseness of ElasticNet. Defaults to 0.5
-
-        For a and b controlling the L1 and L2 norms of the weights:
-
-        .. math ::
-
-           a * L1 + b * L2
-
-        set the input parameters `alpha` and `rho` to be:
-
-        .. math ::
-
-            alpha = a + b
-
-            and
-
-            rho = \frac{a}{a+b}
-
+        l1_ratio : float (optional)
+            Argument passed to sklearn's ElasticNet to control L1 vs L2
+            penalization.  Should be > 0.01.
+        alpha : float (optional)
+            Argument passed to sklearn's ElasticNet.  Controls the weight of
+            both L1 and L2 penalties.
 
         See also
         --------
@@ -281,14 +264,13 @@ class SparseKernelModel(OdfModel, Cache):
                           N=self.sh_order)
             )
 
+        if l1_ratio is None:
+            l1_ratio = 1
         if alpha is None:
-            alpha = 1.0
+            alpha = 1
 
-        if rho is None:
-            rho = 0.5
-
+        self.l1_ratio = l1_ratio
         self.alpha = alpha
-        self.rho = rho
 
     def fit(self, signal):
         """Fit the model to the given signal.
@@ -305,11 +287,13 @@ class SparseKernelModel(OdfModel, Cache):
             y = signal
 
         from sklearn import linear_model
-        lm = linear_model.ElasticNet(alpha=self.alpha, rho=self.rho,
+        lm = linear_model.ElasticNet(l1_ratio=self.l1_ratio, alpha=self.alpha,
                                      fit_intercept=True,
                                      copy_X=True)
 
-        fit = lm.fit(self.X, y)
+        # Handle "nan" as missing observations
+        mask = ~np.isnan(y)
+        fit = lm.fit(self.X[mask, :], y[mask])
         beta = fit.coef_
         intercept = fit.intercept_
 
