@@ -152,30 +152,6 @@ Theory and methods
 \end_layout
 
 \begin_layout Standard
-Below we outline basic mathematical tools and a new framework for reconstructing
- angular information from diffusion MR measurements.
- While the method we outline is generally applicable, we apply it to the
- angular estimator developed by Aganj, Christophe, 
-\shape italic
-et al
-\shape default
-.
- 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "A-L-G-E-K-2010"
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Subsection
-Ensemble average propagator and PODF 
-\end_layout
-
-\begin_layout Standard
 Signal attenuation 
 \begin_inset Formula $S\left(\mathbf{q};\tau\right)$
 \end_inset
@@ -257,7 +233,7 @@ key "A-T-B-S-2011"
 \end_layout
 
 \begin_layout Standard
-Assuming that the diffusion process is Gaussian, one can show that 
+Assuming the diffusion process is Gaussian, one can show that 
 \begin_inset Formula $S\left(\mathbf{q};\tau\right)=S_{0}e^{-b\,\mathbf{g}^{T}\mathbf{Dg}}$
 \end_inset
 
@@ -336,8 +312,8 @@ y distribution.
 A common feature of HARDI techniques is the need to recover from a set of
  noisy measurements a function defined on the unit sphere that exhibits
  localized behavior.
- This localized behavior arises because of the restricted diffusion of the
- water molecules.
+ This localized behavior arises because of the restricted diffusion of water
+ molecules.
  Traditionally, spherical harmonics have been used to represent functions
  on the sphere.
  However, because of the global nature of spherical harmonics they are not
@@ -863,6 +839,14 @@ reference "eq:ODF-kernels"
 \begin_inset Formula $\Phi_{i}$
 \end_inset
 
+, since 
+\begin_inset Formula $K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)$
+\end_inset
+
+ is peaked in direction 
+\begin_inset Formula $\boldsymbol{\Omega}_{i}$
+\end_inset
+
 .
  Recall that the kernel 
 \begin_inset Formula $K_{e}$
@@ -1114,8 +1098,8 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-) to represent the PODF 
-\begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)$
+) to represent 
+\begin_inset Formula $\Phi$
 \end_inset
 
 .
@@ -1131,8 +1115,8 @@ As noted earlier, the significant coefficients
 \begin_inset Formula $\boldsymbol{\Omega}_{i}$
 \end_inset
 
- where the ODF is peaked.
- We can use this result to simplify identifying peaks in the ODF.
+ where the PODF is peaked.
+ We can use this result to simplify identifying peaks in the PODF.
  Peak finding is accomplished by using a simplex algorithm to maximize Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1286,21 +1270,21 @@ To compare our method, we also performed reconstructions based on the algorithms
  in 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "D-A-F-D-2007"
+key "A-L-G-E-K-2010"
 
 \end_inset
 
 , 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "TRI-WES-2010"
+key "D-A-F-D-2007"
 
 \end_inset
 
  and 
 \begin_inset CommandInset citation
 LatexCommand citep
-key "A-L-G-E-K-2010"
+key "TRI-WES-2010"
 
 \end_inset
 
@@ -1313,7 +1297,7 @@ reference "fig:Angle.."
 
 \end_inset
 
-), we denote these methods by, respectively, QB, TV-SH and AG-SH.
+), we denote these methods by, respectively, AG-SH, QB and TV-SH.
  Note that the method presented in this paper is essentially that of 
 \begin_inset CommandInset citation
 LatexCommand citep
