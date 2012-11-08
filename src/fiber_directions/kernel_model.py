@@ -30,6 +30,7 @@ def quadrature_points(N=72):
 
     quad_file = {72: 'qsph1-14-72DP.dat',
                  132: 'qsph1-16-132DP.dat',
+                 192: 'qsph1-23-192DP.dat',
                  492: 'qsph1-37-492DP.dat'}
 
     q_pts = np.loadtxt(os.path.join(basedir, quad_file[N]))
