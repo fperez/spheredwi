@@ -127,7 +127,23 @@ Berkeley, CA 94720
 \end_layout
 
 \begin_layout Abstract
-Purpose:
+Using existing estimators found in High Angular Resolution Diffusion Imaging
+ (HARDI), such as the Orientation Probability Distribution Function (OPDF)
+ of Aganj 
+\shape italic
+et al
+\shape default
+., we develop a new mathematical framework for ....
+ In contrast to traditional methods based on spherical harmonics, the new
+ framework is based on a reproducing kernel formalism combined with recently
+ developed Gaussian-like quadratures for the sphere.
+ This leads to an efficient and sparse representation for HARDI estimators.
+ We demonstrate that the new framework results in reconstructions that are
+ more robust to noise and dropped measurements, compared to using a spherical
+ harmonic based reconstruction.
+ Moreover, the new framework results in better angular resolution and allows
+ for easier peak detection.
+ 
 \end_layout
 
 \begin_layout Section
