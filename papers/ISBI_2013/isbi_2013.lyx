@@ -289,7 +289,7 @@ key "A-T-B-S-2011"
  and references therein.
  HARDI techniques usually aim to recover only angular information about
  the EAP.
- This angular information is contained in a radial projection of the EAP.
+ This angular information is contained in a radial integral of the EAP.
  While different definitions for the projection exist, we choose to follow
  the approach of 
 \begin_inset CommandInset citation
@@ -304,7 +304,7 @@ key "A-L-G-E-K-2010"
 
  weighting in the radial projection.
  Using this weighting, one arrives at the so-called Orientation Probability
- Distribution Function (PODF), which can be interpreted as a marginal probabilit
+ Distribution Function (OPDF), which can be interpreted as a marginal probabilit
 y distribution.
 \end_layout
 
@@ -318,7 +318,7 @@ A common feature of HARDI techniques is the need to recover from a set of
  on the sphere.
  However, because of the global nature of spherical harmonics they are not
  efficient at representing functions with localized features.
- The framework we develop to recover the PODF from measurements of 
+ The framework we develop to recover the OPDF from measurements of 
 \begin_inset Formula $S$
 \end_inset
 
@@ -329,8 +329,7 @@ key "MICH-RATH-2010,VEGA-WEST-2011"
 
 \end_inset
 
-, but with important differences.
- 
+, but with important differences to be discussed below.
 \end_layout
 
 \begin_layout Subsection
@@ -338,7 +337,7 @@ Preliminaries
 \end_layout
 
 \begin_layout Standard
-Since the PODF is defined on the unit sphere 
+Since the OPDF is defined on the unit sphere 
 \begin_inset Formula $\mathbb{S}^{2}$
 \end_inset
 
@@ -411,7 +410,7 @@ key "ATKI-HAN-2012"
 
  degree Legendre polynomial and the over-bar denotes complex conjugation.
  In addition, spherical harmonics are eigenfunctions of the Laplace-Beltrami
- operator on the sphere: 
+ (Laplacian in spherical coordinates) operator on the sphere: 
 \begin_inset Formula $\Delta_{b}Y_{l}^{m}\left(\theta,\phi\right)=-l\left(l+1\right)Y_{l}^{m}\left(\theta,\phi\right)$
 \end_inset
 
@@ -456,7 +455,7 @@ Approximation on
 \end_layout
 
 \begin_layout Standard
-To develop a framework in which to approximate the PODF, we start with a
+To develop a framework in which to approximate the OPDF, we start with a
  subspace of spherical harmonics of maximum degree 
 \begin_inset Formula $L$
 \end_inset
@@ -495,7 +494,11 @@ where
 \begin_inset Formula $f_{l}^{m}$
 \end_inset
 
- into the sum Eq.(
+ into the sum Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:f-sh-expansion"
@@ -572,7 +575,11 @@ where
 \begin_inset Formula $n$
 \end_inset
 
-, as the kernel in Eq.(
+, as the kernel in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:rkhs"
@@ -580,7 +587,7 @@ reference "eq:rkhs"
 \end_inset
 
 ).
- Thus, for reconstructing a PODF we use the representation
+ Thus, for reconstructing a OPDF we use the representation
 \begin_inset Formula 
 \begin{equation}
 f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\boldsymbol{\Omega}'.\label{eq:even-f}
@@ -588,7 +595,11 @@ f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K_{e}\left(\boldsymbol
 
 \end_inset
 
-For reasons explained below, in the sequel we start the sum in Eq.(
+For reasons explained below, in the sequel we start the sum in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-kernel"
@@ -604,7 +615,11 @@ reference "eq:even-kernel"
 \end_inset
 
 .
- To develop a computational algorithm based on Eq.(
+ To develop a computational algorithm based on Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-f"
@@ -621,7 +636,11 @@ Quadratures
 \end_layout
 
 \begin_layout Standard
-Equation (
+Equation
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-f"
@@ -629,7 +648,7 @@ reference "eq:even-f"
 \end_inset
 
 ) represents the starting point from which we develop a computational algorithm
- for reconstructing the ODF.
+ for reconstructing the OPDF.
  While quadratures for Cartesian domains are relatively well developed,
  research in quadratures for the sphere remains an active area of research
  
@@ -659,7 +678,11 @@ key "BAN-DAM-1979"
 \end_layout
 
 \begin_layout Standard
-To develop an efficient sampling scheme by discretizing Eq.(
+To develop an efficient sampling scheme by discretizing Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-f"
@@ -709,7 +732,11 @@ Let
 \end_inset
 
 .
- From Eq.(
+ From Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:even-f"
@@ -824,7 +851,11 @@ where the coefficients
 \end_inset
 
  gradient directions.
- An important property of the representation Eq.(
+ An important property of the representation Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -861,7 +892,11 @@ reference "eq:ODF-kernels"
 \end_inset
 
 .
- In order to determine the coefficients in Eq.(
+ In order to determine the coefficients in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -908,7 +943,35 @@ By construction we  have
 \begin_inset Formula $\mathcal{G}\left\{ \Delta_{b}H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\right\} =K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)$
 \end_inset
 
- and hence solving Eqs.(
+ and hence solving Eqs.
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset space \space{}
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:sys-eqs"
@@ -919,7 +982,35 @@ reference "eq:sys-eqs"
 \begin_inset Formula $\left\{ \Phi_{i}\right\} _{i=1}^{M}$
 \end_inset
 
- automatically yields Eq.(
+ automatically yields Eq.
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset space \space{}
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1083,7 +1174,11 @@ where
 
  is a penalization parameter.
  We use the elastic net solver in the Python software package Scikit-learn
- (http://scikit-learn.org/stable/) to solve Eq.(
+ (http://scikit-learn.org) to solve Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:l1-penalized-l2"
@@ -1091,7 +1186,11 @@ reference "eq:l1-penalized-l2"
 \end_inset
 
 ).
- These coefficients are then used in Eq.(
+ These coefficients are then used in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1115,9 +1214,13 @@ As noted earlier, the significant coefficients
 \begin_inset Formula $\boldsymbol{\Omega}_{i}$
 \end_inset
 
- where the PODF is peaked.
- We can use this result to simplify identifying peaks in the PODF.
- Peak finding is accomplished by using a simplex algorithm to maximize Eq.(
+ where the OPDF is peaked.
+ We can use this result to simplify identifying peaks in the OPDF.
+ Peak finding is accomplished by using a simplex algorithm to maximize Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1224,7 +1327,11 @@ key "AHR-BEY-2009"
 \begin_inset Formula $132$
 \end_inset
 
- functions using Eq.(
+ functions using Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:kernels-in-q-space"
@@ -1233,6 +1340,9 @@ reference "eq:kernels-in-q-space"
 
 ).
  The minimization problem Eq.
+\begin_inset space \space{}
+\end_inset
+
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1245,7 +1355,11 @@ reference "eq:l1-penalized-l2"
 \end_inset
 
 .
- Once these coefficients were determined, peaks in Eq.(
+ Once these coefficients were determined, peaks in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1254,7 +1368,11 @@ reference "eq:ODF-kernels"
 
 ) were found using a simplex method in Scikit-learn.
  The estimated fiber crossing angle was then taken to be the angle between
- peaks in Eq.(
+ peaks in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
@@ -1290,7 +1408,10 @@ key "TRI-WES-2010"
 
 .
  In Fig.
- (
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Angle.."
@@ -1305,7 +1426,11 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
-, but instead of using spherical harmonics we use the functions from Eq.(
+, but instead of using spherical harmonics we use the functions from Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:kernels-in-q-space"
@@ -1379,7 +1504,11 @@ Average error in estimated crossing angle for a synthetic two-fiber signal
 .
  Error bars are at one standard deviation.
  At random 5 measurements out of the 64 were not used.
- The number of functions in Eq.(
+ The number of functions in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:ODF-kernels"
