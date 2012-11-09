@@ -139,8 +139,8 @@ et al
  developed Gaussian-like quadratures for the sphere.
  This leads to an efficient and sparse representation for HARDI estimators.
  We demonstrate that the new framework results in reconstructions that are
- more robust to noise and results in better angular resolution, compared
- to using a spherical harmonic based reconstruction.
+ more robust to noise and have better angular resolution, compared to using
+ a spherical harmonic based reconstruction.
  
 \end_layout
 
@@ -246,7 +246,7 @@ key "CALLAHAN-1991"
 
 -space must be sampled.
  This is typically too costly for clinical applications and hence various
- approximation have been developed.
+ approximations have been developed.
  For a discussion of many of the approximate techniques, see, for example,
  
 \begin_inset CommandInset citation
@@ -261,7 +261,7 @@ key "A-T-B-S-2011"
 \end_layout
 
 \begin_layout Standard
-HARDI techniques recover angular information about the EAP, through a radial
+HARDI techniques recover angular information about the EAP through a radial
  integral of the EAP.
  While different definitions for the integration exist, we choose to follow
  the approach of 
@@ -289,12 +289,8 @@ A common feature of HARDI techniques is the need to recover from a set of
  on the sphere.
  However, because of the global nature of spherical harmonics they are not
  efficient at representing functions with localized features.
- We remark that the framework we develop to recover the OPDF from measurements
- of 
-\begin_inset Formula $S$
-\end_inset
-
- has similarities to the work of 
+ We remark that the framework we develop has similarities to the work of
+ 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "MICH-RATH-2010,VEGA-WEST-2011"
@@ -544,7 +540,7 @@ reference "eq:rkhs"
 \end_inset
 
 ).
- Thus, for reconstructing an OPDF we use the representation Eq.
+ Thus, to reconstruct an OPDF we use the representation Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -799,8 +795,8 @@ The shape of the reproducing kernel
 \begin_inset Formula $K_{e}\left(\mu\right)$
 \end_inset
 
- suggests that the ODF should have a sparse representation in terms of linear
- combinations of the kernels 
+ suggests that the OPDF should have a sparse representation in terms of
+ linear combinations of the kernels 
 \begin_inset Formula $K_{e}$
 \end_inset
 
@@ -1547,8 +1543,8 @@ reference "eq:kernels-in-q-space"
 \end_layout
 
 \begin_layout Standard
-As mentioned at the beginning of the paper, there are similarities between
- the algorithm in this paper and those found in 
+There are similarities between the algorithm in this paper and those found
+ in 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "MICH-RATH-2010,VEGA-WEST-2011"
