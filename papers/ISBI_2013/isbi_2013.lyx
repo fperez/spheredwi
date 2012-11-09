@@ -134,14 +134,13 @@ Using existing estimators found in High Angular Resolution Diffusion Imaging
 et al
 \shape default
 ., we develop a new mathematical framework for implementing HARDI.
- In contrast to traditional methods based on spherical harmonics, the new
- framework is based on a reproducing kernel formalism combined with recently
+ In contrast to traditional methods based on spherical harmonics, the framework
+ developed is based on a reproducing kernel formalism combined with recently
  developed Gaussian-like quadratures for the sphere.
  This leads to an efficient and sparse representation for HARDI estimators.
  We demonstrate that the new framework results in reconstructions that are
- more robust to noise and dropped measurements, compared to using a spherical
- harmonic based reconstruction.
- Moreover, the new framework results in better angular resolution.
+ more robust to noise and results in better angular resolution, compared
+ to using a spherical harmonic based reconstruction.
  
 \end_layout
 
@@ -162,10 +161,10 @@ ding complex structural aspects of white matter in the brain.
  As measurement techniques have improved, initial reconstruction algorithms
  such as Diffusion Tensor Imaging (DTI) have been shown to be limited in
  their ability to resolve complex structures.
- This has lead to a class of algorithms know as High Angular Resolution
+ This has lead to a class of algorithms known as High Angular Resolution
  Diffusion Imaging (HARDI).
- This class of algorithms typically aims to reconstruct only angular information
- of the underlying neural structures.
+ This class of algorithms aims primarily to reconstruct angular information
+ about the underlying neural structures.
  Because of restricted diffusion of water molecules along these neural structure
 s, angular information is typically localized to certain directions.
  Thus, within the HARDI framework, there is need to develop reconstruction
@@ -220,7 +219,7 @@ Signal attenuation
 \begin_inset Formula $\delta$
 \end_inset
 
- is the pulse duration and 
+ is the pulse duration, 
 \begin_inset Formula $\mathbf{G}$
 \end_inset
 
@@ -257,13 +256,13 @@ key "A-T-B-S-2011"
 \end_inset
 
  and references therein.
+ Once such approximation technique is HARDI.
+ 
 \end_layout
 
 \begin_layout Standard
-Because of the limitations of DTI, HARDI techniques are used to resolve
- complex structures.
- These techniques usually aim to recover only angular information about
- the EAP, which is contained in a radial integral of the EAP.
+HARDI techniques recover angular information about the EAP, which is contained
+ in a radial integral of the EAP.
  While different definitions for the integration exist, we choose to follow
  the approach of 
 \begin_inset CommandInset citation
@@ -286,13 +285,12 @@ y distribution.
 A common feature of HARDI techniques is the need to recover from a set of
  noisy measurements a function defined on the unit sphere that exhibits
  localized behavior.
- This localized behavior arises because of the restricted diffusion of water
- molecules.
  Traditionally, spherical harmonics have been used to represent functions
  on the sphere.
  However, because of the global nature of spherical harmonics they are not
  efficient at representing functions with localized features.
- The framework we develop to recover the OPDF from measurements of 
+ We remark that the framework we develop to recover the OPDF from measurements
+ of 
 \begin_inset Formula $S$
 \end_inset
 
@@ -447,7 +445,7 @@ To develop a framework in which to approximate the OPDF, we start with a
 \begin_inset Formula $f$
 \end_inset
 
- can be expanded in terms of spherical harmonic as 
+ can be written as 
 \begin_inset Formula $f\left(\boldsymbol{\Omega}\right)=\sum_{l=0}^{L}\sum_{|m|\le l}f_{l}^{m}Y_{l}^{m}\left(\boldsymbol{\Omega}\right)$
 \end_inset
 
@@ -513,8 +511,8 @@ key "ATKI-HAN-2012"
 \end_inset
 
 .
- Because of the inherent symmetry in dMRI problems, we project onto only
- the even harmonics in 
+ Because of inherent symmetry in dMRI problems, we project onto only the
+ even harmonics in 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
@@ -610,26 +608,8 @@ Quadratures
 \end_layout
 
 \begin_layout Standard
-Equation
-\begin_inset space \space{}
-\end_inset
-
-Eq.
-\begin_inset space \space{}
-\end_inset
-
-(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:rkhs"
-
-\end_inset
-
-) represents the starting point from which we develop a computational algorithm
- for reconstructing the OPDF.
- While quadratures for Cartesian domains are relatively well developed,
- research in quadratures for the sphere remains an active area of research
- 
+While quadratures for Cartesian domains are relatively well developed, research
+ in quadratures for the sphere remains an active area of research 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "ATKI-HAN-2012"
@@ -747,7 +727,7 @@ Signal representation
 \end_layout
 
 \begin_layout Standard
-Aganj, Christophe,
+Aganj
 \shape italic
  et al.
 
@@ -759,14 +739,14 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
- showed that the ODE 
+ showed that the OPDF 
 \begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)=\int_{0}^{\infty}\! P\left(r\boldsymbol{\Omega};\tau\right)r^{2}dr$
 \end_inset
 
  can be approximated by
 \begin_inset Formula 
 \begin{equation}
-\Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\ln\left(-\ln\, S\left(\mathbf{q}\right)\right)\right\} \left(\boldsymbol{\Omega}\right)\label{eq:ODF}
+\Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\ln\left(-\ln\, S\left(\mathbf{q}\right)\right)\right\} \left(\boldsymbol{\Omega}\right),\label{eq:ODF}
 \end{equation}
 
 \end_inset
@@ -796,6 +776,22 @@ where a mono-exponential model was assumed for the radial dependence of
 \end_inset
 
  and does not contain any constant terms.
+ This is the reason we start the sum in Eq.
+\begin_inset space \space{}
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:even-kernel"
+
+\end_inset
+
+) at 
+\begin_inset Formula $l=2$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -854,19 +850,6 @@ reference "eq:ODF-kernels"
 
  is peaked in direction 
 \begin_inset Formula $\boldsymbol{\Omega}_{i}$
-\end_inset
-
-.
- Recall that the kernel 
-\begin_inset Formula $K_{e}$
-\end_inset
-
- does not contain the 
-\begin_inset Formula $l=0$
-\end_inset
-
- term and since it is even the lowest order harmonic present is 
-\begin_inset Formula $l=2$
 \end_inset
 
 .
@@ -1127,7 +1110,7 @@ We have in mind the case where
 \begin_inset Formula $N\ll M$
 \end_inset
 
-, that is we have many fewer measurements than coefficients and hence Eq.(
+, that is, we have many fewer measurements than coefficients and hence Eq.(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:sys-eqs"
@@ -1202,7 +1185,6 @@ As noted earlier, the significant coefficients
 
  where the OPDF is peaked.
  This can be used to simplify identifying peaks in the OPDF.
- Peak finding is accomplished by....
  
 \end_layout
 
@@ -1213,7 +1195,7 @@ Results
 \begin_layout Standard
 To validate the above framework, we simulated reconstructing two crossing
  fibers.
- The dMRI signal of two crossing fibers was modeled as two Gaussian, each
+ The dMRI signal of two crossing fibers was modeled as two Gaussians, each
  with equal volume fraction.
  Specifically, a synthetic signal was generated using 
 \begin_inset Formula $S\left(\mathbf{g}\right)=\left(e^{-b\,\mathbf{g}^{T}\mathbf{D}_{1}\mathbf{g}}+e^{-b\,\mathbf{g}^{T}\mathbf{D}_{2}\mathbf{g}}\right)/2$
@@ -1224,11 +1206,11 @@ To validate the above framework, we simulated reconstructing two crossing
 \end_inset
 
 , 
-\begin_inset Formula $\lambda_{1}=1700\times10^{-6}\,\mathrm{mm/s^{2}}$
+\begin_inset Formula $\lambda_{1}=1800\times10^{-6}\,\mathrm{mm/s^{2}}$
 \end_inset
 
 , 
-\begin_inset Formula $\lambda_{2}=\lambda_{3}=300\times10^{-6}\,\mathrm{mm/s^{2}}$
+\begin_inset Formula $\lambda_{2}=\lambda_{3}=200\times10^{-6}\,\mathrm{mm/s^{2}}$
 \end_inset
 
  is the diffusion tensor and 
@@ -1245,14 +1227,18 @@ To validate the above framework, we simulated reconstructing two crossing
 
 .
  To the signal we added Rician noise at a level of 
-\begin_inset Formula $\mathrm{SNR}=XX$
+\begin_inset Formula $\mathrm{SNR}=5$
 \end_inset
 
-, where we take 
-\begin_inset Formula $SNR=S_{m}/\sigma$
+, where we take the definition of 
+\begin_inset Formula $SNR$
 \end_inset
 
- with 
+ to be 
+\begin_inset Formula $S_{m}/\sigma$
+\end_inset
+
+, with 
 \begin_inset Formula $S_{m}$
 \end_inset
 
@@ -1261,8 +1247,8 @@ To validate the above framework, we simulated reconstructing two crossing
 \end_inset
 
  the standard deviation of the Gaussian noise.
- To test the crossing angle resolution of the method, we then rotated one
- fiber so that the crossing angle ranged from 
+ To test angular resolution of the method, we then rotated one fiber so
+ that the crossing angle ranged from 
 \begin_inset Formula $30$
 \end_inset
 
@@ -1282,7 +1268,7 @@ To validate the above framework, we simulated reconstructing two crossing
 
 \begin_layout Standard
 With 
-\begin_inset Formula $L=8$
+\begin_inset Formula $L=10$
 \end_inset
 
 , a quadrature from 
@@ -1293,15 +1279,15 @@ key "AHR-BEY-2009"
 \end_inset
 
  with 
-\begin_inset Formula $M=132$
+\begin_inset Formula $M=192$
 \end_inset
 
 , which exactly integrates spherical harmonics of maximum degree 
-\begin_inset Formula $19$
+\begin_inset Formula $23$
 \end_inset
 
 , was used to create the 
-\begin_inset Formula $132$
+\begin_inset Formula $192$
 \end_inset
 
  functions using Eq.
@@ -1343,7 +1329,7 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-) were found using a simplex method in Scikit-learn.
+) were found by...
  The estimated fiber crossing angle was then taken to be the angle between
  peaks in Eq.
 \begin_inset space \space{}
@@ -1361,18 +1347,11 @@ reference "eq:ODF-kernels"
 \end_layout
 
 \begin_layout Standard
-To compare our method, we also performed reconstructions based on the algorithms
- in 
+To compare our method against existing techniques, we also performed reconstruct
+ions based on the algorithms in 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "A-L-G-E-K-2010"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "D-A-F-D-2007"
 
 \end_inset
 
@@ -1395,7 +1374,7 @@ reference "fig:Angle.."
 
 \end_inset
 
-), we denote these methods by, respectively, AG-SH, QB and TV-SH.
+), we denote these methods by, respectively, AG-SH and TV-SH.
  Note that the method presented in this paper is essentially that of 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -1414,11 +1393,31 @@ reference "eq:kernels-in-q-space"
 
 \end_inset
 
-) centered at appropriately chosen locations (quadrature points).
+) centered at appropriately chosen locations (quadrature points) on the
+ sphere.
+ In Fig.
+\begin_inset space \space{}
+\end_inset
+
+(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Angle.."
+
+\end_inset
+
+) we denote results based on the new formulation as AG-SK.
 \end_layout
 
 \begin_layout Standard
-Figure shows the results of 
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Angle.."
+
+\end_inset
+
+ shows the results of 
 \begin_inset Formula $50$
 \end_inset
 
@@ -1429,20 +1428,6 @@ Figure shows the results of
 \end_inset
 
  simulations recorded.
- The average absolute value of the error in estimated crossing angle is
- plotted, along with error bars at one standard deviation.
- To further test the robustness of the new algorithm, for each simulation
- 
-\begin_inset Formula $5$
-\end_inset
-
- measurements were chosen at random and removed.
- Thus, the reconstruction was done with only 
-\begin_inset Formula $61$
-\end_inset
-
- measurements.
- This is denoted SK-5 in the figure.
  
 \begin_inset Float figure
 wide false
@@ -1453,7 +1438,7 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename figs/results.pdf
+	filename figs/model_comparison_snr5.00.pdf
 	width 3.75in
 	height 3in
 	BoundingBox 100bp 0bp 1165bp 613bp
@@ -1507,13 +1492,7 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-For crossing angles of less than 
-\begin_inset Formula $50$
-\end_inset
-
- degrees, Q-balls based on spherical harmonics could not resolve the crossing
- angle.
- From Fig.
+From Fig.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
