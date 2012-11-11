@@ -135,9 +135,9 @@ et al
 \shape default
 ., we develop a new mathematical framework for implementing HARDI.
  In contrast to traditional methods based on spherical harmonics, the framework
- developed is based on a reproducing kernel formalism combined with recently
- developed Gaussian-like quadratures for the sphere.
- This leads to an efficient and sparse representation for HARDI estimators.
+ is based on a reproducing kernel formalism combined with recently developed
+ Gaussian-like quadratures for the sphere, which leads to an efficient and
+ sparse representation for HARDI estimators.
  We demonstrate that the new framework results in reconstructions that are
  more robust to noise and have better angular resolution, compared to using
  a spherical harmonic based reconstruction.
@@ -158,15 +158,14 @@ key "STEJ-TANN-1965"
 
 , diffusion magnetic resonance imaging (dMRI) has become a key tool in understan
 ding complex structural aspects of white matter in the brain.
- As measurement techniques have improved, initial reconstruction algorithms
- such as Diffusion Tensor Imaging (DTI) have been shown to be limited in
- their ability to resolve complex structures.
- This has lead to a class of algorithms known as High Angular Resolution
- Diffusion Imaging (HARDI).
- This class of algorithms aims primarily to reconstruct angular information
- about the underlying neural structures.
- Because of restricted diffusion of water molecules along these neural structure
-s, angular information is typically localized to certain directions.
+ With measurement techniques improving, initial reconstruction algorithms
+ such as Diffusion Tensor Imaging (DTI) were shown to be limited in their
+ ability to resolve complex structures.
+ This lead to a class of algorithms known as High Angular Resolution Diffusion
+ Imaging (HARDI), which aims primarily to reconstruct angular information
+ about underlying neural structures.
+ Because of restricted diffusion of water molecules along these structures,
+ angular information is typically localized to certain directions.
  Thus, within the HARDI framework, there is need to develop reconstruction
  algorithms that can accurately and efficiently capture localized angular
  information.
@@ -203,11 +202,7 @@ Signal attenuation
 \begin_inset Formula $\mathcal{F}$
 \end_inset
 
- is the 
-\begin_inset Formula $3D$
-\end_inset
-
- Fourier transform, 
+ is the 3-D Fourier transform, 
 \begin_inset Formula $\mathbf{q}=\gamma\delta\mathbf{G}/2\pi$
 \end_inset
 
@@ -240,29 +235,27 @@ key "CALLAHAN-1991"
 \end_inset
 
 .
- To invert the Fourier transform all of 3D 
+ To invert the Fourier transform all of 3-D 
 \begin_inset Formula $q$
 \end_inset
 
 -space must be sampled.
  This is typically too costly for clinical applications and hence various
- approximations have been developed.
- For a discussion of many of the approximate techniques, see, for example,
- 
+ approximations have been developed (see 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "A-T-B-S-2011"
 
 \end_inset
 
- and references therein.
- Once such approximation technique is HARDI.
+ for examples).
+ One such an approximation technique is HARDI.
  
 \end_layout
 
 \begin_layout Standard
-HARDI techniques recover angular information about the EAP through a radial
- integral of the EAP.
+HARDI techniques recover angular information about the EAP through its radial
+ integral.
  While different definitions for the integration exist, we choose to follow
  the approach of 
 \begin_inset CommandInset citation
@@ -286,9 +279,8 @@ A common feature of HARDI techniques is the need to recover from a set of
  noisy measurements a function defined on the unit sphere that exhibits
  localized behavior.
  Traditionally, spherical harmonics have been used to represent functions
- on the sphere.
- However, because of the global nature of spherical harmonics they are not
- efficient at representing functions with localized features.
+ on the sphere, but because of their global nature they are not efficient
+ at representing functions with localized features.
  We remark that the framework we develop has similarities to the work of
  
 \begin_inset CommandInset citation
@@ -297,7 +289,7 @@ key "MICH-RATH-2010,VEGA-WEST-2011"
 
 \end_inset
 
-, but with important differences to be discussed below.
+, but with important differences discussed below.
 \end_layout
 
 \begin_layout Subsection
@@ -309,15 +301,15 @@ Since the OPDF is defined on the unit sphere
 \begin_inset Formula $\mathbb{S}^{2}$
 \end_inset
 
-, a natural starting point for its recovery are the spherical harmonics,
- which are an orthonormal basis for the space of square integrable functions
- on the sphere, 
+, a natural starting point for its recovery are the spherical harmonics---an
+ orthonormal basis for the space of square integrable functions on the sphere,
+ 
 \begin_inset Formula $L^{2}\left(\mathbb{S}^{2}\right)$
 \end_inset
 
 .
- Here we simply collect relevant properties of spherical harmonics, which
- can be found, for example, in 
+ Here, we simply collect relevant properties of spherical harmonics which
+ can be found in, e.g., 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "ATKI-HAN-2012"
@@ -350,7 +342,7 @@ key "ATKI-HAN-2012"
 \end_inset
 
 .
- Here 
+ Here, 
 \begin_inset Formula $0\le\theta<\pi$
 \end_inset
 
@@ -402,7 +394,7 @@ key "ATKI-HAN-2012"
 \end_inset
 
  is the eigenvalue.
- This can then be used to find the action of the so-called Funk-Radon transform
+ This can be used to find the action of the so-called Funk-Radon transform
  
 \begin_inset Formula $\mathcal{G}f\left(\mathbf{u}\right)=\int_{\mathbb{S}^{2}}\!\delta\left(\mathbf{u}\cdot\mathbf{v}\right)f\left(\mathbf{v}\right)d\mathbf{v}$
 \end_inset
@@ -507,8 +499,8 @@ key "ATKI-HAN-2012"
 \end_inset
 
 .
- Because of inherent symmetry in dMRI problems, we project onto only the
- even harmonics in 
+ Because of inherent symmetry in dMRI, we project onto only the even harmonics
+ in 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
@@ -578,7 +570,7 @@ reference "eq:even-kernel"
 \begin_inset Formula $l=2$
 \end_inset
 
- so that we explicitly remove any constant term from 
+ to explicitly remove any constant term from 
 \begin_inset Formula $f$
 \end_inset
 
@@ -613,15 +605,15 @@ key "ATKI-HAN-2012"
 \end_inset
 
 .
- The difficulty in developing quadratures for the sphere, and hence associated
- sampling algorithms, arises because of the topology of the sphere.
+ The difficulty in developing such quadratures, and hence associated sampling
+ algorithms, arises because of the topology of the sphere.
  This is reflected in the fact that at most only 20 points can be uniformly
  distributed on the sphere.
  Said differently, a set of 21 or more points on the sphere must necessarily
  be unevenly distributed.
  Moreover, while Gaussian quadratures for Cartesian domains exist and are
- well known, it was only recently proven that, in contrast, Gaussian quadratures
- for the sphere in fact do not exist 
+ well known, it was only recently proven that Gaussian quadratures for the
+ sphere do not, in fact, exist 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "BAN-DAM-1979"
@@ -651,19 +643,10 @@ key "AHR-BEY-2009"
 \end_inset
 
 .
- These new quadratures are invariant under icosahedral rotations and hence
- do not cluster like other quadratures.
- More importantly, they are very efficient (nearly Gaussian) and they exactly
+ Unlike other approaches, these new quadratures are invariant under icosahedral
+ rotations and hence do not cluster.
+ More importantly, they are highly efficient (nearly Gaussian) and exactly
  integrate subspaces of spherical harmonics.
- See 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "AHR-BEY-2009"
-
-\end_inset
-
- for further details.
- 
 \end_layout
 
 \begin_layout Standard
@@ -702,7 +685,7 @@ reference "eq:rkhs"
 \end_inset
 
 .
- Note that this is an exact representation for even functions in 
+ This is an exact representation for even functions in 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
@@ -735,11 +718,15 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
- showed that the OPDF 
-\begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)=\int_{0}^{\infty}\! P\left(r\boldsymbol{\Omega};\tau\right)r^{2}dr$
+ showed that the OPDF, 
+\begin_inset Formula 
+\[
+\Phi\left(\boldsymbol{\Omega}\right)=\int_{0}^{\infty}\! P\left(r\boldsymbol{\Omega};\tau\right)r^{2}dr,
+\]
+
 \end_inset
 
- can be approximated by
+can be approximated by
 \begin_inset Formula 
 \begin{equation}
 \Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\ln\left(-\ln\, S\left(\mathbf{q}\right)\right)\right\} \left(\boldsymbol{\Omega}\right),\label{eq:ODF}
@@ -771,8 +758,8 @@ where a mono-exponential model was assumed for the radial dependence of
 \begin_inset Formula $\boldsymbol{\Omega}$
 \end_inset
 
- and does not contain any constant terms.
- This is the reason we start the sum in Eq.
+ and does not contain any constant terms, and is the reason we start the
+ sum in Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -884,7 +871,7 @@ H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\equiv-\frac{1}
 
 \end_inset
 
-By construction we  have 
+By construction 
 \family roman
 \series medium
 \shape up
@@ -900,7 +887,7 @@ By construction we  have
 \begin_inset Formula $\mathcal{G}\left\{ \Delta_{b}H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\right\} =K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)$
 \end_inset
 
- and hence solving Eqs.
+ and, hence, solving Eqs.
 \family default
 \series default
 \shape default
@@ -939,7 +926,7 @@ reference "eq:sys-eqs"
 \begin_inset Formula $\left\{ \Phi_{i}\right\} _{i=1}^{M}$
 \end_inset
 
- automatically yields Eq.
+ yields Eq.
 \family default
 \series default
 \shape default
@@ -992,8 +979,8 @@ reference "eq:ODF-kernels"
 \end_inset
 
  can be verified using the Addition Theorem, the Funk-Hecke formula, the
- Funk-Radon transform and that the spherical harmonics are eigenfunctions
- of the Laplace-Beltrami operator.
+ Funk-Radon transform and the fact that the spherical harmonics are eigenfunctio
+ns of the Laplace-Beltrami operator.
  
 \begin_inset Float figure
 wide false
@@ -1005,7 +992,7 @@ status open
 \begin_inset Graphics
 	filename figs/kernels.pdf
 	scale 50
-	BoundingBox 0bp 50bp 400bp 320bp
+	BoundingBox 0bp 70bp 400bp 320bp
 
 \end_inset
 
@@ -1016,6 +1003,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:kernels"
+
+\end_inset
+
 Kernels Eq.
 \begin_inset space \space{}
 \end_inset
@@ -1056,15 +1049,30 @@ reference "eq:kernels-in-q-space"
 
 \end_inset
 
-Figure 1 shows a plot of 
+Fig.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:kernels"
+
+\end_inset
+
+ shows a plot of 
 \begin_inset Formula $K_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
+\end_inset
+
+ as well 
+\begin_inset Formula $H_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
 \end_inset
 
  for degree 
 \begin_inset Formula $L=8$
 \end_inset
 
- and 
+ with 
 \begin_inset Formula $\hat{e}_{z}$
 \end_inset
 
@@ -1072,11 +1080,7 @@ Figure 1 shows a plot of
 \begin_inset Formula $z$
 \end_inset
 
- direction and the corresponding function 
-\begin_inset Formula $H_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
-\end_inset
-
-.
+ direction.
  We see that 
 \begin_inset Formula $K_{e}$
 \end_inset
@@ -1089,7 +1093,7 @@ Figure 1 shows a plot of
 \begin_inset Formula $-\hat{e}_{z}$
 \end_inset
 
- and decays quickly as one moves away from these directions.
+ and decays rapidly.
  The function 
 \begin_inset Formula $H_{e}\left(\boldsymbol{\Omega}\cdot\hat{e}_{z}\right)$
 \end_inset
@@ -1106,7 +1110,11 @@ We have in mind the case where
 \begin_inset Formula $N\ll M$
 \end_inset
 
-, that is, we have many fewer measurements than coefficients and hence Eq.(
+, that is, we have many fewer measurements than coefficients and hence Eq.
+\begin_inset space ~
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:sys-eqs"
@@ -1139,18 +1147,14 @@ where
 
  are regularization parameters.
  We use the elastic net solver in the Python software package scikit-learn
- (
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://scikit-learn.org
-\end_layout
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "scikit-learn"
 
 \end_inset
 
-) to solve Eq.
+ to solve Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -1182,7 +1186,7 @@ reference "eq:ODF-kernels"
 \end_layout
 
 \begin_layout Standard
-As noted earlier, the significant coefficients 
+As noted earlier, significant coefficients 
 \begin_inset Formula $\Phi_{i}$
 \end_inset
 
@@ -1190,8 +1194,9 @@ As noted earlier, the significant coefficients
 \begin_inset Formula $\boldsymbol{\Omega}_{i}$
 \end_inset
 
- where the OPDF is peaked.
- This can be used to simplify identifying peaks in the OPDF.
+ near OPDF peaks.
+ These directions can therefore be used as starting positions for finding
+ peaks in the OPDF.
  
 \end_layout
 
@@ -1200,10 +1205,9 @@ Results
 \end_layout
 
 \begin_layout Standard
-To validate the above framework, we simulated reconstructing two crossing
- fibers.
- The dMRI signal of two crossing fibers was modeled as two Gaussians, each
- with equal volume fraction.
+To validate the above framework, we simulated recovering the angle of two
+ crossing fibers, the dMRI signal of which can be modeled as the sum of
+ two Gaussians with equal volume fraction.
  Specifically, a synthetic signal was generated using 
 \begin_inset Formula $S\left(\mathbf{g}\right)=\left(e^{-b\,\mathbf{g}^{T}\mathbf{D}_{1}\mathbf{g}}+e^{-b\,\mathbf{g}^{T}\mathbf{D}_{2}\mathbf{g}}\right)/2$
 \end_inset
@@ -1220,7 +1224,7 @@ To validate the above framework, we simulated reconstructing two crossing
 \begin_inset Formula $\lambda_{2}=\lambda_{3}=200\times10^{-6}\,\mathrm{mm/s^{2}}$
 \end_inset
 
- is the diffusion tensor and 
+ is the diffusion tensor, 
 \begin_inset Formula $\mathbf{D}_{2}$
 \end_inset
 
@@ -1228,34 +1232,34 @@ To validate the above framework, we simulated reconstructing two crossing
 \begin_inset Formula $\mathbf{D}_{1}$
 \end_inset
 
- and 
+, and 
 \begin_inset Formula $b=3000\:\mathrm{s/mm^{2}}$
 \end_inset
 
 .
  To the signal we added Rician noise at a level of 
-\begin_inset Formula $\mathrm{SNR}=5$
+\begin_inset Formula $\mathrm{PSNR}=20$
 \end_inset
 
-, where we take the definition of 
-\begin_inset Formula $\mathrm{SNR}$
+, with 
+\begin_inset Formula $\mathrm{PSNR}$
 \end_inset
 
- to be 
+ defined to be 
 \begin_inset Formula $S_{m}/\sigma$
 \end_inset
 
 , with 
-\begin_inset Formula $S_{m}$
+\begin_inset Formula $S_{m}=1$
 \end_inset
 
  the signal maximum and 
 \begin_inset Formula $\sigma$
 \end_inset
 
- the standard deviation of the Gaussian noise.
- To test angular resolution of the method, we then rotated one fiber so
- that the crossing angle ranged from 
+ the standard deviation of the Gaussian noise components.
+ To test the method's angular resolution, the crossing angle was increased
+ from 
 \begin_inset Formula $30$
 \end_inset
 
@@ -1268,7 +1272,7 @@ To validate the above framework, we simulated reconstructing two crossing
 \begin_inset Formula $N=64$
 \end_inset
 
- locations, corresponding to an electrostatic repulsion set of directions
+ locations, corresponding to a set of electrostatic repulsion directions
  found in Siemens scanners.
  
 \end_layout
@@ -1289,7 +1293,7 @@ key "AHR-BEY-2009"
 \begin_inset Formula $M=192$
 \end_inset
 
-, which exactly integrates spherical harmonics of maximum degree 
+ that exactly integrates spherical harmonics of maximum degree 
 \begin_inset Formula $23$
 \end_inset
 
@@ -1326,15 +1330,15 @@ reference "eq:l1-penalized-l2"
 
 .
  We found empirically that 
-\begin_inset Formula $\alpha=0.0005$
+\begin_inset Formula $\alpha=5\mathrm{e}-4$
 \end_inset
 
  and 
 \begin_inset Formula $\rho=0.99$
 \end_inset
 
- worked well, and are fairly insensitive to perturbation.
- Once these coefficients were determined, peaks in Eq.
+ worked well.
+ With these coefficients determined, peaks in Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -1345,10 +1349,10 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-) were found by comparing the ODPF at 10242 positions on the sphere, obtained
- by subdivision of the unit icosahedron.
- The estimated fiber crossing angle was then taken to be the angle between
- peaks in Eq.
+) were found by comparing OPDF values in 10242 positions on the sphere,
+ obtained by subdivision of the unit icosahedron.
+ The estimated fiber crossing angle was taken to be the angle between peaks
+ in Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -1371,23 +1375,12 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
-, as shown in Fig.
-\begin_inset space \space{}
-\end_inset
-
-(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Angle.."
-
-\end_inset
-
-).
- We found that using spherical harmonics of maximum degree 
+, which yielded best results using spherical harmonics of maximum degree
+ 
 \begin_inset Formula $6$
 \end_inset
 
- gave the best results (this is also recommended by 
+, as suggested by 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "TRI-WES-2010"
@@ -1402,8 +1395,7 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
-, but instead of using spherical harmonics we sparsely fit the functions
- from Eq.
+, but using sparsely fit localized functions from Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -1414,25 +1406,45 @@ reference "eq:kernels-in-q-space"
 
 \end_inset
 
-), centered at appropriately chosen locations (quadrature points) on the
- sphere.
- 
+) instead of spherical harmonics, centered at appropriately chosen locations
+ (quadrature points) on the sphere.
 \end_layout
 
 \begin_layout Standard
-Figure 
+Results, summarizing 50 attempts at recovering each crossing angle, are
+ shown in Fig.
+\begin_inset space \space{}
+\end_inset
+
+(
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Angle.."
 
 \end_inset
 
- shows the results of 
-\begin_inset Formula $50$
+).
+ Note that the reconstruction algorithm outlined above (hereafter referred
+ to as the sparse kernel algorithm) results in significantly better angular
+ resolution when the crossing angle is between 
+\begin_inset Formula $30^{\circ}$
 \end_inset
 
- simulated reconstructions.
+ and approximately 
+\begin_inset Formula $45^{\circ}$
+\end_inset
+
+.
+ For crossing angles greater than approximately 
+\begin_inset Formula $45^{\circ}$
+\end_inset
+
+, the spherical harmonics based algorithms and sparse kernel algorithm have
+ approximately the same average angular error.
  
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide true
 sideways false
@@ -1443,8 +1455,8 @@ status open
 \align center
 \begin_inset Graphics
 	filename figs/model_comparison_snr20.00_B3000.png
-	width 83text%
-	BoundingBox 150bp 0bp 900bp 325bp
+	lyxscale 30
+	width 100text%
 
 \end_inset
 
@@ -1474,8 +1486,8 @@ key "A-L-G-E-K-2010"
 sparse kernel model
 \emph default
 ).
- The solid lines represent the error means, while the box plots indicate
- first and third error quartiles (box) and outliers (whiskers).
+ The solid lines represent error means, while the box plots indicate first
+ and third error quartiles (box) and outliers (whiskers).
 \end_layout
 
 \end_inset
@@ -1485,32 +1497,7 @@ sparse kernel model
 
 \end_inset
 
-From Fig.
- (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Angle.."
 
-\end_inset
-
-) we see that using the reconstruction algorithm outlined above (hereafter
- referred to as the sparse kernel algorithm) results in significantly better
- angular resolution when the crossing angle is between 
-\begin_inset Formula $30\,\mathrm{deg}$
-\end_inset
-
- and approximately 
-\begin_inset Formula $45\,\mathrm{deg}$
-\end_inset
-
-.
- For crossing angles greater than approximately 
-\begin_inset Formula $45\,\mathrm{deg}$
-\end_inset
-
-, the spherical harmonics based algorithms and sparse kernel algorithm have
- approximately the same average angular error.
- 
 \end_layout
 
 \begin_layout Section
@@ -1561,7 +1548,7 @@ key "MICH-RATH-2010,VEGA-WEST-2011"
 \begin_layout Standard
 We plan to further develop and test the algorithm against various other
  approaches and report results in a future publication.
- The code and data needed to reproduce this paper is publicly available
+ The code and data needed to reproduce this paper are publicly available
  at 
 \begin_inset Flex URL
 status collapsed
@@ -1579,7 +1566,7 @@ http://bit.ly/ahrens_etal_ISBI2013
 \begin_layout Standard
 
 \series bold
-Acknowledgements
+Acknowledgments
 \series default
  The authors would like to thank B.
  Amirbekian, A.
@@ -1596,7 +1583,7 @@ http://dipy.org
 
 \end_inset
 
-) on which our work is based.
+) on which our work is built.
 \end_layout
 
 \begin_layout Standard
