@@ -1138,8 +1138,19 @@ where
 \end_inset
 
  are regularization parameters.
- We use the elastic net solver in the Python software package Scikit-learn
- (http://scikit-learn.org) to solve Eq.
+ We use the elastic net solver in the Python software package scikit-learn
+ (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://scikit-learn.org
+\end_layout
+
+\end_inset
+
+) to solve Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -1315,14 +1326,14 @@ reference "eq:l1-penalized-l2"
 
 .
  We found empirically that 
-\begin_inset Formula $\alpha=$
+\begin_inset Formula $\alpha=0.0005$
 \end_inset
 
  and 
-\begin_inset Formula $\rho=$
+\begin_inset Formula $\rho=0.99$
 \end_inset
 
- worked well.
+ worked well, and are fairly insensitive to perturbation.
  Once these coefficients were determined, peaks in Eq.
 \begin_inset space \space{}
 \end_inset
@@ -1334,13 +1345,8 @@ reference "eq:ODF-kernels"
 
 \end_inset
 
-) were found by 
-\size large
-\color yellow
-Stefan...
-
-\size default
-\color inherit
+) were found by comparing the ODPF at 10242 positions on the sphere, obtained
+ by subdivision of the unit icosahedron.
  The estimated fiber crossing angle was then taken to be the angle between
  peaks in Eq.
 \begin_inset space \space{}
@@ -1358,22 +1364,14 @@ reference "eq:ODF-kernels"
 \end_layout
 
 \begin_layout Standard
-To compare our method against existing techniques, we also performed reconstruct
-ions based on the algorithms in 
+We compared our method with reconstructions based on 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "A-L-G-E-K-2010"
 
 \end_inset
 
- and 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "TRI-WES-2010"
-
-\end_inset
-
- using spherical harmonics, which we denote in Fig.
+, as shown in Fig.
 \begin_inset space \space{}
 \end_inset
 
@@ -1384,13 +1382,19 @@ reference "fig:Angle.."
 
 \end_inset
 
-) by AG-SH and TV-SH, respectively.
- We found that for our simulations, using spherical harmonics of maximum
- degree 
-\begin_inset Formula $8$
+).
+ We found that using spherical harmonics of maximum degree 
+\begin_inset Formula $6$
 \end_inset
 
- gave the best results for AG-SH and TV-SH.
+ gave the best results (this is also recommended by 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "TRI-WES-2010"
+
+\end_inset
+
+.
  Note that the method presented in this paper is essentially that of 
 \begin_inset CommandInset citation
 LatexCommand citep
@@ -1398,7 +1402,8 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
-, but instead of using spherical harmonics we use the functions from Eq.
+, but instead of using spherical harmonics we sparsely fit the functions
+ from Eq.
 \begin_inset space \space{}
 \end_inset
 
@@ -1409,20 +1414,8 @@ reference "eq:kernels-in-q-space"
 
 \end_inset
 
-) centered at appropriately chosen locations (quadrature points) on the
+), centered at appropriately chosen locations (quadrature points) on the
  sphere.
- In Fig.
-\begin_inset space \space{}
-\end_inset
-
-(
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Angle.."
-
-\end_inset
-
-) we denote results based on the new formulation as AG-SK.
  
 \end_layout
 
@@ -1449,9 +1442,8 @@ status open
 \noindent
 \align center
 \begin_inset Graphics
-	filename figs/model_comparison_snr5.00.pdf
-	width 5.75in
-	height 3.25in
+	filename figs/model_comparison_snr20.00_B3000.png
+	width 83text%
 	BoundingBox 150bp 0bp 900bp 325bp
 
 \end_inset
@@ -1469,15 +1461,21 @@ name "fig:Angle.."
 
 \end_inset
 
-Results of Monte Carlo simulation of estimating the angle between two fibers.
- 
-\size large
-\color yellow
-Stefan...please describe boxes...
+Results of a Monte Carlo simulation estimating the angle between two fibers,
+ based on the OPDF recovered respectively by 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "A-L-G-E-K-2010"
 
-\size default
-\color inherit
- 
+\end_inset
+
+ and this paper (
+\emph on
+sparse kernel model
+\emph default
+).
+ The solid lines represent the error means, while the box plots indicate
+ first and third error quartiles (box) and outliers (whiskers).
 \end_layout
 
 \end_inset
@@ -1552,15 +1550,8 @@ key "MICH-RATH-2010,VEGA-WEST-2011"
 \end_inset
 
 , which are based on spherical wavelets.
- Because of our use of efficient, Gaussian-like quadratures, the algorithm
- developed here is more efficient than those found in 
-\begin_inset CommandInset citation
-LatexCommand citep
-key "MICH-RATH-2010,VEGA-WEST-2011"
-
-\end_inset
-
-.
+ Because of our use of efficient, Gaussian-like quadratures, fewer basis
+ functions are required, resulting in a more efficient algorithm.
  Moreover, because of the use of exact quadratures and the reproducing kernel
  framework, we can say precisely in what subspace our reconstructed signal
  lies.
@@ -1568,16 +1559,44 @@ key "MICH-RATH-2010,VEGA-WEST-2011"
 \end_layout
 
 \begin_layout Standard
-We plan to further develop and test the algorithm and report results in
- a future publication.
- 
-\size large
-\color yellow
-Stefan...where to get the codes...
+We plan to further develop and test the algorithm against various other
+ approaches and report results in a future publication.
+ The code and data needed to reproduce this paper is publicly available
+ at 
+\begin_inset Flex URL
+status collapsed
 
-\size default
-\color inherit
- 
+\begin_layout Plain Layout
+
+http://bit.ly/ahrens_etal_ISBI2013
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Acknowledgements
+\series default
+ The authors would like to thank B.
+ Amirbekian, A.
+ Rokem and E.
+ Garyfallidis for their contributions to the Diffusion Imaging in Python
+ project (
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://dipy.org
+\end_layout
+
+\end_inset
+
+) on which our work is based.
 \end_layout
 
 \begin_layout Standard
