@@ -139,8 +139,8 @@ et al
  Gaussian-like quadratures for the sphere, which leads to an efficient and
  sparse representation for HARDI estimators.
  We demonstrate that the new framework results in reconstructions that are
- more robust to noise and have better angular resolution, compared to using
- a spherical harmonic based reconstruction.
+ more robust to noise and have better angular resolution, compared to spherical
+ harmonic based reconstructions.
  
 \end_layout
 
@@ -222,7 +222,7 @@ Signal attenuation
 \begin_inset Formula $P\left(\mathbf{r};\tau\right)$
 \end_inset
 
- is the so-called ensemble average propagator (EAP) 
+ is the ensemble average propagator (EAP) 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "CALLAHAN-1991"
@@ -241,15 +241,16 @@ key "CALLAHAN-1991"
 
 -space must be sampled.
  This is typically too costly for clinical applications and hence various
- approximations have been developed (see 
+ approximations have been developed (see e.g.
+ 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "A-T-B-S-2011"
 
 \end_inset
 
- for examples).
- One such an approximation technique is HARDI.
+).
+ One such approximation technique is HARDI.
  
 \end_layout
 
@@ -269,9 +270,9 @@ key "A-L-G-E-K-2010"
 \end_inset
 
  weighting in the radial integral.
- With this weighting, one arrives at the so-called Orientation Probability
- Distribution Function (OPDF), which can be interpreted as a marginal probabilit
-y distribution.
+ With this weighting, one arrives at the Orientation Probability Distribution
+ Function (OPDF), which can be interpreted as a marginal probability distributio
+n.
 \end_layout
 
 \begin_layout Standard
@@ -370,7 +371,7 @@ key "ATKI-HAN-2012"
 
  degree Legendre polynomial and the over-bar denotes complex conjugation.
  In addition, spherical harmonics are eigenfunctions of the Laplace-Beltrami
- (Laplacian in spherical coordinates) operator on the sphere: 
+ operator on the sphere: 
 \begin_inset Formula $\Delta_{b}Y_{l}^{m}\left(\theta,\phi\right)=-l\left(l+1\right)Y_{l}^{m}\left(\theta,\phi\right)$
 \end_inset
 
@@ -451,7 +452,7 @@ To develop a framework in which to approximate the OPDF, we start with a
 \end_inset
 
  into this expansion, interchanging summation and integration and using
- the Addition Theorem, we arrive at the so-called reproducing identity 
+ the Addition Theorem, we arrive at the reproducing identity 
 \begin_inset CommandInset citation
 LatexCommand citep
 key "ARON-1950"
@@ -467,19 +468,15 @@ f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\! K\left(\boldsymbol{\Om
 \end_inset
 
 with 
-\begin_inset Formula 
-\begin{equation}
-K\left(\mu\right)=\sum_{l=0}^{L}\frac{2l+1}{4\pi}P_{l}\left(\mu\right)\label{eq:rk}
-\end{equation}
-
+\begin_inset Formula $K\left(\mu\right)=\sum_{l=0}^{L}\frac{2l+1}{4\pi}P_{l}\left(\mu\right)$
 \end_inset
 
-the reproducing kernel for 
+ the reproducing kernel for 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
 .
- It can be shown that the integral operator 
+ It can be shown that the operator 
 \begin_inset Formula $\int_{\mathbb{S}^{2}}K\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)\left(\cdot\right)d\boldsymbol{\Omega}'$
 \end_inset
 
@@ -647,6 +644,23 @@ key "AHR-BEY-2009"
  rotations and hence do not cluster.
  More importantly, they are highly efficient (nearly Gaussian) and exactly
  integrate subspaces of spherical harmonics.
+ In fact, to represent functions in 
+\begin_inset Formula $\mathcal{H}_{L}$
+\end_inset
+
+ one needs (asymptotically) only 
+\begin_inset Formula $\sim4L^{2}/3$
+\end_inset
+
+ points.
+ See 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "AHR-BEY-2009"
+
+\end_inset
+
+ for more details.
 \end_layout
 
 \begin_layout Standard
@@ -718,15 +732,11 @@ key "A-L-G-E-K-2010"
 
 \end_inset
 
- showed that the OPDF, 
-\begin_inset Formula 
-\[
-\Phi\left(\boldsymbol{\Omega}\right)=\int_{0}^{\infty}\! P\left(r\boldsymbol{\Omega};\tau\right)r^{2}dr,
-\]
-
+ showed that the OPDF 
+\begin_inset Formula $\Phi\left(\boldsymbol{\Omega}\right)=\int_{0}^{\infty}\! P\left(r\boldsymbol{\Omega};\tau\right)r^{2}dr$
 \end_inset
 
-can be approximated by
+ can be approximated by
 \begin_inset Formula 
 \begin{equation}
 \Phi\left(\boldsymbol{\Omega}\right)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \Delta_{b}\ln\left(-\ln\, S\left(\mathbf{q}\right)\right)\right\} \left(\boldsymbol{\Omega}\right),\label{eq:ODF}
@@ -1330,7 +1340,7 @@ reference "eq:l1-penalized-l2"
 
 .
  We found empirically that 
-\begin_inset Formula $\alpha=5\mathrm{e}-4$
+\begin_inset Formula $\alpha=5\mathrm{\times10^{-4}}$
 \end_inset
 
  and 
