@@ -1,0 +1,85 @@
+% This file is modified by Frans Oliehoek <faolieho@science.uva.nl>
+% on 2005/12/18. (original file name: beamercolorthemedefault.sty)
+%
+
+
+% Copyright 2003 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% This program can be redistributed and/or modified under the terms
+% of the GNU Public License, version 2.
+
+\mode<presentation>
+
+\definecolor{ias_bluelight}{RGB}{153, 204, 255}
+\definecolor{ias_bluemid}{RGB}{122,163, 204}
+\definecolor{ias_bluedark}{RGB}{91, 121, 152}
+
+
+%the color for the IAS text in the left bottom
+\setbeamercolor*{ias_text}{fg=black}
+
+
+\setbeamercolor*{structure}{fg=ias_bluemid,bg=ias_bluedark}
+
+\setbeamercolor*{frametitle}{fg=white, bg=ias_bluemid}
+\setbeamercolor*{framesubtitle}{fg=ias_bluelight!50!white, bg=ias_bluedark}
+
+\setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg!75!black}
+\setbeamercolor{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg!75!black}
+\setbeamercolor{block title example}{use=example text,fg=white,bg=example text.fg!75!black}
+
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!10!bg}
+\setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!10!bg}
+\setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!10!bg}
+
+
+\setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
+\setbeamercolor*{palette quaternary}{fg=white,bg=black}
+
+
+
+
+% \setbeamercolor*{palette sidebar primary}{use=structure,fg=structure.fg!10}
+% \setbeamercolor*{palette sidebar secondary}{fg=red}
+% \setbeamercolor*{palette sidebar tertiary}{use=structure,fg=structure.fg!50}
+% \setbeamercolor*{palette sidebar quaternary}{fg=white}
+
+\setbeamercolor*{titlelike}{parent=palette primary}
+
+\setbeamercolor*{separation line}{}
+\setbeamercolor*{fine separation line}{}
+
+% the navigation symbols:
+\setbeamercolor{navigation symbols}{use=structure,fg=structure.fg!20!structure.bg}
+\setbeamercolor{navigation symbols dimmed}{use=structure,fg=structure.fg!20!structure.bg!40!ias_bluelight}
+
+
+% colors for sidebar navigation (if sidebarnav is used):
+
+% NOTE: sidebar.fg is used for the frametitle! (overrules previos def of frametitle..)
+%\setbeamercolor*{structure}{fg=ias_bluemid,bg=ias_bluedark}
+
+\setbeamercolor*{sidebar}{use=structure,fg=white,bg=structure.fg} % <- this is the background of the side bar
+  
+\setbeamercolor*{palette sidebar primary}{use=structure,fg=ias_bluelight!30!white,bg=sidebar.bg!95!white}
+\setbeamercolor*{palette sidebar secondary}{use=structure,fg=ias_bluelight!80!white,bg=structure.bg!95!white}%fg!75!black}
+
+% tertiary is used for the author:
+\setbeamercolor*{palette sidebar tertiary}{use=structure,fg=ias_bluelight!20!white,bg=structure.fg!50!black}
+\setbeamercolor*{palette sidebar quaternary}{fg=white,bg=black}
+
+
+\setbeamercolor*{section in sidebar shaded}{parent=palette sidebar primary}
+\setbeamercolor*{section in sidebar}
+  {parent=section in sidebar shaded,use={sidebar,section in sidebar shaded},fg=white,%
+   bg=sidebar.bg!70!section in sidebar shaded.fg}
+\setbeamercolor*{subsection in sidebar shaded}{parent=palette sidebar secondary}
+\setbeamercolor*{subsection in sidebar}
+  {parent=subsection in sidebar shaded,use=section in sidebar,fg=white,%
+   bg=section in sidebar.bg}
+
+
+\mode
+<all>
