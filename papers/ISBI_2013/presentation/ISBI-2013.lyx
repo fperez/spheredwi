@@ -124,7 +124,7 @@ frame{
 
  
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -147,21 +147,6 @@ status collapsed
 \end_inset
 
  
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%==========================================================%
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section*
@@ -189,17 +174,13 @@ LatexCommand tableofcontents
 Background
 \end_layout
 
-\begin_layout Subsection
-dMRI Technique
-\end_layout
-
 \begin_layout BeginFrame
 
 \end_layout
 
 \begin_layout Standard
-Diffusion MRI is a technique which can be used to determine “connectivity”
- in the brain 
+Diffusion MRI (dMRI) can be used to determine “connectivity” in the brain
+ 
 \shape italic
 in vivo
 \shape default
@@ -208,47 +189,7 @@ in vivo
 \end_layout
 
 \begin_layout Itemize
-dMRI can be used to estimate the likelihood of a pathway existing between
- two brain areas 
-\end_layout
-
-\begin_layout Itemize
-It cannot be used to determine whether synapses are formed between the axons
- in one brain area and the dendrites in another
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename axon_dendrite.jpg
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
+....
 \end_layout
 
 \begin_layout EndFrame
@@ -260,55 +201,19 @@ status open
 \end_layout
 
 \begin_layout Standard
-In dMRI, the signal is sensitized to the self-diffusion of water molecules.
- 
-\end_layout
-
-\begin_layout Itemize
-the homogeneity of the magnetic field is varied linearly using a pulsed
- field gradient 
-\end_layout
-
-\begin_layout Itemize
-a different gradient pulse is applied in the opposite direction but with
- the same magnitude 
-\end_layout
-
-\begin_layout Itemize
-the signal attenuation is localized by combining the pulsed gradients with
- “motion-probing” gradient pulses 
-\end_layout
-
-\begin_layout Standard
-Stejkal and Tanner (1965) provided the first theory for dMRI 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout Subsection
-Basic Formulation
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Diffusion MRI measurements are taken in the Fourier domain: 
+dMRI measurements are taken in the Fourier domain: 
 \end_layout
 
 \begin_layout Standard
 \align center
-\begin_inset Formula $E\left(\mathbf{k}\right)=\frac{s\left(\mathbf{k}\right)}{s_{0}}=\int_{\mathbb{R}^{3}}p\left(\mathbf{\Omega}\right)e^{i\mathbf{k}\cdot\mathbf{\Omega}}d^{3}\mathbf{\Omega}$
+\begin_inset Formula $E\left(\mathbf{q}\right)=\frac{s\left(\mathbf{q}\right)}{s_{0}}=\int_{\mathbb{R}^{3}}p\left({\bf r}\right)e^{i\mathbf{q}\cdot{\bf r}}d^{3}{\bf r}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\mathbf{k}\backsim$
+\begin_inset Formula $\mathbf{q}\propto$
 \end_inset
 
 applied magnetic field gradients 
@@ -328,7 +233,7 @@ Reconstruction of
 \noun off
 \color none
 
-\begin_inset Formula $p\left(\mathbf{\Omega}\right)$
+\begin_inset Formula $p\left({\bf r}\right)$
 \end_inset
 
 
@@ -343,21 +248,21 @@ Reconstruction of
 \uwave default
 \noun default
 \color inherit
-requires many samples in 
-\begin_inset Formula $\mathbf{k}$
+requires sampling in 3D 
+\begin_inset Formula $\mathbf{q}$
 \end_inset
 
 -space 
 \end_layout
 
 \begin_layout Itemize
-Each sample is a measurement:More measurements →longer clinical times →unhappy
+Each sample is a measurement: more measurements →longer clinical times →unhappy
  patients 
 \end_layout
 
 \begin_layout Itemize
-Primarily need directional information from 
-\begin_inset Formula $p\left(\mathbf{\Omega}\right)$
+Mainly concerned with directional information from 
+\begin_inset Formula $p\left({\bf r}\right)$
 \end_inset
 
  
@@ -365,7 +270,7 @@ Primarily need directional information from
 
 \begin_deeper
 \begin_layout Itemize
-Want to recover 
+want to recover 
 \family roman
 \series medium
 \shape up
@@ -378,7 +283,7 @@ Want to recover
 \noun off
 \color none
 
-\begin_inset Formula $p\left(\mathbf{\Omega}\right)$
+\begin_inset Formula $p\left({\bf r}\right)$
 \end_inset
 
 
@@ -394,10 +299,15 @@ Want to recover
 \noun default
 \color inherit
  with 
-\begin_inset Formula $\mathbf{\Omega\in\mathrm{\mathit{S^{2}}}}$
+\begin_inset Formula $||{\bf r}||=1,$
 \end_inset
 
+ i.e.
+ set 
+\begin_inset Formula ${\bf r=\boldsymbol{\Omega}}\in\mathbb{S}^{2}$
+\end_inset
 
+.
 \end_layout
 
 \end_deeper
@@ -410,35 +320,27 @@ Want to recover
 \end_layout
 
 \begin_layout Standard
-Initial reconstruction algorithms for 
-\begin_inset Formula $p\left(\mathbf{\Omega}\right)$
-\end_inset
-
- were based on Gaussian ansatz.
- 
+There are many High-Angular-Resolution-Diffusion-Imaging (HARDI)techniques,
+ e.g., 
 \end_layout
 
 \begin_layout Itemize
-The diffusion tensor was recovered 
+Q-balls
 \end_layout
 
 \begin_layout Itemize
-Sampling was done on 
-\begin_inset Formula $\mathit{k}$
-\end_inset
+Spherical deconvolution
+\end_layout
 
- shell
+\begin_layout Itemize
+blaa....blaa...
 \end_layout
 
 \begin_layout Standard
-These methods, such as DTI, could only resolve a single fiber direction
- within each voxel.
+to name a few.
+ Many of the above methods employ spherical harmonics and some type of point
+ (measurement) set on the sphere to reconstruction the function of interest.
  
-\end_layout
-
-\begin_layout Itemize
-Human cerebral white matter possesses considerable intra-voxel structures
- at the resolution typical to MRIs 
 \end_layout
 
 \begin_layout EndFrame
@@ -519,125 +421,6 @@ status open
 \end_layout
 
 \begin_layout Standard
-Diffusion tensor model describes the diffusion at each voxel by an ellipsoid.
- 
-\end_layout
-
-\begin_layout Itemize
-Tensor is fully characterized by its three orthogonal eigenvectors and their
- associated eigenvalues 
-\end_layout
-
-\begin_layout Itemize
-Ellipsoid shape contains information about the directional dependency of
- the diffusion signal 
-\end_layout
-
-\begin_layout Itemize
-Also computes Fractional Anisotropy and the principal diffusion direction
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-The 
-\shape italic
-principal diffusion direction
-\shape default
- is used to show the orientation of the underlying pathway for a coherent
- fiber bundle.
- 
-\end_layout
-
-\begin_layout Itemize
-Found using the direction of the long axis of the tensor
-\end_layout
-
-\begin_layout Standard
-
-\shape italic
-Fractional Anisotropy
-\shape default
- (FA) is used to quantify directional dependency of the tensor model.
- 
-\end_layout
-
-\begin_layout Itemize
-FA values range from 0 (fully isotropic) to 1 (fully anisotropic) 
-\end_layout
-
-\begin_layout Itemize
-Diffusion anisotropy is due to the presence of directionally organized diffusion
- barriers 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Axon membranes 
-\end_layout
-
-\begin_layout Itemize
-Myelin sheath 
-\end_layout
-
-\begin_layout Itemize
-Microtubules 
-\end_layout
-
-\begin_layout Itemize
-Neurofilaments 
-\end_layout
-
-\end_deeper
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Diffusion tensor imaging is limited in angular resolution and can only resolve
- one primary direction per voxel.
-\end_layout
-
-\begin_layout Standard
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-High-Angular-Resolution-Diffusion-Imaging (HARDI) is now used instead.
- 
-\end_layout
-
-\begin_layout Itemize
-DSI 
-\end_layout
-
-\begin_layout Itemize
-Q-Ball 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
 The main idea in Q-Ball is to integrate out the radial component of FT to
  get equation for the “orientation distribution function” (ODF), a PDF on
  the sphere.
@@ -701,10 +484,6 @@ status open
 
 \end_layout
 
-\begin_layout Subsection
-Application in Brain Imaging
-\end_layout
-
 \begin_layout BeginFrame
 
 \end_layout
@@ -762,122 +541,25 @@ status open
 
 \end_layout
 
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Prior to diffusion imaging, pathways in the brain were visualized only through
- dissection, staining, and, more recently, using a tracer substance.
- 
-\end_layout
-
-\begin_layout Itemize
-Tracer substances allow retrograde, anterograde, and multiple tract tracing.
- 
-\end_layout
-
-\begin_layout Itemize
-All of these methods require the sacrifice of the subject.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename brain_slice.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Tractography results have been compared to results from gold-standard invasive
- tract tracing methods.
- 
-\end_layout
-
-\begin_layout Itemize
-Broad similarities were found in the connections detected across techniques
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename tract_comp.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
 \begin_layout Section
 Formulation
 \end_layout
 
 \begin_layout Subsection
-Q-Ball (Tuch 2004)
+Trist
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+'{a}
+\end_layout
+
+\end_inset
+
+n-Vega Formulation
 \end_layout
 
 \begin_layout BeginFrame
@@ -885,260 +567,21 @@ Q-Ball (Tuch 2004)
 \end_layout
 
 \begin_layout Standard
-Q-Ball imaging is a model-free reconstruction scheme for HARDI, based on
- the Funk-Radon transform.
- It uses single shell spherical sampling and estimation of fiber distributions
- from the ODF.
-\begin_inset VSpace bigskip
+The Trist
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+'{a}
+\end_layout
+
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Compared to prior HARDI approaches, Q-Ball imaging has:
-\end_layout
-
-\begin_layout Itemize
-Model independence 
-\end_layout
-
-\begin_layout Itemize
-Linearity in the signal 
-\end_layout
-
-\begin_layout Itemize
-An image resolution framework 
-\end_layout
-
-\begin_layout Itemize
-Computational simplicity 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-The PDF can be written in terms of the Fourier transform as:
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $P(\mathbf{\Omega})=\digamma[E(\mathbf{q})]$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\digamma$
-\end_inset
-
-: Fourier transform with respect to the diffusion wave vector 
-\begin_inset Formula $\mathbf{q}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\mathbf{q}=(2\pi)^{-1}\gamma\delta\mathbf{g}$
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\begin_inset Formula $\gamma$
-\end_inset
-
-: gyromagnetic ratio for the nucleus of interest
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\delta$
-\end_inset
-
-: diffusion gradient duration
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\mathbf{g}$
-\end_inset
-
-: diffusion gradient vector
-\end_layout
-
-\end_deeper
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Orientation Distribution Function (ODF) is given by:
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $\psi(\mathbf{u})=\frac{1}{Z}\intop_{0}^{\infty}P(r\mathbf{u})dr$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Z: dimensionless normalization constant
-\end_layout
-
-\begin_layout Standard
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-It was later discovered that this formulation does not correctly take into
- account the 
-\begin_inset Formula $\mathit{r}^{2}$
-\end_inset
-
- weighting from the spherical integration.
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-More recently, different reconstruction algorithms for Q-Ball method have
- been introduced which use an analytic representation of the Funk-Radon
- transform in terms of spherical harmonics.
- 
-\end_layout
-
-\begin_layout Itemize
-Faster 
-\end_layout
-
-\begin_layout Itemize
-More robust to noise
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using these newer methods, the HARDI signal is represented using spherical
- harmonics and the Funk-Radon transform is then applied analytically using
- the spherical harmonic basis.
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Real-valued, even spherical harmonic basis: 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $Y_{j}=\begin{cases}
-\begin{array}{c}
-\sqrt{2}Re(Y_{l}^{|m|}),\\
-Y_{l}^{m},\\
-\sqrt{2}(-1)^{m+1}Im(Y_{l}^{m}),
-\end{array} & \begin{array}{c}
-m<0\\
-m=0\\
-m>0
-\end{array}\end{cases}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This gives us an analytical ODF estimate: 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $\psi(\theta,\phi)=\sum_{j=1}^{L}2\pi P_{\ell(j)}(0)c_{j}Y_{j}(\theta,\phi)$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $L=(\ell+1)(\ell+2)/2$
-\end_inset
-
-: the number of elements in the spherical harmonic basis
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $c_{j}$
-\end_inset
-
-: spherical harmonic coefficients describing the input HARDI signal
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $P_{\ell(j)}$
-\end_inset
-
-: Legendre polynomial of order 
-\begin_inset Formula $\ell(j)$
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout Subsection
-\begin_inset Formula $\mathbf{\mathrm{Trist\acute{a}n-Vega}}$
-\end_inset
-
- (2010)
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-The 
-\begin_inset Formula $\mathrm{Trist\acute{a}n-Vega}$
-\end_inset
-
- (2010) methodology is centered on single-shell HARDI data sets using Q-Ball
- imaging as a starting point.
+n-Vega (2010) methodology is centered on single-shell HARDI data sets using
+ Q-Ball imaging as a starting point.
  The new method uses an Orientation Probability Density Function (OPDF)
  as opposed to an ODF.
  The goal is to estimate either the ODF or OPDF with an alternate representation
@@ -1148,7 +591,7 @@ The
 
 \begin_layout Itemize
 OPDF represents a true PDF thanks to an included 
-\begin_inset Formula $R^{2}$
+\begin_inset Formula $r^{2}$
 \end_inset
 
  in the integration 
@@ -1163,70 +606,6 @@ New technique shows improvement over existing techniques in terms of angular
 
 \end_layout
 
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Start with, 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $P(\mathbf{R})=\digamma[E(\mathbf{q})](\mathbf{R})=\iiint_{\mathbb{R}^{3}}E(\mathbf{q})e^{-2\pi j\mathbf{q}^{T}\mathbf{R}}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $E(\mathbf{q})$
-\end_inset
-
-: signal
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\mathbf{R}$
-\end_inset
-
-: displacement of water molecules in a time 
-\begin_inset Formula $\triangle$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\mathbf{q}=\gamma\delta\mathbf{G}/2\pi$
-\end_inset
-
-: duel variable in the Fourier domain
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\begin_inset Formula $\gamma$
-\end_inset
-
-: gyromagnetic ratio 
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\delta$
-\end_inset
-
-: duration
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\mathbf{G}$
-\end_inset
-
-: Gradient applied to the magnetic field in the scanner
-\end_layout
-
-\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1241,7 +620,7 @@ Now define the OPDF as,
 
 \begin_layout Standard
 \align center
-\begin_inset Formula $\Phi(\mathbf{\Omega})=\int_{0}^{\infty}R^{2}P(R\mathbf{\Omega})dR=\frac{1}{2}\int_{-\infty}^{\infty}R^{2}P(R\mathbf{\Omega})dR$
+\begin_inset Formula $\Phi(\mathbf{\Omega})=\int_{0}^{\infty}r^{2}P(r\mathbf{\Omega})dr=\frac{1}{2}\int_{-\infty}^{\infty}r^{2}P(r\mathbf{\Omega})dr$
 \end_inset
 
 
@@ -1335,7 +714,7 @@ Leads to an efficient and sparse representation for HARDI estimators
 \end_layout
 
 \begin_layout Subsection
-Formulation
+Sampling on the sphere
 \end_layout
 
 \begin_layout BeginFrame
@@ -1444,10 +823,6 @@ Only the even harmonics are used because of the inherent symmetry in dMRI
 \end_deeper
 \begin_layout EndFrame
 
-\end_layout
-
-\begin_layout Subsection
-Discretization
 \end_layout
 
 \begin_layout BeginFrame
