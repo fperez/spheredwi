@@ -41,7 +41,11 @@
 \pgfdeclaremask{csm}{csm_logo}
 \pgfdeclareimage[mask=csm,width=3cm]{csm-logo}{csm_logo}
 
-\logo{\vbox{\vskip0.1cm\hbox{\pgfuseimage{csm-logo}}}}
+
+\pgfdeclaremask{ucb}{berkely}
+\pgfdeclareimage[mask=ucb,width=2cm]{ucb-logo}{berkeley}
+
+\logo{ \vbox{\vskip0.1cm\hbox{\pgfuseimage{csm-logo}}} \hspace{2.8in}\vbox{\vskip0.1cm\hbox{\pgfuseimage{ucb-logo}}} }
 \end_preamble
 \use_default_options false
 \maintain_unincluded_children false
@@ -188,8 +192,38 @@ in vivo
  
 \end_layout
 
-\begin_layout Itemize
-....
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename MRI-DTIBrain-9223.jpg
+	scale 150
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame
@@ -358,12 +392,12 @@ When performing a dMRI experiment, multiple brain images are acquired and
 \end_layout
 
 \begin_layout Itemize
-This gives multiple measurements for each brain voxel.
+this gives multiple measurements for each brain voxel.
  
 \end_layout
 
 \begin_layout Itemize
-Diffusion tensor model and HARDI model.
+diffusion tensor model and HARDI model.
  
 \end_layout
 
@@ -484,63 +518,6 @@ status open
 
 \end_layout
 
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Diffusion MRI techniques allow researchers to study the anatomical connectivity
- throughout the whole brain in a living human subject.
-\end_layout
-
-\begin_layout Itemize
-Gives researchers access to the brain’s structures and functions.
-\end_layout
-
-\begin_layout Itemize
-Used with tractography techniques to reconstruct major fiber bundles in
- the brain.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename MRI-DTIBrain-9223.jpg
-	scale 150
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
 \begin_layout Section
 Formulation
 \end_layout
@@ -600,10 +577,6 @@ OPDF represents a true PDF thanks to an included
 \begin_layout Itemize
 New technique shows improvement over existing techniques in terms of angular
  resolution 
-\end_layout
-
-\begin_layout EndFrame
-
 \end_layout
 
 \begin_layout EndFrame
@@ -1231,42 +1204,6 @@ The dMRI signal used is given by
 \end_inset
 
 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Rician noise is added to the signal with peak signal-to-noise ratio (PSNR)
- of 20.
- 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $PSNR=\frac{S_{m}}{\sigma}$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $S_{m}=1$
-\end_inset
-
-: signal maximum
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $\sigma$
-\end_inset
-
-: standard deviation of the Gaussian noise components
 \end_layout
 
 \begin_layout EndFrame
