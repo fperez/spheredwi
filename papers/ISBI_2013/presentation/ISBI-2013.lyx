@@ -250,39 +250,15 @@ dMRI measurements are taken in the Fourier domain:
 \begin_inset Formula $\mathbf{q}\propto$
 \end_inset
 
-applied magnetic field gradients 
+ applied magnetic field gradients 
 \end_layout
 
 \begin_layout Itemize
 Reconstruction of 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $p\left({\bf r}\right)$
+\begin_inset Formula $p\left(\mathbf{r}\right)$
 \end_inset
 
-
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-requires sampling in 3D 
+ requires sampling in 3D 
 \begin_inset Formula $\mathbf{q}$
 \end_inset
 
@@ -302,9 +278,8 @@ Mainly concerned with directional information from
  
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
-want to recover 
+Want to recover 
 \family roman
 \series medium
 \shape up
@@ -317,7 +292,7 @@ want to recover
 \noun off
 \color none
 
-\begin_inset Formula $p\left({\bf r}\right)$
+\begin_inset Formula $p\left(\mathbf{r}\right)$
 \end_inset
 
 
@@ -332,19 +307,13 @@ want to recover
 \uwave default
 \noun default
 \color inherit
- with 
-\begin_inset Formula $||{\bf r}||=1,$
+ for 
+\begin_inset Formula $||{\bf r}||=1$
 \end_inset
 
- i.e.
- set 
-\begin_inset Formula ${\bf r=\boldsymbol{\Omega}}\in\mathbb{S}^{2}$
-\end_inset
 
-.
 \end_layout
 
-\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -381,139 +350,6 @@ to name a few.
 
 \end_layout
 
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-When performing a dMRI experiment, multiple brain images are acquired and
- the signal is sensitized to diffusion along different directions.
- 
-\end_layout
-
-\begin_layout Itemize
-this gives multiple measurements for each brain voxel.
- 
-\end_layout
-
-\begin_layout Itemize
-diffusion tensor model and HARDI model.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename dif_tensor.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset space \qquad{}
-\end_inset
-
-
-\begin_inset Graphics
-	filename odf-1.jpg
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-The main idea in Q-Ball is to integrate out the radial component of FT to
- get equation for the “orientation distribution function” (ODF), a PDF on
- the sphere.
- 
-\end_layout
-
-\begin_layout Itemize
-There is not one accepted formulation of HARDI 
-\end_layout
-
-\begin_layout Itemize
-ODFs should be peaked in dominant direction(s) of fiber(s) 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename odf-2-45.jpg
-	scale 50
-
-\end_inset
-
-
-\begin_inset space \qquad{}
-\end_inset
-
-
-\begin_inset Graphics
-	filename odf-2-90.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout EndFrame
 
 \end_layout
@@ -523,20 +359,7 @@ Formulation
 \end_layout
 
 \begin_layout Subsection
-Trist
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-'{a}
-\end_layout
-
-\end_inset
-
-n-Vega Formulation
+Formulation
 \end_layout
 
 \begin_layout BeginFrame
@@ -544,86 +367,28 @@ n-Vega Formulation
 \end_layout
 
 \begin_layout Standard
-The Trist
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-'{a}
-\end_layout
+Define the OPDF as
+\begin_inset Formula 
+\[
+\Phi(\boldsymbol{\Omega})=\int_{0}^{\infty}p(r\boldsymbol{\Omega})r^{2}dr
+\]
 
 \end_inset
 
-n-Vega (2010) methodology is centered on single-shell HARDI data sets using
- Q-Ball imaging as a starting point.
- The new method uses an Orientation Probability Density Function (OPDF)
- as opposed to an ODF.
- The goal is to estimate either the ODF or OPDF with an alternate representation
- in the Fourier Domain.
- 
-\end_layout
-
-\begin_layout Itemize
-OPDF represents a true PDF thanks to an included 
-\begin_inset Formula $r^{2}$
+where 
+\begin_inset Formula $\boldsymbol{\Omega}\in\mathbb{S}^{2}$
 \end_inset
 
- in the integration 
-\end_layout
+.
+ One can show that
+\begin_inset Formula 
+\[
+\Phi(\mathbf{\Omega})\thickapprox-\frac{1}{4\pi^{2}}\mathcal{G}\{\triangle E(\mathbf{q})\}(\boldsymbol{\Omega}),
+\]
 
-\begin_layout Itemize
-New technique shows improvement over existing techniques in terms of angular
- resolution 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Now define the OPDF as, 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $\Phi(\mathbf{\Omega})=\int_{0}^{\infty}r^{2}P(r\mathbf{\Omega})dr=\frac{1}{2}\int_{-\infty}^{\infty}r^{2}P(r\mathbf{\Omega})dr$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-where in the above equations 
-\begin_inset Formula $\mathbf{\Omega}\in S^{2}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Using various approximations, one can show 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $\Phi(\mathbf{\Omega})\cong-\frac{1}{4\pi^{2}}\mathcal{{G}}\{\triangle E(\mathbf{q})\}(\mathbf{\Omega})$
-\end_inset
-
-
+where
 \end_layout
 
 \begin_layout EndFrame
@@ -647,41 +412,6 @@ Diffusion of water molecules is restricted along neural structures leading
  to angular information which is localized to certain directions.
 \end_layout
 
-\begin_layout Itemize
-Spherical Harmonics are global in nature and therefore are not efficient
- at representing functions with localized features
-\end_layout
-
-\begin_layout Itemize
-The Sparse Kernel model oversamples which gives it the ability to achieve
- localization of the basis functions 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Since HARDI signals typically have localized features, these new functions
- more accurately match the signal and therefore achieve better angular resolutio
-n 
-\end_layout
-
-\end_deeper
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-The Sparse Kernel model is based on a reproducing kernel formalism combined
- with Gaussian-like quadratures for the sphere
-\end_layout
-
-\begin_layout Itemize
-Leads to an efficient and sparse representation for HARDI estimators 
-\end_layout
-
 \begin_layout EndFrame
 
 \end_layout
@@ -695,184 +425,137 @@ Sampling on the sphere
 \end_layout
 
 \begin_layout Standard
-We start with a subspace of spherical harmonics of maximum degree 
+Start with a subspace of spherical harmonics of maximum degree 
 \begin_inset Formula $\mathit{L}$
 \end_inset
 
-:
-\end_layout
-
-\begin_layout Standard
-\align center
+: 
 \begin_inset Formula $\mathcal{H}_{L}=span\{Y_{l}^{m}(\Omega):|m|<l,0\leq l\leq L\}$
 \end_inset
 
+.
+ Then write
+\begin_inset Formula 
+\[
+f(\mathbf{\Omega})=\sum_{l=0}^{L}\sum_{|m|\leq l}\int_{S^{2}}\bar{Y}_{l}^{m}(\mathbf{\Omega'})f(\mathbf{\Omega'})d\mathbf{\Omega'}Y_{l}^{m}(\mathbf{\Omega})
+\]
 
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $Y_{l}^{m}(\theta,\phi)=(-1)^{m}c_{l}^{m}P_{l}^{m}(cos\theta)e^{im\phi}$
 \end_inset
 
-: Spherical harmonics of degree 
-\begin_inset Formula $l$
+and use Addition Theorem to arrive at
+\begin_inset Formula 
+\[
+f(\mathbf{\Omega})=\int_{S^{2}}K(\mathbf{\Omega}\cdot\mathbf{\Omega'})f(\mathbf{\Omega'})d\mathbf{\Omega'}
+\]
+
 \end_inset
 
- and order 
-\begin_inset Formula $m$
+with 
+\begin_inset Formula $K(\mu)=\sum_{l=0}^{L}\frac{2l+1}{4\pi}P_{l}(\mu)$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $P_{l}^{m}(\mu)$
-\end_inset
-
-: associated Legendre function
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $c_{l}^{m}=\sqrt{\frac{(2l+1)(l-m)!}{4\pi(l+m)!}}$
-\end_inset
-
-: normalization constant
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-If 
-\begin_inset Formula $f\in\mathcal{H}_{L}$
-\end_inset
-
- then we may write 
-\begin_inset Formula $f$
-\end_inset
-
- as,
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $f=\sum_{l=0}^{L}\sum_{|m|\leq l}\int_{S^{2}}\bar{Y}_{l}^{m}(\mathbf{\Omega'})f(\mathbf{\Omega'})d\mathbf{\Omega'}Y_{l}^{m}(\mathbf{\Omega})$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Interchanging the summation and integration, and using the Addition Theorem
- gives 
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Formula $f(\mathbf{\Omega})=\int_{S^{2}}K_{e}(\mathbf{\Omega}\cdot\mathbf{\Omega'})f(\mathbf{\Omega'})d\mathbf{\Omega'}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Formula $K_{e}(\mu)=\sum_{l=2}^{\left\lfloor L/2\right\rfloor }\frac{4l+1}{4\pi}P_{2l}(\mu)$
-\end_inset
-
-:even reproducing kernel 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Only the even harmonics are used because of the inherent symmetry in dMRI
- 
-\end_layout
-
-\end_deeper
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-We now discretize the integral using Gaussian-like quadratures for the sphere.
-\end_layout
-
-\begin_layout Itemize
-The Gaussian-like quadratures are: Invariant under icosahedral rotations
- 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Do not cluster 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Highly effective (nearly Gaussian)
-\end_layout
-
-\begin_layout Itemize
-Exactly integrate subspaces of spherical harmonics 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Let 
-\begin_inset Formula $\{\Omega_{i},w_{i}\}_{i=1}^{M}$
-\end_inset
-
- denote a quadrature that exactly integrates functions of degree at least
- 
-\begin_inset Formula $2L$
-\end_inset
-
- where 
-\begin_inset Formula $\Omega_{i}$
-\end_inset
-
- is a quadrature point associated with weight 
-\begin_inset Formula $w_{i}$
+ the ``reproducing kernel'' for 
+\begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
 .
  
-\begin_inset VSpace bigskip
-\end_inset
+\end_layout
 
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
 
 \end_layout
 
 \begin_layout Standard
-We can now write 
-\begin_inset Formula $f(\Omega)$
+We now discretize the reproducing kernel identity using Gaussian-like quadrature
+s for the sphere.
+ 
+\end_layout
+
+\begin_layout Itemize
+Gaussian quadratures for the sphere 
+\shape italic
+do not
+\shape default
+ exist!
+\end_layout
+
+\begin_layout Itemize
+The Gaussian-like or ``almost'' Gaussian quadratures we use are invariant
+ under icosahedral rotations
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Gaussian-like implies much more efficient sampling cf.
+ to other quadratures
+\end_layout
+
+\begin_layout Itemize
+invariant under icosahedral rotations implies no clustering of nodes
+\end_layout
+
+\begin_layout Itemize
+exactly integrates subspaces of spherical harmonics
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+See Ahrens, Beylkin 
+\begin_inset Quotes eld
 \end_inset
 
- as
+Rotationally invariant quadratures for the sphere,
+\begin_inset Quotes erd
+\end_inset
+
+ Proc.
+ R.
+ Soc.
+ A, 
+\series bold
+465
+\series default
+, pp.3103-3125, (2009) for more information on these quadratures
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
 \end_layout
 
 \begin_layout Standard
-\align center
-\begin_inset Formula $f(\Omega)=\sum_{i=1}^{M}f(\Omega_{i})w_{i}K_{e}(\Omega\cdot\Omega_{i})$
+We get the representation
+\begin_inset Formula 
+\[
+f(\Omega)=\sum_{i=1}^{M}f(\Omega_{i})w_{i}K(\Omega\cdot\Omega_{i}),
+\]
+
 \end_inset
 
+with 
+\begin_inset Formula $\Omega_{i}$
+\end_inset
 
+, 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ 
+\begin_inset Formula $i=1,2,\dots M$
+\end_inset
+
+ the quadrature nodes and weights.
+ Since the dMRI signal must be even WRT inversion, we restrict to only the
+ even harmonics and we remove the DC term.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -880,7 +563,7 @@ Exact representation for even functions in
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
-
+ 
 \end_layout
 
 \begin_layout Itemize
