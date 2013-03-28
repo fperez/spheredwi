@@ -124,7 +124,7 @@ frame{
 
  
 \begin_inset ERT
-status open
+status collapsed
 
 \begin_layout Plain Layout
 
@@ -232,7 +232,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename axon_dendrite.jpg
+	filename ../../../../../../Desktop/ISBI 2013/axon_dendrite.jpg
 	scale 50
 
 \end_inset
@@ -265,8 +265,8 @@ In dMRI, the signal is sensitized to the self-diffusion of water molecules.
 \end_layout
 
 \begin_layout Itemize
-the homogeneity of the magnetic field is varied linearly using a pulsed
- field gradient 
+the strength of the magnetic field is varied linearly using a pulsed field
+ gradient 
 \end_layout
 
 \begin_layout Itemize
@@ -288,6 +288,177 @@ Stejkal and Tanner (1965) provided the first theory for dMRI
 \end_layout
 
 \begin_layout Subsection
+Application in Brain Imaging
+\end_layout
+
+\begin_layout BeginFrame
+
+\end_layout
+
+\begin_layout Standard
+Diffusion MRI techniques allow researchers to study the anatomical connectivity
+ throughout the whole brain in a living human subject.
+\end_layout
+
+\begin_layout Itemize
+Gives researchers access to the brain’s structures and functions.
+\end_layout
+
+\begin_layout Itemize
+Used with tractography techniques to reconstruct major fiber bundles in
+ the brain.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../../../../Desktop/ISBI 2013/MRI-DTIBrain-9223.jpg
+	scale 150
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\end_layout
+
+\begin_layout Standard
+Prior to diffusion imaging, pathways in the brain were visualized only through
+ dissection, staining, and, more recently, using a tracer substance.
+ 
+\end_layout
+
+\begin_layout Itemize
+Tracer substances allow retrograde, anterograde, and multiple tract tracing.
+ 
+\end_layout
+
+\begin_layout Itemize
+All of these methods require the sacrifice of the subject.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../../../../Desktop/ISBI 2013/brain_slice.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\end_layout
+
+\begin_layout Standard
+Tractography results have been compared to results from gold-standard invasive
+ tract tracing methods.
+ 
+\end_layout
+
+\begin_layout Itemize
+Broad similarities were found in the connections detected across techniques
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../../../../Desktop/ISBI 2013/tract_comp.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout Subsection
 Basic Formulation
 \end_layout
 
@@ -301,7 +472,7 @@ Diffusion MRI measurements are taken in the Fourier domain:
 
 \begin_layout Standard
 \align center
-\begin_inset Formula $E\left(\mathbf{k}\right)=\frac{s\left(\mathbf{k}\right)}{s_{0}}=\int_{\mathbb{R}^{3}}p\left(\mathbf{\Omega}\right)e^{i\mathbf{k}\cdot\mathbf{\Omega}}d^{3}\mathbf{\Omega}$
+\begin_inset Formula $E\left(\mathbf{k}\right)=\frac{s\left(\mathbf{k}\right)}{s_{0}}=\int_{\mathbb{R}^{3}}p\left(\mathbf{r}\right)e^{i\mathbf{k}\cdot\mathbf{r}}d^{3}\mathbf{r}$
 \end_inset
 
 
@@ -312,6 +483,13 @@ Diffusion MRI measurements are taken in the Fourier domain:
 \end_inset
 
 applied magnetic field gradients 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $s_{0}$
+\end_inset
+
+: gradient-free signal
 \end_layout
 
 \begin_layout Itemize
@@ -328,7 +506,7 @@ Reconstruction of
 \noun off
 \color none
 
-\begin_inset Formula $p\left(\mathbf{\Omega}\right)$
+\begin_inset Formula $p\left(\mathbf{r}\right)$
 \end_inset
 
 
@@ -394,7 +572,7 @@ Want to recover
 \noun default
 \color inherit
  with 
-\begin_inset Formula $\mathbf{\Omega\in\mathrm{\mathit{S^{2}}}}$
+\begin_inset Formula $\mathbf{\Omega\in\mathrm{\mathit{\mathbb{S}^{2}}}}$
 \end_inset
 
 
@@ -410,11 +588,8 @@ Want to recover
 \end_layout
 
 \begin_layout Standard
-Initial reconstruction algorithms for 
-\begin_inset Formula $p\left(\mathbf{\Omega}\right)$
-\end_inset
-
- were based on Gaussian ansatz.
+Diffusion tensor imaging (DTI), the first reconstruction technique, is based
+ on Gaussian ansatz.
  
 \end_layout
 
@@ -431,7 +606,7 @@ Sampling was done on
 \end_layout
 
 \begin_layout Standard
-These methods, such as DTI, could only resolve a single fiber direction
+A major drawback of DTI is that it can only resolve a single fiber direction
  within each voxel.
  
 \end_layout
@@ -439,75 +614,6 @@ These methods, such as DTI, could only resolve a single fiber direction
 \begin_layout Itemize
 Human cerebral white matter possesses considerable intra-voxel structures
  at the resolution typical to MRIs 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-When performing a dMRI experiment, multiple brain images are acquired and
- the signal is sensitized to diffusion along different directions.
- 
-\end_layout
-
-\begin_layout Itemize
-This gives multiple measurements for each brain voxel.
- 
-\end_layout
-
-\begin_layout Itemize
-Diffusion tensor model and HARDI model.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename dif_tensor.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset space \qquad{}
-\end_inset
-
-
-\begin_inset Graphics
-	filename odf-1.jpg
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout EndFrame
@@ -570,10 +676,6 @@ Fractional Anisotropy
 \end_layout
 
 \begin_layout Itemize
-FA values range from 0 (fully isotropic) to 1 (fully anisotropic) 
-\end_layout
-
-\begin_layout Itemize
 Diffusion anisotropy is due to the presence of directionally organized diffusion
  barriers 
 \end_layout
@@ -629,6 +731,51 @@ DSI
 Q-Ball 
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centerline{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../../../../Desktop/ISBI 2013/dif_tensor.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \qquad{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../../../../../../Desktop/ISBI 2013/odf90.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout EndFrame
 
 \end_layout
@@ -667,7 +814,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename odf-2-45.png
+	filename ../../../../../../Desktop/ISBI 2013/odf45.png
 	scale 50
 
 \end_inset
@@ -678,178 +825,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename odf-2-90.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout Subsection
-Application in Brain Imaging
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Diffusion MRI techniques allow researchers to study the anatomical connectivity
- throughout the whole brain in a living human subject.
-\end_layout
-
-\begin_layout Itemize
-Gives researchers access to the brain’s structures and functions.
-\end_layout
-
-\begin_layout Itemize
-Used with tractography techniques to reconstruct major fiber bundles in
- the brain.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename MRI-DTIBrain-9223.jpg
-	scale 150
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Prior to diffusion imaging, pathways in the brain were visualized only through
- dissection, staining, and, more recently, using a tracer substance.
- 
-\end_layout
-
-\begin_layout Itemize
-Tracer substances allow retrograde, anterograde, and multiple tract tracing.
- 
-\end_layout
-
-\begin_layout Itemize
-All of these methods require the sacrifice of the subject.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename brain_slice.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-
-\end_layout
-
-\begin_layout Standard
-Tractography results have been compared to results from gold-standard invasive
- tract tracing methods.
- 
-\end_layout
-
-\begin_layout Itemize
-Broad similarities were found in the connections detected across techniques
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-centerline{
-\end_layout
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename tract_comp.png
+	filename ../../../../../../Desktop/ISBI 2013/odf90.png
 	scale 50
 
 \end_inset
@@ -896,7 +872,7 @@ Q-Ball imaging is a model-free reconstruction scheme for HARDI, based on
 \end_layout
 
 \begin_layout Standard
-Compared to prior HARDI approaches, Q-Ball imaging has:
+Compared to other HARDI approaches, Q-Ball imaging has:
 \end_layout
 
 \begin_layout Itemize
@@ -990,7 +966,7 @@ Orientation Distribution Function (ODF) is given by:
 
 \begin_layout Standard
 \align center
-\begin_inset Formula $\psi(\mathbf{u})=\frac{1}{Z}\intop_{0}^{\infty}P(r\mathbf{u})dr$
+\begin_inset Formula $\psi(\mathbf{\Omega})=\frac{1}{Z}\intop_{0}^{\infty}P(r\mathbf{\Omega})dr$
 \end_inset
 
 
@@ -1026,9 +1002,9 @@ It was later discovered that this formulation does not correctly take into
 \end_layout
 
 \begin_layout Standard
-More recently, different reconstruction algorithms for Q-Ball method have
- been introduced which use an analytic representation of the Funk-Radon
- transform in terms of spherical harmonics.
+More recently, different reconstruction algorithms have been introduced
+ which use an analytic representation of the Funk-Radon transform in terms
+ of spherical harmonics.
  
 \end_layout
 
@@ -1122,10 +1098,20 @@ This gives us an analytical ODF estimate:
 \end_layout
 
 \begin_layout Subsection
-\begin_inset Formula $\mathbf{\mathrm{Trist\acute{a}n-Vega}}$
+Trist
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+'{a}
+\end_layout
+
 \end_inset
 
- (2010)
+n-Vega (2010)
 \end_layout
 
 \begin_layout BeginFrame
@@ -1133,16 +1119,25 @@ This gives us an analytical ODF estimate:
 \end_layout
 
 \begin_layout Standard
-The 
-\begin_inset Formula $\mathrm{Trist\acute{a}n-Vega}$
+The Trist
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+'{a}
+\end_layout
+
 \end_inset
 
- (2010) methodology is centered on single-shell HARDI data sets using Q-Ball
- imaging as a starting point.
+n-Vega (2010) methodology is centered on single-shell HARDI data sets using
+ Q-Ball imaging as a starting point.
  The new method uses an Orientation Probability Density Function (OPDF)
  as opposed to an ODF.
- The goal is to estimate either the ODF or OPDF with an alternate representation
- in the Fourier Domain.
+ The goal is to estimate the OPDF with an alternate representation in the
+ Fourier Domain.
  
 \end_layout
 
@@ -1155,8 +1150,12 @@ OPDF represents a true PDF thanks to an included
 \end_layout
 
 \begin_layout Itemize
-New technique shows improvement over existing techniques in terms of angular
- resolution 
+Inclusion of 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+ shows improvement over existing techniques in terms of angular resolution
+ 
 \end_layout
 
 \begin_layout EndFrame
@@ -1173,7 +1172,7 @@ Start with,
 
 \begin_layout Standard
 \align center
-\begin_inset Formula $P(\mathbf{R})=\digamma[E(\mathbf{q})](\mathbf{R})=\iiint_{\mathbb{R}^{3}}E(\mathbf{q})e^{-2\pi j\mathbf{q}^{T}\mathbf{R}}$
+\begin_inset Formula $P(\mathbf{R})=\digamma[E(\mathbf{q})](\mathbf{R})=\iiint_{\mathbb{R}^{3}}E(\mathbf{q})e^{-2\pi j\mathbf{q}^{T}\mathbf{R}}d^{3}\mathbf{q}$
 \end_inset
 
 
@@ -1249,7 +1248,7 @@ Now define the OPDF as,
 
 \begin_layout Standard
 where in the above equations 
-\begin_inset Formula $\mathbf{\Omega}\in S^{2}$
+\begin_inset Formula $\mathbf{\Omega}\in\mathbb{S}^{2}$
 \end_inset
 
 
@@ -1279,7 +1278,7 @@ Using various approximations, one can show
 \end_layout
 
 \begin_layout Section
-Sparse Kernel Model
+Sparse Kernel Method
 \end_layout
 
 \begin_layout Subsection
@@ -1295,24 +1294,14 @@ Diffusion of water molecules is restricted along neural structures leading
  to angular information which is localized to certain directions.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
 Spherical Harmonics are global in nature and therefore are not efficient
  at representing functions with localized features
 \end_layout
 
-\begin_layout Itemize
-The Sparse Kernel model oversamples which gives it the ability to achieve
- localization of the basis functions 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Since HARDI signals typically have localized features, these new functions
- more accurately match the signal and therefore achieve better angular resolutio
-n 
-\end_layout
-
-\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1322,7 +1311,29 @@ n
 \end_layout
 
 \begin_layout Standard
-The Sparse Kernel model is based on a reproducing kernel formalism combined
+Our new 
+\begin_inset Quotes eld
+\end_inset
+
+Sparse Kernel
+\begin_inset Quotes erd
+\end_inset
+
+ method uses functions which are localized and better match the shape of
+ HARDI signals, compared to SH 
+\end_layout
+
+\begin_layout Itemize
+These new functions therefore achieve better angular resolution, compared
+ to using SH 
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Sparse Kernel method is based on a reproducing kernel formalism combined
  with Gaussian-like quadratures for the sphere
 \end_layout
 
@@ -1797,10 +1808,6 @@ the coefficients found by solving this are then used to represent
 
 \end_layout
 
-\begin_layout Subsection
-Results
-\end_layout
-
 \begin_layout BeginFrame
 
 \end_layout
@@ -1898,12 +1905,20 @@ Rician noise is added to the signal with peak signal-to-noise ratio (PSNR)
 
 \end_layout
 
+\begin_layout Section
+Results and Conclusions
+\end_layout
+
+\begin_layout Subsection
+Results
+\end_layout
+
 \begin_layout BeginFrame
 
 \end_layout
 
 \begin_layout Standard
-The Sparse Kernel model was tested by simulating the recovery of the angle
+The Sparse Kernel method was tested by simulating the recovery of the angle
  of two crossing fibers.
 \end_layout
 
@@ -1962,7 +1977,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename results.png
+	filename ../../../../../../Desktop/ISBI 2013/results.png
 	scale 50
 
 \end_inset
@@ -1990,37 +2005,33 @@ status open
 \end_layout
 
 \begin_layout Standard
-The Sparse Kernel model has significantly better angular resolution when
- the crossing angle is between 30 and 45 degrees.
- 
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-When the crossing angle is greater than 45 degrees, the Sparse Kernel model
- has approximately the same average angular error as spherical harmonic
- methods.
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout Section
-Conclusions
-\end_layout
-
-\begin_layout BeginFrame
-
+Conclusions:
 \end_layout
 
 \begin_layout Itemize
-Able to achieve localization of basis functions, in contrast to spherical
- harmonics, resulting in a better match of the signal 
+To resolve multifiber crossings, need to reconstruct function on the sphere
+ with localized features
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Traditional spherical harmonics are not ideal in this case
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+New sparse kernel formulation achieves localization of basis functions,
+ in contrast to spherical harmonics, resulting in a better match of the
+ signal 
+\end_layout
+
+\begin_layout Itemize
+For large crossing angles, comparable to spherical harmonic methods
+\end_layout
+
+\begin_layout Itemize
+For small crossing angles, significantly better angular resolution when
+ compared to spherical harmonic methods
 \end_layout
 
 \begin_layout Itemize
@@ -2028,14 +2039,45 @@ Fewer basis functions are needed, compared to methods such as spherical
  wavelets, due to Gaussian-like quadratures 
 \end_layout
 
-\begin_layout Itemize
-Able to say precisely in what subspace our reconstructed signal lies because
- of the use of exact quadratures and the reproducing kernel framework 
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout Subsection
+Future Directions
+\end_layout
+
+\begin_layout BeginFrame
+
 \end_layout
 
 \begin_layout Itemize
-Performs comparable to spherical harmonic methods, surpassing spherical
- harmonic results in certain cases
+Determine 
+\begin_inset Quotes eld
+\end_inset
+
+optimal
+\begin_inset Quotes erd
+\end_inset
+
+ parameters for elastic net solver
+\end_layout
+
+\begin_layout Itemize
+Develope method that better captures nearly isotropic signals
+\end_layout
+
+\begin_layout Itemize
+Investigate why dropping measurements gives better results
+\end_layout
+
+\begin_layout Itemize
+Test other kernels, for example radial basis functions
+\end_layout
+
+\begin_layout Itemize
+Compare method with other sparse methods, such as the spherical wavelet
+ method
 \end_layout
 
 \begin_layout EndFrame
