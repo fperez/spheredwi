@@ -36,7 +36,7 @@
   \end{tabular}      
 }
 %[April XXX 2013]{ISBI-2013}
-\subject{Computational Sciences}
+%\subject{Computational Sciences}
 
 \pgfdeclaremask{csm}{csm_logo}
 \pgfdeclareimage[mask=csm,width=3cm]{csm-logo}{csm_logo}
@@ -115,7 +115,7 @@
 
 \begin_layout Standard
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -193,32 +193,35 @@ in vivo
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/MRI-DTIBrain-9223.jpg
+
+\end_inset
 
 
-\backslash
-centerline{
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+From http://www.humanconnectomeproject.org/
 \end_layout
 
 \end_inset
 
 
-\begin_inset Graphics
-	filename MRI-DTIBrain-9223.jpg
-	scale 150
-
-\end_inset
-
-
-\begin_inset ERT
-status open
+\end_layout
 
 \begin_layout Plain Layout
 
-}
 \end_layout
 
 \end_inset
@@ -240,7 +243,7 @@ dMRI measurements are taken in the Fourier domain:
 
 \begin_layout Standard
 \align center
-\begin_inset Formula $E\left(\mathbf{q}\right)=\frac{s\left(\mathbf{q}\right)}{s_{0}}=\int_{\mathbb{R}^{3}}p\left({\bf r}\right)e^{i\mathbf{q}\cdot{\bf r}}d^{3}{\bf r}$
+\begin_inset Formula $E\left(\mathbf{q}\right)=\frac{s\left(\mathbf{q}\right)}{s_{0}}=\int_{\mathbb{R}^{3}}p\left({\bf r}\right)e^{-2\pi i\mathbf{q}\cdot{\bf r}}d^{3}{\bf r}$
 \end_inset
 
 
@@ -254,7 +257,7 @@ dMRI measurements are taken in the Fourier domain:
 \end_layout
 
 \begin_layout Itemize
-Reconstruction of 
+Full reconstruction of 
 \begin_inset Formula $p\left(\mathbf{r}\right)$
 \end_inset
 
@@ -278,42 +281,6 @@ Mainly concerned with directional information from
  
 \end_layout
 
-\begin_layout Itemize
-Want to recover 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $p\left(\mathbf{r}\right)$
-\end_inset
-
-
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- for 
-\begin_inset Formula $||{\bf r}||=1$
-\end_inset
-
-
-\end_layout
-
 \begin_layout EndFrame
 
 \end_layout
@@ -323,7 +290,7 @@ Want to recover
 \end_layout
 
 \begin_layout Standard
-There are many High-Angular-Resolution-Diffusion-Imaging (HARDI)techniques,
+There are many High-Angular-Resolution-Diffusion-Imaging (HARDI) techniques,
  e.g., 
 \end_layout
 
@@ -336,13 +303,25 @@ Spherical deconvolution
 \end_layout
 
 \begin_layout Itemize
-blaa....blaa...
+Diffusion spectrum imaging
+\end_layout
+
+\begin_layout Itemize
+Gaussian-mixture models
 \end_layout
 
 \begin_layout Standard
 to name a few.
- Many of the above methods employ spherical harmonics and some type of point
- (measurement) set on the sphere to reconstruction the function of interest.
+ For those methods that sample on fixed 
+\begin_inset Quotes eld
+\end_inset
+
+q shells,
+\begin_inset Quotes erd
+\end_inset
+
+ some type of point (measurement) set on the sphere and typically spherical
+ harmonics are used to reconstruct the function of interest.
  
 \end_layout
 
@@ -350,27 +329,19 @@ to name a few.
 
 \end_layout
 
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout Section
-Formulation
-\end_layout
-
-\begin_layout Subsection
-Formulation
-\end_layout
-
 \begin_layout BeginFrame
 
 \end_layout
 
 \begin_layout Standard
-Define the OPDF as
+To describe the angular information in 
+\begin_inset Formula $p\left(\mathbf{r}\right)$
+\end_inset
+
+, one can consider either the orientation distribution function (ODF) (Tuch)
 \begin_inset Formula 
 \[
-\Phi(\boldsymbol{\Omega})=\int_{0}^{\infty}p(r\boldsymbol{\Omega})r^{2}dr
+\psi(\boldsymbol{\Omega})=\int_{0}^{\infty}p(r\boldsymbol{\Omega})dr
 \]
 
 \end_inset
@@ -379,19 +350,72 @@ where
 \begin_inset Formula $\boldsymbol{\Omega}\in\mathbb{S}^{2}$
 \end_inset
 
-.
- One can show that
+ or the orientation probability distribution function (OPDF) (Aganj 
+\shape slanted
+et al
+\shape default
+.,Tristan-Vega 
+\shape slanted
+et al
+\shape default
+., Weeden 
+\shape slanted
+et al
+\shape default
+.)
 \begin_inset Formula 
 \[
-\Phi(\mathbf{\Omega})\thickapprox-\frac{1}{4\pi^{2}}\mathcal{G}\{\triangle E(\mathbf{q})\}(\boldsymbol{\Omega}),
+\Phi(\boldsymbol{\Omega})=\int_{0}^{\infty}p(r\boldsymbol{\Omega})r^{2}dr.
 \]
 
 \end_inset
 
-where
+In this work, we consider estimating the OPDF, since it includes the correct
+ spherical 
+\begin_inset Formula $r^{2}$
+\end_inset
+
+ weighting.
 \end_layout
 
 \begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\end_layout
+
+\begin_layout Standard
+Aganj 
+\shape italic
+et al.
+
+\shape default
+ showed that the OPDF can be approximated by
+\begin_inset Formula 
+\[
+\Phi(\boldsymbol{\Omega})\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{G}\left\{ \triangle\ln\left[-\ln\, E(\mathbf{q})\right]\right\} \left(\mathbf{\boldsymbol{\Omega}}\right),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ is the Laplacian restricted to the sphere and 
+\begin_inset Formula $\mathcal{G}$
+\end_inset
+
+ is the Funk-Radon transform, defined as
+\begin_inset Formula 
+\[
+\mathcal{G}f\left(\boldsymbol{\Omega}\right)=\int_{\mathbb{S}^{2}}\delta\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\Omega'.
+\]
+
+\end_inset
+
 
 \end_layout
 
@@ -410,6 +434,40 @@ Motivation
 \begin_layout Standard
 Diffusion of water molecules is restricted along neural structures leading
  to angular information which is localized to certain directions.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/single-tesnor.pdf
+	scale 50
+	BoundingBox 0bp 75bp 400bp 235bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Single Gaussian diffusion PDF.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Spherical harmonics not ideal to represent such functions...need to design
+ new representation.
 \end_layout
 
 \begin_layout EndFrame
@@ -430,31 +488,44 @@ Start with a subspace of spherical harmonics of maximum degree
 \end_inset
 
 : 
-\begin_inset Formula $\mathcal{H}_{L}=span\{Y_{l}^{m}(\Omega):|m|<l,0\leq l\leq L\}$
+\begin_inset Formula $\mathcal{H}_{L}=span\{Y_{l}^{m}:|m|\le l,\,0\leq l\leq L\}$
 \end_inset
 
 .
- Then write
+ For 
+\begin_inset Formula $f\in\mathcal{H}_{L},$
+\end_inset
+
+ 
 \begin_inset Formula 
 \[
-f(\mathbf{\Omega})=\sum_{l=0}^{L}\sum_{|m|\leq l}\int_{S^{2}}\bar{Y}_{l}^{m}(\mathbf{\Omega'})f(\mathbf{\Omega'})d\mathbf{\Omega'}Y_{l}^{m}(\mathbf{\Omega})
+f\left(\boldsymbol{\Omega}\right)=\sum_{l=0}^{L}\sum_{|m|\leq l}\int_{S^{2}}\bar{Y}_{l}^{m}\left(\boldsymbol{\Omega}'\right)f\left(\boldsymbol{\Omega}'\right)d\mathbf{\Omega'}Y_{l}^{m}\left(\boldsymbol{\Omega}\right).
 \]
 
 \end_inset
 
-and use Addition Theorem to arrive at
+Changing order of summation and integration and using the Addition Theorem
+ we arrive at
 \begin_inset Formula 
 \[
-f(\mathbf{\Omega})=\int_{S^{2}}K(\mathbf{\Omega}\cdot\mathbf{\Omega'})f(\mathbf{\Omega'})d\mathbf{\Omega'}
+f\left(\boldsymbol{\Omega}\right)=\int_{S^{2}}K(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}')f\left(\boldsymbol{\Omega}'\right)d\mathbf{\Omega'}
 \]
 
 \end_inset
 
-with 
+where 
 \begin_inset Formula $K(\mu)=\sum_{l=0}^{L}\frac{2l+1}{4\pi}P_{l}(\mu)$
 \end_inset
 
- the ``reproducing kernel'' for 
+ is the 
+\begin_inset Quotes eld
+\end_inset
+
+reproducing kernel
+\begin_inset Quotes erd
+\end_inset
+
+ for 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
@@ -471,8 +542,8 @@ with
 \end_layout
 
 \begin_layout Standard
-We now discretize the reproducing kernel identity using Gaussian-like quadrature
-s for the sphere.
+To obtain a sampling scheme, we now discretize the reproducing kernel identity
+ using Gaussian-like quadratures for the sphere.
  
 \end_layout
 
@@ -485,8 +556,15 @@ do not
 \end_layout
 
 \begin_layout Itemize
-The Gaussian-like or ``almost'' Gaussian quadratures we use are invariant
- under icosahedral rotations
+The Gaussian-like or 
+\begin_inset Quotes eld
+\end_inset
+
+almost
+\begin_inset Quotes erd
+\end_inset
+
+ Gaussian quadratures we use are invariant under icosahedral rotations
 \end_layout
 
 \begin_deeper
@@ -535,27 +613,20 @@ Rotationally invariant quadratures for the sphere,
 We get the representation
 \begin_inset Formula 
 \[
-f(\Omega)=\sum_{i=1}^{M}f(\Omega_{i})w_{i}K(\Omega\cdot\Omega_{i}),
+f\left(\boldsymbol{\Omega}\right)=\sum_{i=1}^{M}f\left(\boldsymbol{\Omega}_{i}\right)w_{i}K(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}),
 \]
 
 \end_inset
 
 with 
-\begin_inset Formula $\Omega_{i}$
+\begin_inset Formula $\left\{ w_{i},\boldsymbol{\Omega}_{i}\right\} $
 \end_inset
 
 , 
-\begin_inset Formula $w_{i}$
-\end_inset
-
- 
 \begin_inset Formula $i=1,2,\dots M$
 \end_inset
 
  the quadrature nodes and weights.
- Since the dMRI signal must be even WRT inversion, we restrict to only the
- even harmonics and we remove the DC term.
- 
 \end_layout
 
 \begin_layout Itemize
@@ -567,11 +638,11 @@ Exact representation for even functions in
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $K_{e}(\Omega\cdot\Omega_{i})$
+\begin_inset Formula $K(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i})$
 \end_inset
 
  is localized about 
-\begin_inset Formula $\Omega_{i}$
+\begin_inset Formula $\boldsymbol{\Omega}_{i}$
 \end_inset
 
 
@@ -583,10 +654,25 @@ Analogous to Lagrange interpolation in that
 \end_inset
 
  is a linear combination of function values and a single function 
-\begin_inset Formula $K_{e}$
+\begin_inset Formula $K$
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Since the dMRI signal must be even WRT inversion, we restrict to only the
+ even harmonics and remove the DC term from the kernel, i.e., we start the
+ sum at 
+\begin_inset Formula $l=2$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+ denote this kernel.
 \end_layout
 
 \begin_layout EndFrame
@@ -602,49 +688,73 @@ OPDF
 \end_layout
 
 \begin_layout Standard
-Incorporating an assumption on the radial behavior of the signal, Aganj
- 
-\shape italic
-et al.
+New kernel
+\begin_inset Formula 
+\[
+K_{e}\left(\mu\right)=\sum_{l=2}^{\left\lfloor L/2\right\rfloor }\frac{4l+1}{4\pi}P_{2l}\left(\mu\right)
+\]
 
-\shape default
- showed that this may be approximated by
-\end_layout
+\end_inset
 
-\begin_layout Standard
+looks much more like the Gaussian signal cf.
+ to spherical harmonics.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \align center
-\begin_inset Formula $\Phi(\Omega)\approx\frac{1}{4\pi}+\frac{1}{16\pi^{2}}\mathcal{{G}}\{\triangle\ln(-\ln E(\mathbf{q}))\}(\mathbf{\Omega})$
+\begin_inset Graphics
+	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/kernel.pdf
+	scale 50
+	BoundingBox 20bp 45bp 360bp 235bp
+	clip
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/single-tesnor.pdf
+	scale 50
+	BoundingBox 20bp 45bp 380bp 235bp
+	clip
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout Itemize
-The constant term represents the isotropic component of 
-\begin_inset Formula $\Phi(\mathbf{\Omega})$
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Left: 
+\begin_inset Formula $K_{e}$
+\end_inset
+
+ for 
+\begin_inset Formula $L=8$
+\end_inset
+
+.
+ Right: Gaussian
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout Itemize
-The second term describes the angular variation in 
-\begin_inset Formula $\Phi(\mathbf{\Omega})$
-\end_inset
-
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-This is an even function of 
-\begin_inset Formula $\Omega$
 \end_inset
 
- and does not contain any constant terms 
+ 
 \end_layout
 
-\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1021,11 +1131,6 @@ Able to achieve localization of basis functions, in contrast to spherical
 \begin_layout Itemize
 Fewer basis functions are needed, compared to methods such as spherical
  wavelets, due to Gaussian-like quadratures 
-\end_layout
-
-\begin_layout Itemize
-Able to say precisely in what subspace our reconstructed signal lies because
- of the use of exact quadratures and the reproducing kernel framework 
 \end_layout
 
 \begin_layout Itemize
