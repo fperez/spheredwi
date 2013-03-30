@@ -165,7 +165,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/MRI-DTIBrain-9223.jpg
+	filename MRI-DTIBrain-9223.jpg
 
 \end_inset
 
@@ -406,7 +406,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/single-tesnor.pdf
+	filename single-tesnor.pdf
 	scale 50
 	BoundingBox 0bp 75bp 400bp 235bp
 	clip
@@ -670,7 +670,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/kernel.pdf
+	filename kernel.pdf
 	scale 50
 	BoundingBox 20bp 45bp 360bp 235bp
 	clip
@@ -679,7 +679,7 @@ status open
 
 
 \begin_inset Graphics
-	filename /home/cory/Research/dMRI/spheredwi/papers/ISBI_2013/presentation/single-tesnor.pdf
+	filename single-tesnor.pdf
 	scale 50
 	BoundingBox 20bp 45bp 380bp 235bp
 	clip
