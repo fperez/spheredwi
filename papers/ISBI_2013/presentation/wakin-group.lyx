@@ -232,7 +232,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/axon_dendrite.jpg
+	filename axon_dendrite.jpg
 	scale 50
 
 \end_inset
@@ -325,7 +325,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/MRI-DTIBrain-9223.jpg
+	filename MRI-DTIBrain-9223.jpg
 	scale 150
 
 \end_inset
@@ -382,7 +382,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/brain_slice.png
+	filename brain_slice.png
 	scale 50
 
 \end_inset
@@ -435,7 +435,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/tract_comp.png
+	filename tract_comp.png
 	scale 50
 
 \end_inset
@@ -746,7 +746,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/dif_tensor.png
+	filename dif_tensor.png
 	scale 50
 
 \end_inset
@@ -757,7 +757,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/odf90.png
+	filename odf90.png
 	scale 50
 
 \end_inset
@@ -814,7 +814,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/odf45.png
+	filename odf45.png
 	scale 50
 
 \end_inset
@@ -825,7 +825,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/odf90.png
+	filename odf90.png
 	scale 50
 
 \end_inset
@@ -1977,7 +1977,7 @@ centerline{
 
 
 \begin_inset Graphics
-	filename ../../../../../../Desktop/ISBI 2013/results.png
+	filename results.png
 	scale 50
 
 \end_inset
