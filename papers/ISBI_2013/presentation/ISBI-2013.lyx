@@ -113,44 +113,8 @@
 
 \begin_body
 
-\begin_layout Standard
-\begin_inset ERT
-status open
+\begin_layout Title (Plain Frame)
 
-\begin_layout Plain Layout
-
-
-\backslash
-frame{
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-titlepage
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Section*
@@ -1144,7 +1108,7 @@ Localized kernels, compared to spherical harmonics, match of the signal
 
 \begin_layout Itemize
 Sparse kernel model results in approximately 
-\begin_inset Formula $95%\%
+\begin_inset Formula $95%%
 $
 \end_inset
 
@@ -1172,10 +1136,6 @@ Use of Gaussian-like quadratures results in efficient sampling framework
 \family roman
 \size large
 Acknowledgments
-\end_layout
-
-\begin_layout Standard
-
 \end_layout
 
 \begin_layout Standard
