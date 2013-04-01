@@ -217,7 +217,8 @@ dMRI measurements are taken in the Fourier domain:
 \begin_inset Formula $\mathbf{q}\propto$
 \end_inset
 
- applied magnetic field gradients 
+ applied magnetic field gradients.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -229,12 +230,14 @@ Full reconstruction of
 \begin_inset Formula $\mathbf{q}$
 \end_inset
 
--space 
+-space.
+ 
 \end_layout
 
 \begin_layout Itemize
 Each sample is a measurement: more measurements →longer clinical times →unhappy
- patients 
+ patients.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -242,6 +245,7 @@ Mainly concerned with directional information from
 \begin_inset Formula $p\left({\bf r}\right)$
 \end_inset
 
+.
  
 \end_layout
 
@@ -528,21 +532,21 @@ almost
 \begin_inset Quotes erd
 \end_inset
 
- Gaussian quadratures we use are invariant under icosahedral rotations
+ Gaussian quadratures we use are invariant under icosahedral rotations:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Gaussian-like implies much more efficient sampling cf.
- to other quadratures
+ to other quadratures.
 \end_layout
 
 \begin_layout Itemize
-invariant under icosahedral rotations implies no clustering of nodes
+invariant under icosahedral rotations implies no clustering of nodes.
 \end_layout
 
 \begin_layout Itemize
-exactly integrates subspaces of spherical harmonics
+exactly integrates subspaces of spherical harmonics.
 \end_layout
 
 \end_deeper
@@ -562,7 +566,7 @@ Rotationally invariant quadratures for the sphere,
 \series bold
 465
 \series default
-, pp.3103-3125, (2009) for more information on these quadratures
+, pp.3103-3125, (2009) for more information on these quadratures.
 \end_layout
 
 \begin_layout EndFrame
@@ -598,6 +602,7 @@ Exact representation for even functions in
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
+.
  
 \end_layout
 
@@ -609,7 +614,7 @@ Exact representation for even functions in
 \begin_inset Formula $\boldsymbol{\Omega}_{i}$
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Itemize
@@ -621,7 +626,7 @@ Analogous to Lagrange interpolation in that
 \begin_inset Formula $K$
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
@@ -760,7 +765,7 @@ The shape of the reproducing kernel
 \begin_inset Formula $\left\{ \mathbf{q}_{i}\right\} _{i=1}^{N}$
 \end_inset
 
- gradient directions
+ gradient directions.
 \end_layout
 
 \begin_layout Itemize
@@ -780,7 +785,7 @@ Peaks in
 \begin_inset Formula $\boldsymbol{\Omega}_{i}$
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout EndFrame
@@ -817,7 +822,7 @@ that is we apply the Funk-Radon and Laplacian operators analytically so
 \begin_inset Formula $\mathcal{G}\left\{ \triangle H_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)\right\} =K_{e}\left(\boldsymbol{\Omega}\cdot\boldsymbol{\Omega}_{i}\right)$
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Itemize
@@ -825,14 +830,16 @@ The mean is removed from
 \begin_inset Formula $E$
 \end_inset
 
- prior to calculations 
+ prior to calculations.
+ 
 \end_layout
 
 \begin_layout Itemize
 \begin_inset Formula $N\ll M$
 \end_inset
 
- so the top equation is an under-determined system 
+ so the top equation is an under-determined system.
+ 
 \end_layout
 
 \begin_layout EndFrame
@@ -864,19 +871,13 @@ The system of under-determined equations is regularized by solving and elastic
 \begin_inset Formula $\rho$
 \end_inset
 
- are regularization parameters
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Typical values: 
-\begin_inset Formula $\alpha=5e^{-4},\rho=0.99$
+ are regularization parameters (typical values: 
+\begin_inset Formula $\alpha=5\times10^{-4},\rho=0.99)$
 \end_inset
 
-
+.
 \end_layout
 
-\end_deeper
 \begin_layout Standard
 After solving this optimization problem for the coefficients, we immediately
  have
@@ -980,7 +981,7 @@ Crossing angle was decreased from
 \begin_inset Formula $30$
 \end_inset
 
- degrees
+ degrees.
 \end_layout
 
 \begin_layout Itemize
@@ -988,13 +989,14 @@ At each crossing angle, the signal was sampled at
 \begin_inset Formula $N=64$
 \end_inset
 
- locations 
+ locations.
+ 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 sample locations correspond electrostatic repulsion directions found in
- Siemens scanner
+ Siemens scanner.
 \end_layout
 
 \begin_layout Itemize
@@ -1006,15 +1008,15 @@ a quadrature with
 \begin_inset Formula $L=10$
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Itemize
-solve underdetermined linear system for kernel coefficients
+solve underdetermined linear system for kernel coefficients.
 \end_layout
 
 \begin_layout Itemize
-determine crossing angle by using grid (spherical tessellation) search
+determine crossing angle by using grid (spherical tessellation) search.
 \end_layout
 
 \end_deeper
@@ -1028,14 +1030,15 @@ Compared to results from using spherical harmonics of maximum degree
 et al.
 
 \shape default
- formulation 
+ formulation.
+ 
 \end_layout
 
 \begin_layout Itemize
 \begin_inset Formula $50$
 \end_inset
 
- realizations were used to calculate mean crossing angle
+ realizations were used to calculate mean crossing angle.
 \end_layout
 
 \begin_layout EndFrame
@@ -1103,7 +1106,8 @@ Sparse Kernel model yields better angular resolution when the crossing angle
 
 \begin_layout Itemize
 Localized kernels, compared to spherical harmonics, match of the signal
- shape well 
+ shape well.
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -1116,11 +1120,20 @@ $
 \begin_inset Formula $\sim10$
 \end_inset
 
- nonzero coefficients)
+ nonzero coefficients).
 \end_layout
 
 \begin_layout Itemize
-Use of Gaussian-like quadratures results in efficient sampling framework
+Numerical evidence suggests that with approximately 
+\begin_inset Formula $34\approx10\log_{2}10$
+\end_inset
+
+ randomly chosen measurement, we can get similar resolution.
+ Working on rigorous compressive sensing framework.
+\end_layout
+
+\begin_layout Itemize
+Use of Gaussian-like quadratures results in efficient sampling framework.
 \end_layout
 
 \begin_layout EndFrame
