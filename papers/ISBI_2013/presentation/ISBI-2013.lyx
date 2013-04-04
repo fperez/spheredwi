@@ -166,6 +166,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename MRI-DTIBrain-9223.jpg
+	scale 150
 
 \end_inset
 
