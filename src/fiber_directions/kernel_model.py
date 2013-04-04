@@ -4,6 +4,8 @@ __all__ = ['SparseKernelModel', 'SparseKernelFit']
 import numpy as np
 import scipy as sp
 import scipy.special
+
+from numpy.linalg import norm
 from dipy.core.geometry import cart2sphere
 from dipy.reconst.odf import OdfModel, OdfFit
 from dipy.reconst.cache import Cache
@@ -64,7 +66,6 @@ def cos_inc_angle(theta1, phi1, theta2, phi2):
     return np.sin(theta1) * np.sin(theta2) * np.cos(phi1 - phi2) \
            + np.cos(theta1) * np.cos(theta2)
 
-
 def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
     """Construct the kernel matrix, A.
 
@@ -97,6 +98,28 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
     cos_theta = cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
 
     return kernel(cos_theta, N)
+
+
+def coherence(A):
+    """Calculate the coherence of a given matrix A
+
+    """
+    inner_prods=np.dot(A.T, A)
+
+    n_inner_prods = np.zeros_like(inner_prods)
+
+    (n,n) = inner_prods.shape
+
+    for i in range(n):
+      for j in range(n):
+        n_inner_prods[i,j] = np.abs(inner_prods[i,j])/(norm(A[:,i]) * norm(A[:,j]))
+ 
+
+
+    coherence = n_inner_prods - np.diag(np.ones(n)) 
+
+    return np.max(coherence)
+
 
 
 def kernel_reconstruct(kernels_theta, kernels_phi, weights,
@@ -186,6 +209,37 @@ def inv_funk_radon_even_kernel(mu, N):
         A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
 
     return A
+
+
+def inv_funk_radon_even_kernel_Y2m(mu, N):
+    """Q-space kernel.
+
+    Calculate the inverse Funk-Radon transform and inverse
+    spherical Laplacian of the reproducing kernel for the
+    even degree subspace of spherical harmonics of degree 4 to maximum
+    degree N plus a term involving the spherical harmonics of degree l=2.
+
+    .. math::
+
+       H(\Omega'\cdot\Omega) =\Delta^{-1} G^{-1}\sum_{|m|\le 2} + \Delta^{-1} G^{-1} K_e(\Omega'\cdot\Omega)
+
+    Parameters
+    ----------
+    mu : float
+        Cosine of the included angle between the kernel origin and a data point.
+    N : int
+        Maximum degree of spherical harmonic subspace.
+
+    """
+    A = np.zeros_like(mu)
+
+    for k in range(4, N + 1, 2):
+        Pk = sp.special.legendre(k)
+        A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
+
+    return A
+
+
 
 
 def L(E, d1=0.001, d2=0.001):
@@ -291,8 +345,31 @@ class SparseKernelModel(OdfModel, Cache):
                                      fit_intercept=True,
                                      copy_X=True)
 
+
+	#from sklearn.linear_model import RandomizedLasso as rl
+	#lasso = rl(alpha=0.01,verbose=False,fit_intercept=True,scaling=0.001,n_resampling=500)
+	#rl_object = lasso.fit(self.X, y)
+
+	#support = np.squeeze(np.where(rl_object.get_support()))       	
+	
+	#clf = linear_model.LinearRegression()
+	#clf.fit(self.X[:,support],y)
+
+        #beta = np.zeros(self.qp)
+	#beta[support] = clf.coef_
+
+	#intercept = clf.intercept_
+
+	(rows,cols) = self.X.shape
         # Handle "nan" as missing observations
-        mask = ~np.isnan(y)
+	#your_array = np.arange(rows)
+	#np.random.shuffle(your_array)
+        #mask = your_array[:34]
+
+        mask = np.array([0, 32, 34, 39, 27, 17, 35, 58, 33, 25, 46, 61, 43, 23,  7, 31, 57, 
+			42,  4, 41, 63, 20,  2, 47, 15, 22,  5, 38, 44, 52, 50,  8, 51, 48])
+
+        #mask = ~np.isnan(y)
         fit = lm.fit(self.X[mask, :], y[mask])
         beta = fit.coef_
         intercept = fit.intercept_

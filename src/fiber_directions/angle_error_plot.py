@@ -4,6 +4,7 @@ sys.path.insert(0, '..')
 
 from kernel_model import SparseKernelModel
 from kernel_model import quadrature_points
+
 from sphdif.linalg import rotation_around_axis
 
 from dipy.core.gradients import GradientTable

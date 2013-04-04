@@ -1,10 +1,15 @@
 import numpy as np
 import scipy as sp
 import scipy.special
+from numpy.linalg import norm
 
 import coord
 import sphere
 import plot
+
+
+
+
 
 
 def std_kernel(mu, N):
@@ -68,6 +73,39 @@ def inv_funk_radon_even_kernel(mu, N):
         A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
 
     return A
+
+
+def inv_funk_radon_even_kernel_plus_ylm(mu, N):
+    """Q-space kernel.
+
+    Calculate the inverse Funk-Radon transform and inverse
+    spherical Laplacian of the reproducing kernel for the
+    even degree subspace of spherical harmonics from degree 4
+    to a maximum degree N, i.e.
+
+    .. math::
+
+       H(\mu) = \Delta^{-1} G^{-1} Y^m_2 + \Delta^{-1} G^{-1} K_e(\mu)
+
+    Parameters
+    ----------
+    mu : float
+        Cosine of the included angle between the kernel origin and a data point.
+    N : int
+        Maximum degree of spherical harmonic subspace.
+
+    """
+    #A = np.zeros_like(mu)
+
+    #for k in range(4, N + 1, 2):
+    #    Pk = sp.special.legendre(k)
+    #    A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
+    
+    A = 1.0
+ 
+    return A
+
+
 
 
 def kernel_reconstruct(kernels_theta, kernels_phi, weights,

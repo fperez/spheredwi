@@ -269,7 +269,7 @@ def main_coverage(fpoints, fpoints_missing=None, symm=False,
                   vmin=None, show_3d=False):
     bv_good,sphere,field,bv_miss = build_coverage(fpoints, fpoints_missing,
                                                   symm=symm)
-    show_coverage_2d(bv_good, field, bv_miss, vmin=vmin)
+    #show_coverage_2d(bv_good, field, bv_miss, vmin=vmin)
 
     import matplotlib.pyplot as plt
     plt.show()
@@ -280,4 +280,4 @@ def main_coverage(fpoints, fpoints_missing=None, symm=False,
 
 if __name__ == '__main__':
     main_coverage('bvecs', fpoints_missing='bvecs_missing',
-                  symm=True, vmin=None, show_3d=True)
+                  symm=False, vmin=None, show_3d=True)

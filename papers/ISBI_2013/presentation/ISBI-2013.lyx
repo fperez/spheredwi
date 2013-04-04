@@ -23,7 +23,7 @@
 %get rid of navigation symbols:
 \setbeamertemplate{navigation symbols}{}
 
-\title[dMRI]{Sparse Reconstruction of Diffusion MRI signals}
+%\title[dMRI]{Sparse Reconstruction of Diffusion MRI signals}
 \author[]{}
 %
 \institute[]{
@@ -113,8 +113,8 @@
 
 \begin_body
 
-\begin_layout Title (Plain Frame)
-
+\begin_layout Title
+Sparse Reconstruction of Diffusion MRI signals
 \end_layout
 
 \begin_layout Section*
@@ -598,7 +598,7 @@ with
 \end_layout
 
 \begin_layout Itemize
-Exact representation for even functions in 
+Exact representation for functions in 
 \begin_inset Formula $\mathcal{H}_{L}$
 \end_inset
 
@@ -657,7 +657,7 @@ OPDF
 \end_layout
 
 \begin_layout Standard
-New kernel
+The new kernel
 \begin_inset Formula 
 \[
 K_{e}\left(\mu\right)=\sum_{l=2}^{\left\lfloor L/2\right\rfloor }\frac{4l+1}{4\pi}P_{2l}\left(\mu\right)
@@ -835,10 +835,11 @@ The mean is removed from
 \end_layout
 
 \begin_layout Itemize
+We consider the case 
 \begin_inset Formula $N\ll M$
 \end_inset
 
- so the top equation is an under-determined system.
+ so that we have an under-determined system.
  
 \end_layout
 
@@ -851,7 +852,7 @@ The mean is removed from
 \end_layout
 
 \begin_layout Standard
-The system of under-determined equations is regularized by solving and elastic
+This system of under-determined equations is regularized by solving an elastic
  net problem: 
 \end_layout
 
@@ -1112,11 +1113,10 @@ Localized kernels, compared to spherical harmonics, match of the signal
 
 \begin_layout Itemize
 Sparse kernel model results in approximately 
-\begin_inset Formula $95%%
-$
+\begin_inset Formula $95$
 \end_inset
 
- compression (
+% compression (
 \begin_inset Formula $\sim10$
 \end_inset
 
@@ -1153,9 +1153,7 @@ Acknowledgments
 
 \begin_layout Standard
 \align block
-The authors would like to thank B.
- Amirbekian, A.
- Rokem and E.
+The authors would like to thank Bago Amirbekian, Ariel Rokem and Eleftherios
  Garyfallidis for their contributions to the Diffusion Imaging in Python
  project (http: //dipy.org) on which our work is built.
 \end_layout

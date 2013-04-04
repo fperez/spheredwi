@@ -10,4 +10,5 @@ sphere = create_unit_sphere(6)
 kernel_odf = even_kernel(sphere.z, N=8)
 kernel_signal = inv_funk_radon_even_kernel(sphere.z, N=8)
 
-show_odfs([[[kernel_odf, kernel_signal]]], (sphere.vertices, sphere.faces))
+#show_odfs([[[kernel_odf, kernel_signal]]], (sphere.vertices, sphere.faces))
+show_odfs([[[kernel_odf]]], (sphere.vertices, sphere.faces))
