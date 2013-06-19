@@ -66,7 +66,7 @@ def cos_inc_angle(theta1, phi1, theta2, phi2):
     return np.sin(theta1) * np.sin(theta2) * np.cos(phi1 - phi2) \
            + np.cos(theta1) * np.cos(theta2)
 
-def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
+def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18, kern_name):
     """Construct the kernel matrix, A.
 
     The kernel projects sampling points to evaluation points.  Therefore,
@@ -89,6 +89,9 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
         Maximum degree of spherical harmonic subspace.
 
     """
+    #adjust alpha value:
+    alpha = 0.5
+    
     P = len(s_theta)
     Q = len(q_theta)
 
@@ -97,7 +100,8 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
 
     cos_theta = cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
 
-    return kernel(cos_theta, N)
+    return create_kern(cos_theta, N, kern_name, alpha)
+    #return kernel(cos_theta, N)
 
 
 def coherence(A):
@@ -347,7 +351,7 @@ class SparseKernelModel(OdfModel, Cache):
             kernel_matrix(self.gradient_theta, self.gradient_phi,
                           self.kernel_theta, self.kernel_phi,
                           kernel=inv_funk_radon_even_kernel,
-                          N=self.sh_order)
+                          N=self.sh_order, 'frek')
             )
 
         if l1_ratio is None:
