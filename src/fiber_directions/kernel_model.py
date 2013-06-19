@@ -181,6 +181,38 @@ def even_kernel(mu, N):
 
     return A
 
+def create_kern(mu, N, coeff_type, alpha=0):
+    """Calculates the appropriate kernel.
+
+       Parameters
+       ----------
+       mu: float
+           Cosine of the included angle between the kernel origin and a data point.
+       N: int
+          Maximum degree of spherical harmonic subspace.
+       coeff_type: string
+                   Either 'frek' for inverse Funk-Radon even kernel or 'rbf' for
+                   radial basis functions.
+        alpha: float
+               Needed for radial basis functions."""
+    
+    A = np.zeros_like(mu)
+
+    if coeff_type is 'frek':
+        for k in range(2, N + 1, 2):
+            Pk = sp.special.legendre(k)
+            A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
+
+        return A
+
+    elif coeff_type is 'rbf':
+        c = np.exp(1)*alpha
+        for k in range(2, N + 1, 2):
+            Pk = sp.special.legendre(k)
+            A += (np.exp(-2*alpha)/np.sqrt(2)) * (k*np.exp(k*np.log(c/k))) * ((2*k+1)/(4*np.pi)) * Pk(mu)
+
+        return A 
+
 
 def inv_funk_radon_even_kernel(mu, N):
     """Q-space kernel.
