@@ -66,7 +66,7 @@ def cos_inc_angle(theta1, phi1, theta2, phi2):
     return np.sin(theta1) * np.sin(theta2) * np.cos(phi1 - phi2) \
            + np.cos(theta1) * np.cos(theta2)
 
-def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18, kern_name):
+def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
     """Construct the kernel matrix, A.
 
     The kernel projects sampling points to evaluation points.  Therefore,
@@ -89,9 +89,6 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18, kern_name):
         Maximum degree of spherical harmonic subspace.
 
     """
-    #adjust alpha value:
-    alpha = 0.5
-    
     P = len(s_theta)
     Q = len(q_theta)
 
@@ -100,8 +97,7 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18, kern_name):
 
     cos_theta = cos_inc_angle(s_theta, s_phi, q_theta, q_phi)
 
-    return create_kern(cos_theta, N, kern_name, alpha)
-    #return kernel(cos_theta, N)
+    return kernel(cos_theta, N)
 
 
 def coherence(A):
@@ -184,38 +180,6 @@ def even_kernel(mu, N):
         A += (2 * k + 1) / (4 * np.pi) * Pk(mu)
 
     return A
-
-def create_kern(mu, N, coeff_type, alpha=0):
-    """Calculates the appropriate kernel.
-
-       Parameters
-       ----------
-       mu: float
-           Cosine of the included angle between the kernel origin and a data point.
-       N: int
-          Maximum degree of spherical harmonic subspace.
-       coeff_type: string
-                   Either 'frek' for inverse Funk-Radon even kernel or 'rbf' for
-                   radial basis functions.
-        alpha: float
-               Needed for radial basis functions."""
-    
-    A = np.zeros_like(mu)
-
-    if coeff_type is 'frek':
-        for k in range(2, N + 1, 2):
-            Pk = sp.special.legendre(k)
-            A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
-
-        return A
-
-    elif coeff_type is 'rbf':
-        c = np.exp(1)*alpha
-        for k in range(2, N + 1, 2):
-            Pk = sp.special.legendre(k)
-            A += (np.exp(-2*alpha)/np.sqrt(2)) * (k*np.exp(k*np.log(c/k))) * ((2*k+1)/(4*np.pi)) * Pk(mu)
-
-        return A 
 
 
 def inv_funk_radon_even_kernel(mu, N):
@@ -351,7 +315,7 @@ class SparseKernelModel(OdfModel, Cache):
             kernel_matrix(self.gradient_theta, self.gradient_phi,
                           self.kernel_theta, self.kernel_phi,
                           kernel=inv_funk_radon_even_kernel,
-                          N=self.sh_order, 'frek')
+                          N=self.sh_order)
             )
 
         if l1_ratio is None:
@@ -387,7 +351,7 @@ class SparseKernelModel(OdfModel, Cache):
 	#rl_object = lasso.fit(self.X, y)
 
 	#support = np.squeeze(np.where(rl_object.get_support()))       	
-	
+
 	#clf = linear_model.LinearRegression()
 	#clf.fit(self.X[:,support],y)
 
