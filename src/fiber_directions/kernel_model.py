@@ -278,8 +278,9 @@ class SparseKernelModel(OdfModel, Cache):
         loglog_tf : bool
             Whether to perform ``log(-log(.))`` on the signal before fitting.
             In theory, this gives a better representation of the ODF (but does
-            predict back the original signal).  Also, it seems not to work well
-            for low b-values (<= 1500).
+            not predict back the original signal).  Also, it seems not to work
+            well for low b-values (<= 1500).  If this is enabled, ensure
+            that input data lies in (0, 1].
         l1_ratio : float (optional)
             Argument passed to sklearn's ElasticNet to control L1 vs L2
             penalization.  Should be > 0.01.
@@ -292,8 +293,8 @@ class SparseKernelModel(OdfModel, Cache):
         sklearn.linear_model.ElasticNet
 
         """
-        mask = gtab.bvals > 0
-        bvecs = gtab.bvecs[mask]
+        self._where_dwi = ~gtab.b0s_mask
+        bvecs = gtab.bvecs[self._where_dwi]
 
         self.qp = qp
         self.sh_order = sh_order
@@ -319,7 +320,7 @@ class SparseKernelModel(OdfModel, Cache):
         if l1_ratio is None:
             l1_ratio = 1
         if alpha is None:
-            alpha = 1
+            alpha = 0.0005
 
         self.l1_ratio = l1_ratio
         self.alpha = alpha
@@ -333,6 +334,8 @@ class SparseKernelModel(OdfModel, Cache):
             Signal measured at each b-vector.
 
         """
+        signal = signal[..., self._where_dwi]
+
         if self.loglog_tf:
             y = -L(signal)
         else:
@@ -343,32 +346,8 @@ class SparseKernelModel(OdfModel, Cache):
                                      fit_intercept=True,
                                      copy_X=True)
 
-
-	#from sklearn.linear_model import RandomizedLasso as rl
-	#lasso = rl(alpha=0.01,verbose=False,fit_intercept=True,scaling=0.001,n_resampling=500)
-	#rl_object = lasso.fit(self.X, y)
-
-	#support = np.squeeze(np.where(rl_object.get_support()))       	
-
-	#clf = linear_model.LinearRegression()
-	#clf.fit(self.X[:,support],y)
-
-        #beta = np.zeros(self.qp)
-	#beta[support] = clf.coef_
-
-	#intercept = clf.intercept_
-
-	(rows,cols) = self.X.shape
-        # Handle "nan" as missing observations
-	#your_array = np.arange(rows)
-	#np.random.shuffle(your_array)
-        #mask = your_array[:34]
-
-        mask = np.array([0, 32, 34, 39, 27, 17, 35, 58, 33, 25, 46, 61, 43, 23,  7, 31, 57, 
-			42,  4, 41, 63, 20,  2, 47, 15, 22,  5, 38, 44, 52, 50,  8, 51, 48])
-
-        #mask = ~np.isnan(y)
-        fit = lm.fit(self.X[mask, :], y[mask])
+        mask = ~np.isnan(y)
+        fit = lm.fit(self.X[mask, ...], y[mask])
         beta = fit.coef_
         intercept = fit.intercept_
 
