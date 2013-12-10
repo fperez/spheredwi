@@ -16,7 +16,7 @@ def quadrature_points(N=72):
 
     Parameters
     ----------
-    N : int, {72, 132, 492}
+    N : int, {72, 132, 192, 492}
         A quadrature set with N points is loaded.
 
     Returns
@@ -101,25 +101,17 @@ def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
 
 
 def coherence(A):
-    """Calculate the coherence of a given matrix A
+    """Calculate the coherence matrix of a given matrix A.
+
+    This matrix A_ij consists of the normalized inner product between
+    columns i and j.
 
     """
-    inner_prods=np.dot(A.T, A)
+    N = np.linalg.norm(A, axis=0)
+    C = np.abs(A.T.dot(A)) / N / N[:, None]
+    C[np.diag_indices_from(C)] = 0
 
-    n_inner_prods = np.zeros_like(inner_prods)
-
-    (n,n) = inner_prods.shape
-
-    for i in range(n):
-      for j in range(n):
-        n_inner_prods[i,j] = np.abs(inner_prods[i,j])/(norm(A[:,i]) * norm(A[:,j]))
- 
-
-
-    coherence = n_inner_prods - np.diag(np.ones(n)) 
-
-    return np.max(coherence)
-
+    return C
 
 
 def kernel_reconstruct(kernels_theta, kernels_phi, weights,
