@@ -311,6 +311,12 @@ class SparseKernelModel(OdfModel, Cache):
 
         self.kernel_theta, self.kernel_phi, _ = quadrature_points(N=qp)
 
+        # Since our kernel is even, only use quadrature points above or on the
+        # equator
+        mask = self.kernel_theta >= (np.pi / 2)
+        self.kernel_theta = self.kernel_theta[mask]
+        self.kernel_phi = self.kernel_phi[mask]
+
         self.X = np.asfortranarray(
             kernel_matrix(self.gradient_theta, self.gradient_phi,
                           self.kernel_theta, self.kernel_phi,
