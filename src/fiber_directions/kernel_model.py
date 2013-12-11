@@ -66,6 +66,7 @@ def cos_inc_angle(theta1, phi1, theta2, phi2):
     return np.sin(theta1) * np.sin(theta2) * np.cos(phi1 - phi2) \
            + np.cos(theta1) * np.cos(theta2)
 
+
 def kernel_matrix(s_theta, s_phi, q_theta, q_phi, kernel, N=18):
     """Construct the kernel matrix, A.
 
@@ -216,28 +217,27 @@ def gaussian_rbf(mu, alpha):
 
     Parameters
     ----------
-    mu    : float
-            Cosine of the included angle between the kernel origin and a data point.
+    mu : float
+        Cosine of the included angle between the kernel origin and a data point.
     alpha : float
-            shape parameter alpha > 0
+        Shape parameter ``alpha > 0``.
 
     """
     A = np.zeros_like(mu)
     n_max = 40 
 
-    for k in range(2,n_max,2):
+    for k in range(2, n_max, 2):
         Pk = sp.special.legendre(k)
-        A += (2.0 * k + 1.0) *an(k,alpha)* Pk(mu)
+        A += (2.0 * k + 1.0) * an(k, alpha) * Pk(mu)
 
-    return A * 0.5  
+    return A * 0.5
 
 
-def an(n,alpha):
-    """Calculate expansion coefficient
-       from Baxter and Hubbert.
+def an(n, alpha):
+    """Calculate expansion coefficient for Gaussian RBF from Baxter and Hubbert.
     """
-    return np.sqrt(np.pi/alpha)*np.exp(-2.0*alpha)*sp.special.iv(n + 1.0/2.0, 2.0*alpha)
-
+    return np.sqrt(np.pi / alpha) * np.exp(-2.0*alpha) * \
+      sp.special.iv(n + 1.0/2.0, 2.0*alpha)
 
 
 def inv_funk_radon_even_kernel(mu, N):
@@ -268,6 +268,7 @@ def inv_funk_radon_even_kernel(mu, N):
 
     return A
 
+
 def inv_funk_radon_gaussian_rbf(mu, alpha):
     """Q-space kernel.
 
@@ -297,7 +298,6 @@ def inv_funk_radon_gaussian_rbf(mu, alpha):
     return A
 
 
-
 def inv_funk_radon_even_kernel_Y2m(mu, N):
     """Q-space kernel.
 
@@ -325,8 +325,6 @@ def inv_funk_radon_even_kernel_Y2m(mu, N):
         A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
 
     return A
-
-
 
 
 def L(E, d1=0.001, d2=0.001):
