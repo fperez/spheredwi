@@ -182,6 +182,64 @@ def even_kernel(mu, N):
     return A
 
 
+def kernel(mu, N):
+    """Reproducing kernel.
+
+    Compute the reproducing kernel for the subspace
+    of spherical harmonics of maximum degree N.
+
+    Parameters
+    ----------
+    mu : float
+        Cosine of the included angle between the kernel origin and a data point.
+    N : int
+        Maximum degree of spherical harmonic subspace.
+
+    """
+    A = np.zeros_like(mu)
+
+    for k in range(N + 1):
+        Pk = sp.special.legendre(k)
+        A += (2 * k + 1) / (4 * np.pi) * Pk(mu)
+
+    return A
+
+
+
+
+def gaussian_rbf(mu, alpha):
+    """Gaussian radial basis function: exp(-alpha r^2). In terms
+    of mu, the cosine of the angle, exp(-alpha 2*(1-mu) ). 
+
+    Compute the Gaussian radial basis function using the 
+    spherical harmonic expansion
+
+    Parameters
+    ----------
+    mu    : float
+            Cosine of the included angle between the kernel origin and a data point.
+    alpha : float
+            shape parameter alpha > 0
+
+    """
+    A = np.zeros_like(mu)
+    n_max = 40 
+
+    for k in range(2,n_max,2):
+        Pk = sp.special.legendre(k)
+        A += (2.0 * k + 1.0) *an(k,alpha)* Pk(mu)
+
+    return A * 0.5  
+
+
+def an(n,alpha):
+    """Calculate expansion coefficient
+       from Baxter and Hubbert.
+    """
+    return np.sqrt(np.pi/alpha)*np.exp(-2.0*alpha)*sp.special.iv(n + 1.0/2.0, 2.0*alpha)
+
+
+
 def inv_funk_radon_even_kernel(mu, N):
     """Q-space kernel.
 
@@ -209,6 +267,35 @@ def inv_funk_radon_even_kernel(mu, N):
         A += (2 * k + 1) / (8 * np.pi**2 * Pk(0) * k * (k + 1)) * Pk(mu)
 
     return A
+
+def inv_funk_radon_gaussian_rbf(mu, alpha):
+    """Q-space kernel.
+
+    Calculate the inverse Funk-Radon transform and inverse
+    spherical Laplacian of the Gaussian RBF with shape 
+    parameter alpha
+
+    .. math::
+
+       H(\mu) = \Delta^{-1} G^{-1} Exp(-alpha 2*(1-mu))
+
+    Parameters
+    ----------
+    mu    : float
+            Cosine of the included angle between the kernel origin and a data point.
+    alpha : float
+            shape parameter 
+
+    """
+    A = np.zeros_like(mu)
+    n_max = 40
+    
+    for k in range(2, n_max, 2):
+        Pk = sp.special.legendre(k)
+        A +=  (((2.0 * k + 1.0) * an(k,alpha)) /  (4.0 * np.pi * Pk(0) * k * (k + 1.0)))  * Pk(mu)
+
+    return A
+
 
 
 def inv_funk_radon_even_kernel_Y2m(mu, N):
