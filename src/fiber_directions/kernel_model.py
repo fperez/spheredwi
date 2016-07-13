@@ -205,7 +205,10 @@ def gaussian_rbf(mu, alpha):
     of mu, the cosine of the angle, exp(-alpha 2*(1-mu) ). 
 
     Compute the Gaussian radial basis function using the 
-    spherical harmonic expansion
+    spherical harmonic expansion. Note that we can use only
+    the even harmonics, since this symmetry is required in 
+    dMRI. Thus, we have a "symmetric" Gaussian. We truncate the
+    infinite sum when the coefficients are less than 10^-16.
 
     Parameters
     ----------
@@ -216,7 +219,10 @@ def gaussian_rbf(mu, alpha):
 
     """
     A = np.zeros_like(mu)
-    n_max = 40 
+
+    n_max = 5
+    while (n_max*(np.log10(n_max) - np.log10(np.exp(1)*alpha)) < 16):
+	n_max += 1
 
     for k in range(2, n_max, 2):
         Pk = sp.special.legendre(k)
@@ -225,11 +231,14 @@ def gaussian_rbf(mu, alpha):
     return A * 0.5
 
 
+
 def an(n, alpha):
-    """Calculate expansion coefficient for Gaussian RBF from Baxter and Hubbert.
+    """Calculate expansion coefficient for Gaussian RBF from Baxter and Hubbert
+       paper "Radial Basis Functions for the Sphere."
     """
     return np.sqrt(np.pi / alpha) * np.exp(-2.0*alpha) * \
       sp.special.iv(n + 1.0/2.0, 2.0*alpha)
+
 
 
 def inv_funk_radon_even_kernel(mu, N):
@@ -281,7 +290,12 @@ def inv_funk_radon_gaussian_rbf(mu, alpha):
 
     """
     A = np.zeros_like(mu)
-    n_max = 40
+    
+    
+    n_max = 5
+    while (n_max*(np.log10(n_max) - np.log10(np.exp(1)*alpha)) < 16):
+	n_max += 1
+
     
     for k in range(2, n_max, 2):
         Pk = sp.special.legendre(k)
@@ -348,7 +362,7 @@ def Linv(E):
 
 
 class SparseKernelModel(OdfModel, Cache):
-    def __init__(self, gtab, sh_order=8, qp=132,
+    def __init__(self, kernel, gtab, sh_order=8, qp=132,
                  loglog_tf=True, l1_ratio=None, alpha=None):
         """Sparse kernel model.
 
@@ -398,7 +412,7 @@ class SparseKernelModel(OdfModel, Cache):
         self.X = np.asfortranarray(
             kernel_matrix(self.gradient_theta, self.gradient_phi,
                           self.kernel_theta, self.kernel_phi,
-                          kernel=inv_funk_radon_even_kernel,
+                          kernel=kernel,
                           N=self.sh_order)
             )
 
@@ -442,6 +456,7 @@ class SparseKernelModel(OdfModel, Cache):
 
 class SparseKernelFit(OdfFit):
     def __init__(self, beta, intercept=0, model=None):
+        self.kernel = kernel
         self.beta = beta
         self.model = model
         self.intercept = intercept
